@@ -21,7 +21,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-
+Route::group([], base_path('routes/base/budget.php'));
 Route::group([], base_path('routes/base/profiles.php'));
 Route::group([], base_path('routes/base/roles.php'));
 Route::group([], base_path('routes/base/orders.php'));

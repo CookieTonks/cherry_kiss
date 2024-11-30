@@ -20,6 +20,25 @@
 
             <!-- Módulo 1 -->
             <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
+                <a href="{{ route('cotizaciones.home') }}" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Cotizaciones</a>
+            </div>
+
+            <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
+                <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Ordenes</a>
+            </div>
+
+            <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
+                <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Compras</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="py-12">
+        <div class="flex flex-wrap gap-6 max-w-7xl mx-auto sm:px-6 lg:px-12">
+
+            <!-- Módulo 1 -->
+            <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
                 <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Modulo 1</a>
             </div>
 
@@ -47,26 +66,7 @@
             </div>
 
             <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
-                <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Modulo 3</a>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="py-12">
-        <div class="flex flex-wrap gap-6 max-w-7xl mx-auto sm:px-6 lg:px-12">
-
-            <!-- Módulo 1 -->
-            <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
-                <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Modulo 1</a>
-            </div>
-
-            <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
-                <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Modulo 2</a>
-            </div>
-
-            <div class="w-full h-full sm:w-1/3 bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg p-6 flex items-center justify-center h-64">
-                <a href="#" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Modulo 3</a>
+                <a href="{{ route('roles.index') }}" class="text-lg font-semibold text-gray-900 dark:text-gray-100">Permisos</a>
             </div>
 
         </div>

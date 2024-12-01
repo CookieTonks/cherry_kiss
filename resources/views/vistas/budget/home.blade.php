@@ -102,8 +102,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!-- Aquí va tu formulario -->
-                    <form>
+                    <form method="POST" action="{{ route('cotizaciones.create') }}">
+                        @csrf
                         <div class="mb-3">
                             <label for="cliente" class="form-label">Cliente</label>
                             <input type="text" class="form-control" id="cliente" placeholder="Nombre del cliente">
@@ -129,12 +129,14 @@
                             <label for="tipo" class="form-label">Tipo</label>
                             <input type="text" class="form-control" id="tipo" placeholder="Tipo de cotización">
                         </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Cotización</button>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cotización</button>
-                </div>
+
             </div>
         </div>
     </div>

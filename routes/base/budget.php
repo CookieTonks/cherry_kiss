@@ -11,7 +11,7 @@ use App\Http\Controllers\BudgetController;
 Route::group(['middleware' => ['auth']], function () {
     Route::middleware(['can:ver_cotizaciones'])->group(function () {
         Route::get('/cotizaciones/home', [BudgetController::class, 'index'])->name('cotizaciones.home');
-        Route::post('/cotizaciones/create', [BudgetController::class, 'store'])->name('cotizaciones.store');
+        Route::post('/cotizaciones/create', [BudgetController::class, 'store'])->name('cotizaciones.create');
         Route::delete('/cotizaciones/delete/{id}', [BudgetController::class, 'destroy'])->name('cotizaciones.destroy');
     });
 });

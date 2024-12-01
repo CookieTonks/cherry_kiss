@@ -38,6 +38,38 @@
             {{ $slot }}
         </main>
     </div>
+
+    <!-- Mostrar el mensaje de éxito -->
+    @if(session('success'))
+    <div class="alert alert-success position-absolute top-0 end-0 mt-3 me-3 alert-dismissible fade show" id="successMessage" style="max-width: 25rem;" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
+    <!-- Mostrar el mensaje de error -->
+    @if(session('error'))
+    <div class="alert alert-danger position-absolute top-0 end-0 mt-3 me-3 alert-dismissible fade show" id="errorMessage" style="max-width: 25rem;" role="alert">
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    @endif
+
+    <!-- Script para cerrar el mensaje después de unos segundos -->
+    <script>
+        $(document).ready(function() {
+            // Desvanecer el mensaje de éxito después de 5 segundos
+            setTimeout(function() {
+                $('#successMessage').fadeOut(500); // Fade out en 500ms
+            }, 5000);
+
+            // Desvanecer el mensaje de error después de 5 segundos
+            setTimeout(function() {
+                $('#errorMessage').fadeOut(500); // Fade out en 500ms
+            }, 5000);
+        });
+    </script>
+
 </body>
 
-</html>
+</html> 

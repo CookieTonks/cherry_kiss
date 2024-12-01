@@ -73,12 +73,12 @@
                         <tbody>
                             @foreach($cotizaciones as $cotizacion)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{$cotizacion->id}}</td>
+                                <td>{{$cotizacion->cliente}}</td>
+                                <td>{{$cotizacion->user_id}}</td>
+                                <td>{{$cotizacion->monto}}</td>
+                                <td>{{$cotizacion->estado}}</td>
+                                <td>{{$cotizacion->tipo}}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -106,19 +106,15 @@
                         @csrf
                         <div class="mb-3">
                             <label for="cliente" class="form-label">Cliente</label>
-                            <input type="text" class="form-control" id="cliente" placeholder="Nombre del cliente">
-                        </div>
-                        <div class="mb-3">
-                            <label for="vendedor" class="form-label">Vendedor</label>
-                            <input type="text" class="form-control" id="vendedor" placeholder="Nombre del vendedor">
+                            <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nombre del cliente">
                         </div>
                         <div class="mb-3">
                             <label for="monto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" id="monto" placeholder="Monto de la cotización">
+                            <input type="number" class="form-control" id="monto" name="monto" placeholder="Monto de la cotización">
                         </div>
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado</label>
-                            <select class="form-select" id="estado">
+                            <select class="form-select" id="estado" name="estado">
                                 <option selected>Seleccionar estado</option>
                                 <option value="pendiente">Pendiente</option>
                                 <option value="aprobado">Aprobado</option>
@@ -127,7 +123,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="tipo" class="form-label">Tipo</label>
-                            <input type="text" class="form-control" id="tipo" placeholder="Tipo de cotización">
+                            <input type="text" class="form-control" id="tipo" name="tipo" placeholder="Tipo de cotización">
                         </div>
 
                         <div class="modal-footer">

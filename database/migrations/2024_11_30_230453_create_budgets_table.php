@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('budgets', function (Blueprint $table) {
             $table->id();
             $table->string('cliente');
-            $table->string('vendedor');
+            $table->unsignedBigInteger('user_id');
             $table->string('estado');
             $table->string('monto');
             $table->string('tipo');

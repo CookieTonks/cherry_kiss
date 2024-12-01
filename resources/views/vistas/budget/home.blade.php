@@ -75,7 +75,7 @@
                             <tr>
                                 <td>{{$cotizacion->id}}</td>
                                 <td>{{$cotizacion->cliente}}</td>
-                                <td>{{$cotizacion->user_id}}</td>
+                                <td>{{$cotizacion->user->name }}</td>
                                 <td>{{$cotizacion->monto}}</td>
                                 <td>{{$cotizacion->estado}}</td>
                                 <td>{{$cotizacion->tipo}}</td>

@@ -74,8 +74,8 @@
                             @foreach($cotizaciones as $cotizacion)
                             <tr>
                                 <td>{{$cotizacion->id}}</td>
-                                <td>{{$cotizacion->cliente}}</td>
-                                <td>{{$cotizacion->user->name }}</td>
+                                <td>{{ $cotizacion->client?->name ?? 'Cliente no asignado' }}</td>
+                                <td>{{ $cotizacion->user?->name ?? 'Usuario no asignado' }}</td>
                                 <td>{{$cotizacion->monto}}</td>
                                 <td>{{$cotizacion->estado}}</td>
                                 <td>{{$cotizacion->tipo}}</td>
@@ -105,9 +105,15 @@
                     <form method="POST" action="{{ route('cotizaciones.create') }}">
                         @csrf
                         <div class="mb-3">
-                            <label for="cliente" class="form-label">Cliente</label>
-                            <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nombre del cliente">
+                            <label for="client" class="form-label">Cliente</label>
+                            <select class="form-control" id="cliente" name="client">
+                                <option value="">Seleccione un cliente</option>
+                                @foreach ($clientes as $client)
+                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+
                         <div class="mb-3">
                             <label for="monto" class="form-label">Monto</label>
                             <input type="number" class="form-control" id="monto" name="monto" placeholder="Monto de la cotización">

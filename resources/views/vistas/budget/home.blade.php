@@ -46,6 +46,11 @@
         <div class="py-2">
             <div class="row">
                 <div class="table-responsive">
+                    <div id="toolbar">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            +
+                        </button>
+                    </div>
                     <table id="orders-table"
                         class="table table-striped table-bordered"
                         data-toggle="table"
@@ -66,9 +71,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($cotizaciones as $cotizacion)
                             <tr>
-
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -78,5 +90,53 @@
     </div>
 
 
+
+    <!-- Modales -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Formulario de Nueva Cotización</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí va tu formulario -->
+                    <form>
+                        <div class="mb-3">
+                            <label for="cliente" class="form-label">Cliente</label>
+                            <input type="text" class="form-control" id="cliente" placeholder="Nombre del cliente">
+                        </div>
+                        <div class="mb-3">
+                            <label for="vendedor" class="form-label">Vendedor</label>
+                            <input type="text" class="form-control" id="vendedor" placeholder="Nombre del vendedor">
+                        </div>
+                        <div class="mb-3">
+                            <label for="monto" class="form-label">Monto</label>
+                            <input type="number" class="form-control" id="monto" placeholder="Monto de la cotización">
+                        </div>
+                        <div class="mb-3">
+                            <label for="estado" class="form-label">Estado</label>
+                            <select class="form-select" id="estado">
+                                <option selected>Seleccionar estado</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="aprobado">Aprobado</option>
+                                <option value="rechazado">Rechazado</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipo" class="form-label">Tipo</label>
+                            <input type="text" class="form-control" id="tipo" placeholder="Tipo de cotización">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cotización</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </x-app-layout>

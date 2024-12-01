@@ -12,7 +12,8 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        return view('vistas.budget.home');
+        $cotizaciones = Budget::all();
+        return view('vistas.budget.home', compact('cotizaciones'));
     }
 
     /**

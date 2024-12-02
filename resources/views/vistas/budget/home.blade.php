@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Cotizaciones') }}
+            Cotizaciones / {{ $estado ? ucfirst(strtolower($estado)) : 'Todas' }}
         </h2>
+
     </x-slot>
 
     <div class="container">
@@ -12,8 +13,8 @@
                 <div class="col-12 col-sm-4">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('cotizaciones.home') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones enviadas
+                            <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Cotizaciones abiertas
                             </a>
                         </div>
                     </div>
@@ -23,7 +24,7 @@
                 <div class="col-12 col-sm-4">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="#" class="text-decoration-none text-dark fw-bold fs-5">
+                            <a href="{{ route('budgets.index', ['estado' => 'PENDIENTE']) }}" class="text-decoration-none text-dark fw-bold fs-5">
                                 Cotizaciones pendientes
                             </a>
                         </div>
@@ -34,7 +35,7 @@
                 <div class="col-12 col-sm-4">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="#" class="text-decoration-none text-dark fw-bold fs-5">
+                            <a href="{{ route('budgets.index', ['estado' => 'ENTREGADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
                                 Cotizaciones entregadas
                             </a>
                         </div>
@@ -43,6 +44,8 @@
 
             </div>
         </div>
+
+
         <div class="py-2">
             <div class="row">
                 <div class="table-responsive">
@@ -68,6 +71,7 @@
                                 <th data-field="status" data-sortable="true">Estado</th>
                                 <th data-field="total" data-sortable="true">Monto</th>
                                 <th data-field="tipo" data-sortable="true">Tipo</th>
+                                <th data-field="partidas" data-sortable="true">Partidas</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -76,9 +80,16 @@
                                 <td>{{$cotizacion->id}}</td>
                                 <td>{{ $cotizacion->client?->name ?? 'Cliente no asignado' }}</td>
                                 <td>{{ $cotizacion->user?->name ?? 'Usuario no asignado' }}</td>
-                                <td>{{$cotizacion->monto}}</td>
                                 <td>{{$cotizacion->estado}}</td>
+                                <td>{{$cotizacion->monto}}</td>
                                 <td>{{$cotizacion->tipo}}</td>
+                                <td>
+                                    <!-- Botón para abrir modal -->
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
+                                        onclick="loadItems({{ $cotizacion->id }})">
+                                        Ver Partidas
+                                    </button>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -93,7 +104,6 @@
 
     <!-- Modales -->
 
-    <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -102,45 +112,153 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{{ route('cotizaciones.create') }}">
+                    <form action="{{ route('budgets.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        <!-- Datos de la OC -->
                         <div class="mb-3">
                             <label for="client" class="form-label">Cliente</label>
-                            <select class="form-control" id="cliente" name="client">
-                                <option value="">Seleccione un cliente</option>
-                                @foreach ($clientes as $client)
-                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                            <select class="form-control" id="client" name="client" required>
+                                @foreach ($clientes as $cliente)
+                                <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="monto" class="form-label">Monto</label>
-                            <input type="number" class="form-control" id="monto" name="monto" placeholder="Monto de la cotización">
-                        </div>
-                        <div class="mb-3">
-                            <label for="estado" class="form-label">Estado</label>
-                            <select class="form-select" id="estado" name="estado">
-                                <option selected>Seleccionar estado</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="aprobado">Aprobado</option>
-                                <option value="rechazado">Rechazado</option>
-                            </select>
-                        </div>
+                        <!-- Datos de la OC -->
                         <div class="mb-3">
                             <label for="tipo" class="form-label">Tipo</label>
-                            <input type="text" class="form-control" id="tipo" name="tipo" placeholder="Tipo de cotización">
+                            <select class="form-control" id="tipo" name="tipo" required>
+                                <option value="urgencia">Urgencia</option>
+                                <option value="generica">Generica</option>
+                            </select>
                         </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar Cotización</button>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>P/U</th>
+                                        <th>Imagen</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Fila inicial de ejemplo -->
+                                    <tr>
+                                        <td>
+                                            <input type="text" class="form-control" name="items[0][descripcion]" placeholder="Descripción" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" name="items[0][cantidad]" placeholder="Cantidad" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control" step="0.01" name="items[0][precio_unitario]" placeholder="Precio Unitario" required>
+                                        </td>
+                                        <td>
+                                            <input type="file" class="form-control" name="items[0][imagen]" accept="image/*">
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-danger btn-sm delete-row">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+                        <!-- Botón para agregar filas -->
+                        <button type="button" id="add-row" class="btn btn-primary mb-3"> + Partida</button>
+                        <button type="submit" class="btn btn-success mb-3">Guardar</button>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
 
+
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="itemsModalLabel">Detalles del Presupuesto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let itemIndex = 1;
+
+        // Agregar fila
+        document.getElementById('add-row').addEventListener('click', () => {
+            const tableBody = document.querySelector('#items-table tbody');
+            const newRow = `
+            <tr>
+                <td>
+                    <input type="text" class="form-control" name="items[${itemIndex}][descripcion]" placeholder="Descripción">
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="items[${itemIndex}][cantidad]" placeholder="Cantidad">
+                </td>
+                <td>
+                    <input type="number" class="form-control" step="0.01" name="items[${itemIndex}][precio_unitario]" placeholder="Precio Unitario">
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm delete-row">-</button>
+                </td>
+            </tr>
+        `;
+            tableBody.insertAdjacentHTML('beforeend', newRow);
+            itemIndex++;
+        });
+
+        // Eliminar fila
+        document.querySelector('#items-table').addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-row')) {
+                const row = event.target.closest('tr');
+                row.remove();
+            }
+        });
+    </script>
+
+    <script>
+        function loadItems(budgetId) {
+            // Realiza una solicitud AJAX para obtener los items del presupuesto
+            fetch(`/budgets/${budgetId}/items`)
+                .then(response => response.json())
+                .then(items => {
+                    const tbody = document.getElementById('itemsTableBody');
+                    tbody.innerHTML = ''; // Limpiar datos anteriores
+                    items.forEach(item => {
+                        const row = `
+                    <tr>
+                        <td>${item.descripcion}</td>
+                        <td>${item.cantidad}</td>
+                        <td>${item.precio_unitario}</td>
+                        <td>${item.subtotal}</td>
+                    </tr>
+                `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error al cargar los items:', error));
+        }
+    </script>
 </x-app-layout>

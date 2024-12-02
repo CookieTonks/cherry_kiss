@@ -9,6 +9,15 @@ class Budget extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'client_id',
+        'user_id',
+        'estado',
+        'codigo',
+        'monto',
+        'tipo'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -17,5 +26,10 @@ class Budget extends Model
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class); // Relación con partidas
     }
 }

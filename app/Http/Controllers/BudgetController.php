@@ -4,86 +4,121 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Client;
-
 use Illuminate\Http\Request;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Log;
+use App\Helpers\StringHelper;
 
 class BudgetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
     {
+        $estado = $request->query('estado');
+        $userId = auth()->id();
+
+        // Obtener cotizaciones según el estado
+        $cotizaciones = Budget::where('user_id', $userId)
+            ->when($estado, function ($query) use ($estado) {
+                $query->where('estado', strtoupper($estado));
+            })
+            ->get();
+
+        // Calcular el total por estado
+        $totales = [
+            'abiertas' => Budget::where('user_id', $userId)->where('estado', 'ABIERTA')->count(),
+            'pendientes' => Budget::where('user_id', $userId)->where('estado', 'PENDIENTE')->count(),
+            'cerradas' => Budget::where('user_id', $userId)->where('estado', 'CERRADA')->count(),
+        ];
 
 
-        $cotizaciones = Budget::where('user_id', auth()->id())->get();
         $clientes = Client::all();
 
-        return view('vistas.budget.home', compact('cotizaciones', 'clientes'));
+
+        return view('vistas.budget.home', compact('cotizaciones', 'estado', 'totales', 'clientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
-    {
 
-        try {
-            // Crear una nueva instancia de Budget
-            $budget = new Budget();
-            $budget->client_id = $request->client;
-            $budget->user_id = auth()->id(); // Obtener el ID del usuario autenticado
-            $budget->estado = $request->estado;
-            $budget->monto = $request->monto;
-            $budget->tipo = $request->tipo;
-            $budget->save();
 
-            // Redirigir con un mensaje de éxito
-            return redirect()->route('cotizaciones.home')->with('success', 'Cotizacion creada exitosamente');
-        } catch (\Throwable $th) {
-            // Si ocurre un error, capturamos la excepción y retornamos con un mensaje de error
-            return redirect()->route('cotizaciones.home')->with('error', 'Hubo un problema al crear el presupuesto. Intenta de nuevo.');
-        }
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
-        //
+
+
+        // try {
+            // Crear el presupuesto
+            $this->createBudget($request);
+
+            // Redirigir con mensaje de éxito
+            return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
+        // } catch (\Throwable $th) {
+            // Manejar error
+            Log::error('Error al crear el presupuesto: ' . $th->getMessage());
+            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
+        // }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Budget $budget)
+
+    public function createBudget(Request $request)
     {
-        //
+        // Convertir datos generales a mayúsculas
+        $data = [
+            'client_id' => $request->client,
+            'estado' => $request->estado,
+            'tipo' => $request->tipo,
+        ];
+
+        // Especificamos los campos que queremos convertir
+        $fieldsToUpper = ['estado', 'tipo'];
+
+        $data = StringHelper::convertToUpperCase($data, $fieldsToUpper);
+
+        // Crear el presupuesto
+        $budget = Budget::create([
+            'client_id' => $data['client_id'],
+            'user_id' => auth()->id(),
+            'estado' => 'ABIERTA',  // Estado convertido a mayúsculas
+            'codigo' => 'OC-' . (Budget::max('id') + 1),
+            'tipo' => $data['tipo'],  // Tipo convertido a mayúsculas
+            'monto' => 0
+        ]);
+
+        $total = 0;
+
+        // Crear partidas y convertir descripciones de items a mayúsculas
+        $items = StringHelper::convertItemsToUpperCase($request->items);
+
+        foreach ($request->items as $index => $item) {
+            $path = null;
+
+
+            if (isset($item['imagen']) && $item['imagen']->isValid()) {
+                $path = $item['imagen']->store('partidas-imagenes', 'public');
+            }
+
+
+            $budget->items()->create([
+                'descripcion' => $item['descripcion'],
+                'cantidad' => $item['cantidad'],
+                'precio_unitario' => $item['precio_unitario'],
+                'subtotal' => $item['cantidad'] * $item['precio_unitario'],
+                'imagen' => $path,
+            ]);
+        }
+
+        // Actualizar el monto total
+        $budget->update([
+            'monto' => $total,
+        ]);
+
+        return $budget;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Budget $budget)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Budget $budget)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Budget $budget)
+
+    public function getItems($budgetId)
     {
-        //
+        $budget = Budget::findOrFail($budgetId);
+        return response()->json($budget->items);
     }
 }

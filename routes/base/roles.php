@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RolePermissionController;
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::middleware(['can:ver_permisos'])->group(function () {
+    // Route::middleware(['can:ver_permisos'])->group(function () {
         Route::get('/roles', [RolePermissionController::class, 'index'])->name('roles.home');
         Route::post('/roles/store', [RolePermissionController::class, 'storeRole'])->name('roles.store');
         Route::post('/roles/assign', [RolePermissionController::class, 'assignRole'])->name('roles.assign');
@@ -19,5 +19,5 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/permissions/create', [RolePermissionController::class, 'createPermission'])->name('permissions.create');
         Route::post('/permissions/give', [RolePermissionController::class, 'givePermissionToUser'])->name('permissions.give');
         Route::post('/permissions/revoke', [RolePermissionController::class, 'revokePermissionFromUser'])->name('permissions.revoke');
-    });
+    // });
 });

@@ -140,7 +140,7 @@
                                         <th>Descripción</th>
                                         <th>Cantidad</th>
                                         <th>P/U</th>
-                                        <th>Imagen</th>
+                                        <th>PDF</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -157,7 +157,7 @@
                                             <input type="number" class="form-control" step="0.01" name="items[0][precio_unitario]" placeholder="Precio Unitario" required>
                                         </td>
                                         <td>
-                                            <input type="file" class="form-control" name="items[0][imagen]" accept="image/*">
+                                            <input type="file" class="form-control" name="items[0][pdf]" accept="pdf/*">
                                         </td>
                                         <td class="text-center">
                                             <button type="button" class="btn btn-danger btn-sm delete-row">Eliminar</button>
@@ -219,6 +219,9 @@
                 </td>
                 <td>
                     <input type="number" class="form-control" step="0.01" name="items[${itemIndex}][precio_unitario]" placeholder="Precio Unitario">
+                </td>
+                <td>
+                    <input type="file" class="form-control" name="items[0][pdf]" accept="pdf/*">
                 </td>
                 <td class="text-center">
                     <button type="button" class="btn btn-danger btn-sm delete-row">-</button>

@@ -7,6 +7,11 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\StringHelper;
+use setasign\Fpdi\Fpdi;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class BudgetController extends Controller
 {
@@ -42,18 +47,13 @@ class BudgetController extends Controller
 
     public function store(Request $request)
     {
-
-
         // try {
-            // Crear el presupuesto
-            $this->createBudget($request);
+        $this->createBudget($request);
 
-            // Redirigir con mensaje de éxito
-            return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
+        //     return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
         // } catch (\Throwable $th) {
-            // Manejar error
-            Log::error('Error al crear el presupuesto: ' . $th->getMessage());
-            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
+        //     Log::error('Error al crear el presupuesto: ' . $th->getMessage());
+        //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
         // }
     }
 
@@ -86,24 +86,46 @@ class BudgetController extends Controller
 
         // Crear partidas y convertir descripciones de items a mayúsculas
         $items = StringHelper::convertItemsToUpperCase($request->items);
-
         foreach ($request->items as $index => $item) {
+
             $path = null;
 
+            if (isset($item['pdf']) && $item['pdf']->isValid()) {
+                // 1. Guarda el archivo original
+                $originalPath = $item['pdf']->store('partidas-imagenes', 'public');
+                $originalPdfPath = storage_path('app/public/' . $originalPath);
 
-            if (isset($item['imagen']) && $item['imagen']->isValid()) {
-                $path = $item['imagen']->store('partidas-imagenes', 'public');
+                // 2. Combina con FPDI
+                $fpdi = new FPDI();
+                $pageCount = $fpdi->setSourceFile($originalPdfPath);
+
+                // Ruta del archivo final
+                $processedPath = 'partidas-imagenes/processed-' . basename($originalPath);
+                $processedPdfPath = storage_path('app/public/' . $processedPath);
+
+                // Importa las páginas del PDF original y agrega el logo y el footer
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $templateId = $fpdi->importPage($i);
+                    $fpdi->AddPage('L'); // Forzar a Landscape (horizontal)
+                    $fpdi->useTemplate($templateId);
+
+                    // Agregar el logo a la página
+                    $fpdi->Image(storage_path('app/public/logo.png'), 10, 10, 20); // Logo en la parte superior izquierda
+                    $fpdi->SetY(10); // Posicionar el footer en la parte inferior
+                    $fpdi->SetFont('Arial', '', 12);
+                    $fpdi->Cell(0, 2, $budget->codigo, 0, 0, 'C'); // El código en el centro del footer
+                }
+
+                // 3. Guardar el PDF procesado
+                $fpdi->Output($processedPdfPath, 'F');
+
+                // El path del archivo final procesado
+                $path = $processedPath;
             }
-
-
-            $budget->items()->create([
-                'descripcion' => $item['descripcion'],
-                'cantidad' => $item['cantidad'],
-                'precio_unitario' => $item['precio_unitario'],
-                'subtotal' => $item['cantidad'] * $item['precio_unitario'],
-                'imagen' => $path,
-            ]);
         }
+
+
+
 
         // Actualizar el monto total
         $budget->update([

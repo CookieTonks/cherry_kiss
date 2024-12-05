@@ -14,7 +14,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones abiertas
+                                Cotizaciones abiertas: {{$totales['abiertas']}}
                             </a>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'PENDIENTE']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones pendientes
+                                Cotizaciones pendientes: {{$totales['pendientes']}}
                             </a>
                         </div>
                     </div>
@@ -36,7 +36,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ENTREGADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones entregadas
+                                Cotizaciones entregadas: {{$totales['cerradas']}}
                             </a>
                         </div>
                     </div>
@@ -72,23 +72,31 @@
                                 <th data-field="total" data-sortable="true">Monto</th>
                                 <th data-field="tipo" data-sortable="true">Tipo</th>
                                 <th data-field="partidas" data-sortable="true">Partidas</th>
+                                <th data-field="acciones" data-sortable="true">Acciones</th>
+
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($cotizaciones as $cotizacion)
+                            @foreach($budgets as $budget)
                             <tr>
-                                <td>{{$cotizacion->id}}</td>
-                                <td>{{ $cotizacion->client?->name ?? 'Cliente no asignado' }}</td>
-                                <td>{{ $cotizacion->user?->name ?? 'Usuario no asignado' }}</td>
-                                <td>{{$cotizacion->estado}}</td>
-                                <td>{{$cotizacion->monto}}</td>
-                                <td>{{$cotizacion->tipo}}</td>
+                                <td>{{$budget->id}}</td>
+                                <td>{{ $budget->client?->name ?? 'Cliente no asignado' }}</td>
+                                <td>{{ $budget->user?->name ?? 'Usuario no asignado' }}</td>
+                                <td>{{$budget->estado}}</td>
+                                <td>{{$budget->monto}}</td>
+                                <td>{{$budget->tipo}}</td>
                                 <td>
                                     <!-- Botón para abrir modal -->
                                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
-                                        onclick="loadItems({{ $cotizacion->id }})">
+                                        onclick="loadItems({{ $budget->id }})">
                                         Ver Partidas
                                     </button>
+                                </td>
+
+                                <td>
+                                    <a href="{{ route('budgets.show', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
+                                        Opciones
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -105,7 +113,7 @@
     <!-- Modales -->
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Formulario de Nueva Cotización</h5>
@@ -118,8 +126,8 @@
                         <div class="mb-3">
                             <label for="client" class="form-label">Cliente</label>
                             <select class="form-control" id="client" name="client" required>
-                                @foreach ($clientes as $cliente)
-                                <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
+                                @foreach ($clients as $client)
+                                <option value="{{ $client->id }}">{{ $client->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -162,6 +170,7 @@
                                         <td class="text-center">
                                             <button type="button" class="btn btn-danger btn-sm delete-row">Eliminar</button>
                                         </td>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -191,6 +200,8 @@
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
                                 <th>Subtotal</th>
+                                <th>PDF</th>
+
                             </tr>
                         </thead>
                         <tbody id="itemsTableBody">
@@ -224,8 +235,10 @@
                     <input type="file" class="form-control" name="items[0][pdf]" accept="pdf/*">
                 </td>
                 <td class="text-center">
-                    <button type="button" class="btn btn-danger btn-sm delete-row">-</button>
+                    <button type="button" class="btn btn-danger btn-sm delete-row">Eliminar</button>
                 </td>
+                
+                
             </tr>
         `;
             tableBody.insertAdjacentHTML('beforeend', newRow);
@@ -256,6 +269,9 @@
                         <td>${item.cantidad}</td>
                         <td>${item.precio_unitario}</td>
                         <td>${item.subtotal}</td>
+                        <td>
+                            <a href="/storage/${item.imagen}" target="_blank">Ver PDF</a>
+                        </td>
                     </tr>
                 `;
                         tbody.innerHTML += row;

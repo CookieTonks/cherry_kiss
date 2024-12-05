@@ -21,7 +21,7 @@ class BudgetController extends Controller
         $userId = auth()->id();
 
         // Obtener cotizaciones según el estado
-        $cotizaciones = Budget::where('user_id', $userId)
+        $budgets = Budget::where('user_id', $userId)
             ->when($estado, function ($query) use ($estado) {
                 $query->where('estado', strtoupper($estado));
             })
@@ -35,26 +35,24 @@ class BudgetController extends Controller
         ];
 
 
-        $clientes = Client::all();
+
+        $clients = Client::all();
 
 
-        return view('vistas.budget.home', compact('cotizaciones', 'estado', 'totales', 'clientes'));
+        return view('vistas.budget.home', compact('budgets', 'estado', 'totales', 'clients'));
     }
-
-
-
 
 
     public function store(Request $request)
     {
-        // try {
-        $this->createBudget($request);
+        try {
+            $this->createBudget($request);
 
-        //     return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
-        // } catch (\Throwable $th) {
-        //     Log::error('Error al crear el presupuesto: ' . $th->getMessage());
-        //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
-        // }
+            return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
+        } catch (\Throwable $th) {
+            Log::error('Error al crear el presupuesto: ' . $th->getMessage());
+            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
+        }
     }
 
 
@@ -103,17 +101,34 @@ class BudgetController extends Controller
                 $processedPath = 'partidas-imagenes/processed-' . basename($originalPath);
                 $processedPdfPath = storage_path('app/public/' . $processedPath);
 
-                // Importa las páginas del PDF original y agrega el logo y el footer
+                // Importa las páginas del PDF original y ajusta tamaño
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $templateId = $fpdi->importPage($i);
-                    $fpdi->AddPage('L'); // Forzar a Landscape (horizontal)
+
+                    // Obtiene el tamaño y orientación de la página original
+                    $size = $fpdi->getTemplateSize($templateId);
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+
+                    // Crea una nueva página con las dimensiones originales
+                    $fpdi->AddPage($orientation, [$size['width'], $size['height']]);
+
+                    // Usa la plantilla de la página original
                     $fpdi->useTemplate($templateId);
 
                     // Agregar el logo a la página
                     $fpdi->Image(storage_path('app/public/logo.png'), 10, 10, 20); // Logo en la parte superior izquierda
-                    $fpdi->SetY(10); // Posicionar el footer en la parte inferior
-                    $fpdi->SetFont('Arial', '', 12);
-                    $fpdi->Cell(0, 2, $budget->codigo, 0, 0, 'C'); // El código en el centro del footer
+
+                    // Establecer las coordenadas y formato para agregar el código
+                    $fpdi->SetY(10);
+                    $fpdi->SetX($size['width'] - 60); // Ajustar según el tamaño de la página
+                    $fpdi->SetFillColor(200, 200, 200); // Fondo gris
+                    $fpdi->SetFont('Arial', '', 14);
+                    $fpdi->Cell(50, 10, $budget->codigo, 0, 0, 'C', true); // Agregar el código
+
+                    // Agregar pie de página
+                    $fpdi->SetY(-15); // Pie de página a 15mm del borde inferior
+                    $fpdi->SetFont('Arial', 'I', 8);
+                    // $fpdi->Cell(0, 10, 'Página ' . $fpdi->PageNo(), 0, 0, 'C');
                 }
 
                 // 3. Guardar el PDF procesado
@@ -122,10 +137,15 @@ class BudgetController extends Controller
                 // El path del archivo final procesado
                 $path = $processedPath;
             }
+
+            $budget->items()->create([
+                'descripcion' => $item['descripcion'],
+                'cantidad' => $item['cantidad'],
+                'precio_unitario' => $item['precio_unitario'],
+                'subtotal' => $item['cantidad'] * $item['precio_unitario'],
+                'imagen' => $path,
+            ]);
         }
-
-
-
 
         // Actualizar el monto total
         $budget->update([
@@ -136,11 +156,54 @@ class BudgetController extends Controller
     }
 
 
-
-
     public function getItems($budgetId)
     {
         $budget = Budget::findOrFail($budgetId);
         return response()->json($budget->items);
+    }
+
+    public function show($budgetId)
+    {
+
+        $budget = Budget::findorfail($budgetId);
+        $items = $budget->items;
+        return view('vistas.budget.show', compact('budget', 'items'));
+    }
+
+
+    public function make($budgetId)
+    {
+        $budget = Budget::findorfail($budgetId);
+        $items = $budget->items;
+
+        $html = view('vistas.budget.cot', compact('budget', 'items'))->render();
+
+        $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+
+        // Descargar el PDF
+        return $pdf->stream("budget_{$budget->id}.pdf");
+    }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Budget $budget)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Budget $budget)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Budget $budget)
+    {
+        //
     }
 }

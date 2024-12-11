@@ -7,6 +7,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\StringHelper;
+use App\Models\Item;
 use setasign\Fpdi\Fpdi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -173,7 +174,11 @@ class BudgetController extends Controller
 
     public function make($budgetId)
     {
-        $budget = Budget::findorfail($budgetId);
+        $budget = Budget::findOrFail($budgetId);
+        $totalSubtotal = $budget->items->sum('subtotal');
+        $budget->monto = $totalSubtotal;
+        $budget->save();
+
         $items = $budget->items;
 
         $html = view('vistas.budget.cot', compact('budget', 'items'))->render();
@@ -202,8 +207,96 @@ class BudgetController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Budget $budget)
+    public function destroyBudget(Budget $budget)
     {
         //
+    }
+
+    public function storeItem(Request $request, $budgetId)
+    {
+        try {
+            $budget = Budget::findOrFail($budgetId);
+
+            $path = null;
+
+            if (isset($item['pdf']) && $item['pdf']->isValid()) {
+                // 1. Guarda el archivo original
+                $originalPath = $item['pdf']->store('partidas-imagenes', 'public');
+                $originalPdfPath = storage_path('app/public/' . $originalPath);
+
+                // 2. Combina con FPDI
+                $fpdi = new FPDI();
+                $pageCount = $fpdi->setSourceFile($originalPdfPath);
+
+                // Ruta del archivo final
+                $processedPath = 'partidas-imagenes/processed-' . basename($originalPath);
+                $processedPdfPath = storage_path('app/public/' . $processedPath);
+
+                // Importa las páginas del PDF original y ajusta tamaño
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $templateId = $fpdi->importPage($i);
+
+                    // Obtiene el tamaño y orientación de la página original
+                    $size = $fpdi->getTemplateSize($templateId);
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+
+                    // Crea una nueva página con las dimensiones originales
+                    $fpdi->AddPage($orientation, [$size['width'], $size['height']]);
+
+                    // Usa la plantilla de la página original
+                    $fpdi->useTemplate($templateId);
+
+                    // Agregar el logo a la página
+                    $fpdi->Image(storage_path('app/public/logo.png'), 10, 10, 20); // Logo en la parte superior izquierda
+
+                    // Establecer las coordenadas y formato para agregar el código
+                    $fpdi->SetY(10);
+                    $fpdi->SetX($size['width'] - 60); // Ajustar según el tamaño de la página
+                    $fpdi->SetFillColor(200, 200, 200); // Fondo gris
+                    $fpdi->SetFont('Arial', '', 14);
+                    $fpdi->Cell(50, 10, $budget->codigo, 0, 0, 'C', true); // Agregar el código
+
+                    // Agregar pie de página
+                    $fpdi->SetY(-15); // Pie de página a 15mm del borde inferior
+                    $fpdi->SetFont('Arial', 'I', 8);
+                    // $fpdi->Cell(0, 10, 'Página ' . $fpdi->PageNo(), 0, 0, 'C');
+                }
+
+                // 3. Guardar el PDF procesado
+                $fpdi->Output($processedPdfPath, 'F');
+
+                // El path del archivo final procesado
+                $path = $processedPath;
+            }
+
+            $budget->items()->create([
+                'descripcion' => $request['descripcion'],
+                'cantidad' => $request['cantidad'],
+                'precio_unitario' => $request['precio_unitario'],
+                'subtotal' => $request['cantidad'] * $request['precio_unitario'],
+                'imagen' => $path,
+            ]);
+
+            return back()->with('success', '¡Partida agregada con éxito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Partida no agregada, intenta de nuevo!');
+        }
+    }
+
+
+    public function destroyItem($itemId)
+    {
+        try {
+            $item = Item::findOrFail($itemId);
+
+            if ($item->imagen && file_exists(public_path($item->imagen))) {
+                unlink(public_path($item->imagen));
+            }
+            $item->delete();
+
+            return back()->with('success', '¡Partida y archivo PDF borrados con éxito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Partida no eliminada, intenta de nuevo!');
+        }
     }
 }

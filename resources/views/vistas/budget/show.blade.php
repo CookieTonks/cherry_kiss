@@ -26,25 +26,32 @@
                             @foreach($items as $item)
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control" value="{{$item->descripcion}}" name="items[0][descripcion]" placeholder="Descripción" required>
+                                    {{$item->descripcion}}
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" value="{{$item->cantidad}}" name="items[0][cantidad]" placeholder="Cantidad" required>
+                                    {{$item->cantidad}}
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" value="{{$item->precio_unitario}}" step="0.01" name="items[0][precio_unitario]" placeholder="Precio Unitario" required>
+                                    {{$item->precio_unitario}}
                                 </td>
                                 <td>
-                                    <a href="{{ asset('storage/' . $item->imagen) }}" target="_blank">Ver PDF</a>
+                                    <a href="/storage/{{ $item->imagen }}" target="_blank">Ver PDF</a>
                                 </td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-danger btn-sm delete-row">Eliminar</button>
+                                    <form action="{{ route('item.destroy', ['itemId' => $item->id]) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm delete-row">Eliminar</button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+                <button type="button" id="add-row" class="btn btn-primary mb-3 text-end" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                    + Partida
+                </button>
             </div>
 
             <div class="py-12 text-end">
@@ -58,5 +65,43 @@
                 <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
             </div>
         </div>
+
+
+        <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addItemModalLabel">Agregar Partida</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('item.store', ['budgetId' => $budget->id] ) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Cantidad">
+                            </div>
+                            <div class="mb-3">
+                                <label for="precio_unitario" class="form-label">Precio Unitario</label>
+                                <input type="number" class="form-control" id="precio_unitario" name="precio_unitario" step="0.01" placeholder="Precio Unitario">
+                            </div>
+                            <div class="mb-3">
+                                <label for="pdf" class="form-label">Archivo PDF</label>
+                                <input type="file" class="form-control" id="pdf" name="pdf" accept="pdf/*">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-success mb-3">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </x-slot>
 </x-app-layout>

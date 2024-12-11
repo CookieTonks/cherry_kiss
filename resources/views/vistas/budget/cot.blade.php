@@ -67,7 +67,7 @@
         </tbody>
     </table>
     <div class="footer">
-        <p>Total: Monto de COT</p>
+        <p>Total: {{$budget->monto }}</p>
         <p>Gracias por su preferencia.</p>
     </div>
 </body>

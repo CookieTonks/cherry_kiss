@@ -55,6 +55,7 @@
             </div>
 
             <div class="py-12 text-end">
+                <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
                 <a href="{{ route('budgets.make', ['budgetId' => $budget->id]) }}" target="_blank" class="btn btn-success btn-sm">Crear Cotización</a>
                 <a href="{{ route('budgets.edit', ['budgetId' => $budget->id]) }}" target="_blank" class="btn btn-info btn-sm">Editar Cotización</a>
                 <a href="{{ route('budgets.destroy', ['budgetId' => $budget->id]) }}"
@@ -62,7 +63,6 @@
                     onclick="return confirm('¿Estás seguro de que deseas eliminar esta cotización?')">
                     Eliminar Cotización
                 </a>
-                <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
             </div>
         </div>
 
@@ -75,7 +75,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('item.store', ['budgetId' => $budget->id] ) }}" method="POST" enctype="multipart/form-data" >
+                        <form action="{{ route('item.store', ['budgetId' => $budget->id] ) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
                                 <label for="descripcion" class="form-label">Descripción</label>

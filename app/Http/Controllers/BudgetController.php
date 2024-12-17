@@ -191,9 +191,11 @@ class BudgetController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Budget $budget)
+    public function edit(Budget $budgetId)
     {
-        //
+        $budget = $budgetId;
+        $clients = Client::all();
+        return view('vistas.budget.edit', compact('budget', 'clients'));
     }
 
     /**
@@ -201,8 +203,18 @@ class BudgetController extends Controller
      */
     public function update(Request $request, Budget $budget)
     {
-        //
+
+        try {
+            // Actualizar el modelo
+            $budget->update($request->only(['descripcion', 'cantidad', 'precio_unitario']));
+
+
+            return back()->with('success', '¡Cotizacion modificada con éxito!');
+        } catch (\Exception $e) {
+            return back()->with('error', '¡Cotizacion no modificada, intenta de nuevo!');
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -214,14 +226,15 @@ class BudgetController extends Controller
 
     public function storeItem(Request $request, $budgetId)
     {
+
         try {
             $budget = Budget::findOrFail($budgetId);
 
             $path = null;
 
-            if (isset($item['pdf']) && $item['pdf']->isValid()) {
+            if (isset($request->pdf) && $request->pdf->isValid()) {
                 // 1. Guarda el archivo original
-                $originalPath = $item['pdf']->store('partidas-imagenes', 'public');
+                $originalPath = $request->pdf->store('partidas-imagenes', 'public');
                 $originalPdfPath = storage_path('app/public/' . $originalPath);
 
                 // 2. Combina con FPDI

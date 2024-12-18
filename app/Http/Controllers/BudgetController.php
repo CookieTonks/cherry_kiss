@@ -227,7 +227,7 @@ class BudgetController extends Controller
     public function storeItem(Request $request, $budgetId)
     {
 
-        try {
+        // try {
             $budget = Budget::findOrFail($budgetId);
 
             $path = null;
@@ -260,7 +260,7 @@ class BudgetController extends Controller
                     $fpdi->useTemplate($templateId);
 
                     // Agregar el logo a la página
-                    $fpdi->Image(storage_path('app/public/logo.png'), 10, 10, 20); // Logo en la parte superior izquierda
+                    $fpdi->Image(public_path('logo.png'), 10, 10, 20);
 
                     // Establecer las coordenadas y formato para agregar el código
                     $fpdi->SetY(10);
@@ -291,9 +291,9 @@ class BudgetController extends Controller
             ]);
 
             return back()->with('success', '¡Partida agregada con éxito!');
-        } catch (\Throwable $th) {
-            return back()->with('error', '¡Partida no agregada, intenta de nuevo!');
-        }
+        // } catch (\Throwable $th) {
+        //     return back()->with('error', '¡Partida no agregada, intenta de nuevo!');
+        // }
     }
 
 

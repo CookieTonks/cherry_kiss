@@ -58,6 +58,7 @@
                 <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
                 <a href="{{ route('budgets.make', ['budgetId' => $budget->id]) }}" target="_blank" class="btn btn-success btn-sm">Crear Cotización</a>
                 <a href="{{ route('budgets.edit', ['budgetId' => $budget->id]) }}" target="_blank" class="btn btn-info btn-sm">Editar Cotización</a>
+                <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalAssignOC">Aprobar</a>
                 <a href="{{ route('budgets.destroy', ['budgetId' => $budget->id]) }}"
                     class="btn btn-danger btn-sm"
                     onclick="return confirm('¿Estás seguro de que deseas eliminar esta cotización?')">
@@ -102,6 +103,55 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal fade" id="modalAssignOC" tabindex="-1" aria-labelledby="modalAssignOCTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAssignOCTitle">Asignar Orden de Compra y Cotización</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('budgets.assignOC', ['budgetId' => $budget->id]) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="assignOCCheck" name="assignOC" value="1" checked>
+                                <label class="form-check-label" for="assignOCCheck">
+                                    Ingresar OC del cliente
+                                </label>
+                            </div>
+                            <div class="mb-3" id="ocInputContainer">
+                                <label for="ocNumber" class="form-label">Número de Orden de Compra (OC)</label>
+                                <input type="text" class="form-control" id="ocNumber" name="ocNumber">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Enviar a produccion</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const assignOCCheck = document.getElementById('assignOCCheck');
+                const ocInputContainer = document.getElementById('ocInputContainer');
+
+                assignOCCheck.addEventListener('change', function() {
+                    if (this.checked) {
+                        ocInputContainer.style.display = 'block';
+                        document.getElementById('ocNumber').required = true;
+                    } else {
+                        ocInputContainer.style.display = 'none';
+                        document.getElementById('ocNumber').required = false;
+                    }
+                });
+            });
+        </script>
 
     </x-slot>
 </x-app-layout>

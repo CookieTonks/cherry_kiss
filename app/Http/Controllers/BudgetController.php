@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Budget;
 use App\Models\Client;
+use App\Models\ClientUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\StringHelper;
@@ -28,11 +29,17 @@ class BudgetController extends Controller
             })
             ->get();
 
+
+
+
+
         // Calcular el total por estado
         $totales = [
             'abiertas' => Budget::where('user_id', $userId)->where('estado', 'ABIERTA')->count(),
+            'proceso' => Budget::where('user_id', $userId)->where('estado', 'PROCESO')->count(),
             'pendientes' => Budget::where('user_id', $userId)->where('estado', 'PENDIENTE')->count(),
-            'cerradas' => Budget::where('user_id', $userId)->where('estado', 'CERRADA')->count(),
+            'entregadas' => Budget::where('user_id', $userId)->where('estado', 'ENTREGADAS')->count(),
+            'rechazadas' => Budget::where('user_id', $userId)->where('estado', 'CERRADA')->count(),
         ];
 
 
@@ -41,6 +48,24 @@ class BudgetController extends Controller
 
 
         return view('vistas.budget.home', compact('budgets', 'estado', 'totales', 'clients'));
+    }
+
+
+    public function getClientUsers($clientId)
+    {
+        // Obtener los ClientUser relacionados con el Cliente seleccionado
+        $client = Client::find($clientId);
+
+        // Verificar si el cliente existe
+        if (!$client) {
+            return response()->json(['error' => 'Cliente no encontrado'], 404);
+        }
+
+        // Obtener los ClientUsers relacionados
+        $clientUsers = $client->clientUsers; // Si tienes la relación correctamente definida como 'clientUsers'
+
+        // Devolver los datos en formato JSON
+        return response()->json($clientUsers);
     }
 
 
@@ -76,7 +101,7 @@ class BudgetController extends Controller
             'client_id' => $data['client_id'],
             'user_id' => auth()->id(),
             'estado' => 'ABIERTA',  // Estado convertido a mayúsculas
-            'codigo' => 'OC-' . (Budget::max('id') + 1),
+            'codigo' => 'COT-' . (Budget::max('id') + 1),
             'tipo' => $data['tipo'],  // Tipo convertido a mayúsculas
             'monto' => 0
         ]);
@@ -117,7 +142,7 @@ class BudgetController extends Controller
                     $fpdi->useTemplate($templateId);
 
                     // Agregar el logo a la página
-                    $fpdi->Image(storage_path('app/public/logo.png'), 10, 10, 20); // Logo en la parte superior izquierda
+                    $fpdi->Image(public_path('logo.png'), 10, 10, 20);
 
                     // Establecer las coordenadas y formato para agregar el código
                     $fpdi->SetY(10);
@@ -155,6 +180,42 @@ class BudgetController extends Controller
 
         return $budget;
     }
+
+    public function assignOC(Request $request, $budgetId)
+    {
+        $request->validate([
+            'assignOC' => 'nullable|boolean',
+            'ocNumber' => 'nullable|string|max:255',
+        ]);
+
+        $budget = Budget::findOrFail($budgetId);
+
+        // Verificar si el cliente asignó una OC
+        if ($request->has('assignOC') && $request->assignOC) {
+            $budget->oc_number = $request->ocNumber;
+            $budget->estado = 'PROCESO';
+        } else {
+
+            // Generar una OC interna si no fue asignada
+            $budget->oc_number = 'BAL-' . $budgetId;
+            $budget->estado = 'PROCESO';
+        }
+
+        $budget->save();
+
+        return redirect()->route('budgets.show', ['budgetId' => $budgetId])
+            ->with('success', 'Orden de Compra asignada correctamente.');
+    }
+
+
+    public function getUsersByClient($clientId)
+    {
+        $client = Client::find($clientId);
+
+        dd($client);
+        return response()->json(['client_user' => $client->user]);
+    }
+
 
 
     public function getItems($budgetId)
@@ -227,7 +288,7 @@ class BudgetController extends Controller
     public function storeItem(Request $request, $budgetId)
     {
 
-        // try {
+        try {
             $budget = Budget::findOrFail($budgetId);
 
             $path = null;
@@ -291,9 +352,9 @@ class BudgetController extends Controller
             ]);
 
             return back()->with('success', '¡Partida agregada con éxito!');
-        // } catch (\Throwable $th) {
-        //     return back()->with('error', '¡Partida no agregada, intenta de nuevo!');
-        // }
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Partida no agregada, intenta de nuevo!');
+        }
     }
 
 

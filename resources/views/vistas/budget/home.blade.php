@@ -8,20 +8,31 @@
 
     <div class="container">
         <div class="py-5">
-            <div class="row">
+
+            <div class="row justify-content-center">
                 <!-- Módulo 1 -->
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-2">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones abiertas: {{$totales['abiertas']}}
+                                Cotizaciones proceso: {{$totales['abiertas']}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-2">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Cotizaciones proceso: {{$totales['proceso']}}
                             </a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Módulo 2 -->
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-2">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'PENDIENTE']) }}" class="text-decoration-none text-dark fw-bold fs-5">
@@ -32,15 +43,28 @@
                 </div>
 
                 <!-- Módulo 3 -->
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-2">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ENTREGADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones entregadas: {{$totales['cerradas']}}
+                                Cotizaciones entregadas: {{$totales['entregadas']}}
                             </a>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-12 col-sm-2">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Cotizaciones rechazadas: {{$totales['rechazadas']}}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+
 
             </div>
         </div>
@@ -70,7 +94,7 @@
                                 <th data-field="supplier" data-sortable="true">Vendedor</th>
                                 <th data-field="status" data-sortable="true">Estado</th>
                                 <th data-field="total" data-sortable="true">Monto</th>
-                                <th data-field="tipo" data-sortable="true">Tipo</th>
+                                <th data-field="moneda" data-sortable="true">Moneda</th>
                                 <th data-field="partidas" data-sortable="true">Partidas</th>
                                 <th data-field="acciones" data-sortable="true">Acciones</th>
 
@@ -84,7 +108,7 @@
                                 <td>{{ $budget->user?->name ?? 'Usuario no asignado' }}</td>
                                 <td>{{$budget->estado}}</td>
                                 <td>{{$budget->monto}}</td>
-                                <td>{{$budget->tipo}}</td>
+                                <td>{{$budget->moneda}}</td>
                                 <td>
                                     <!-- Botón para abrir modal -->
                                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
@@ -126,18 +150,27 @@
                         <div class="mb-3">
                             <label for="client" class="form-label">Cliente</label>
                             <select class="form-control" id="client" name="client" required>
+                                <option value="">Selecciona una empresa</option>
+
                                 @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                                 @endforeach
                             </select>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="clientUser" class="form-label">Usuario de Cliente</label>
+                            <select class="form-control" id="clientUser" name="clientUser" disabled>
+                                <option value="">Selecciona un usuario de cliente</option>
+                            </select>
+                        </div>
+
                         <!-- Datos de la OC -->
                         <div class="mb-3">
-                            <label for="tipo" class="form-label">Tipo</label>
-                            <select class="form-control" id="tipo" name="tipo" required>
-                                <option value="urgencia">Urgencia</option>
-                                <option value="generica">Generica</option>
+                            <label for="moneda" class="form-label">Moneda</label>
+                            <select class="form-control" id="moneda" name="moneda" required>
+                                <option value="MXN">MXN</option>
+                                <option value="USD">USD</option>
                             </select>
                         </div>
 
@@ -280,4 +313,43 @@
                 .catch(error => console.error('Error al cargar los items:', error));
         }
     </script>
+
+
+    <script>
+        // Event listener para detectar cuando cambia el cliente seleccionado
+        document.getElementById('client').addEventListener('change', function() {
+            var clientId = this.value;
+            var clientUserSelect = document.getElementById('clientUser');
+
+            if (clientId) {
+                // Hacer una petición para obtener los usuarios del cliente
+                fetch(`/getClientUsers/${clientId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Limpiar las opciones actuales
+                        clientUserSelect.innerHTML = '<option value="">Selecciona un usuario de cliente</option>';
+
+                        // Habilitar el campo de selección
+                        clientUserSelect.disabled = false;
+
+                        // Llenar el select con los usuarios de cliente
+                        data.forEach(function(clientUser) {
+                            var option = document.createElement('option');
+                            option.value = clientUser.id;
+                            option.textContent = clientUser.name;
+                            clientUserSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching client users:', error);
+                        clientUserSelect.disabled = true; // Deshabilitar en caso de error
+                    });
+            } else {
+                // Si no hay cliente seleccionado, deshabilitar el campo de usuario de cliente
+                clientUserSelect.innerHTML = '<option value="">Selecciona un usuario de cliente</option>';
+                clientUserSelect.disabled = true;
+            }
+        });
+    </script>
+
 </x-app-layout>

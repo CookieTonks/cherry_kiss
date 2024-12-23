@@ -14,8 +14,11 @@ class Budget extends Model
         'user_id',
         'estado',
         'codigo',
+        'moneda',
         'monto',
-        'tipo'
+        'oc_number',
+        'delivery_time',
+        'client_user_id'
     ];
 
     public function user()

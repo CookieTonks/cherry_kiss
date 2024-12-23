@@ -71,14 +71,15 @@ class BudgetController extends Controller
 
     public function store(Request $request)
     {
-        try {
+
+        // try {
             $this->createBudget($request);
 
             return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
-        } catch (\Throwable $th) {
-            Log::error('Error al crear el presupuesto: ' . $th->getMessage());
-            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
-        }
+        // } catch (\Throwable $th) {
+        //     Log::error('Error al crear el presupuesto: ' . $th->getMessage());
+        //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
+        // }
     }
 
 
@@ -87,12 +88,14 @@ class BudgetController extends Controller
         // Convertir datos generales a mayúsculas
         $data = [
             'client_id' => $request->client,
-            'estado' => $request->estado,
-            'tipo' => $request->tipo,
+            'moneda' => $request->moneda,
+            'client_user_id' => $request->clientUser,
+            'delivery_time' => $request->deliveryTime,
+
         ];
 
         // Especificamos los campos que queremos convertir
-        $fieldsToUpper = ['estado', 'tipo'];
+        $fieldsToUpper = ['estado', 'moneda'];
 
         $data = StringHelper::convertToUpperCase($data, $fieldsToUpper);
 
@@ -102,7 +105,9 @@ class BudgetController extends Controller
             'user_id' => auth()->id(),
             'estado' => 'ABIERTA',  // Estado convertido a mayúsculas
             'codigo' => 'COT-' . (Budget::max('id') + 1),
-            'tipo' => $data['tipo'],  // Tipo convertido a mayúsculas
+            'moneda' => $data['moneda'],
+            'delivery_time' => $data['delivery_time'],
+            'client_user_id' => $data['client_user_id'],
             'monto' => 0
         ]);
 

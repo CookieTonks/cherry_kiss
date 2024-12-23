@@ -174,6 +174,11 @@
                             </select>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="delivery_time" class="form-label">Tiempo de Entrega</label>
+                            <input type="number" class="form-control" id="delivery_time" name="delivery_time" required>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="table table-bordered" id="items-table">
                                 <thead>

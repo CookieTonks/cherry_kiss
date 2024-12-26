@@ -12,6 +12,7 @@ use App\Models\Item;
 use setasign\Fpdi\Fpdi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 
 
@@ -73,9 +74,9 @@ class BudgetController extends Controller
     {
 
         // try {
-            $this->createBudget($request);
+        $this->createBudget($request);
 
-            return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
+        return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
         // } catch (\Throwable $th) {
         //     Log::error('Error al crear el presupuesto: ' . $th->getMessage());
         //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
@@ -85,12 +86,13 @@ class BudgetController extends Controller
 
     public function createBudget(Request $request)
     {
+
         // Convertir datos generales a mayúsculas
         $data = [
             'client_id' => $request->client,
             'moneda' => $request->moneda,
             'client_user_id' => $request->clientUser,
-            'delivery_time' => $request->deliveryTime,
+            'delivery_time' => $request->delivery_time,
 
         ];
 
@@ -195,15 +197,19 @@ class BudgetController extends Controller
 
         $budget = Budget::findOrFail($budgetId);
 
+        $delivery_date = Carbon::now()->addDays($budget->delivery_time);
+
         // Verificar si el cliente asignó una OC
         if ($request->has('assignOC') && $request->assignOC) {
             $budget->oc_number = $request->ocNumber;
             $budget->estado = 'PROCESO';
+            $budget->delivery_date = $delivery_date;
         } else {
 
             // Generar una OC interna si no fue asignada
             $budget->oc_number = 'BAL-' . $budgetId;
             $budget->estado = 'PROCESO';
+            $budget->delivery_date = $delivery_date;
         }
 
         $budget->save();
@@ -216,8 +222,6 @@ class BudgetController extends Controller
     public function getUsersByClient($clientId)
     {
         $client = Client::find($clientId);
-
-        dd($client);
         return response()->json(['client_user' => $client->user]);
     }
 

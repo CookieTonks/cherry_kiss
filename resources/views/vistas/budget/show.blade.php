@@ -43,6 +43,9 @@
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm delete-row">Eliminar</button>
                                     </form>
+
+                                    <a href="#" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalModifyItem">Editar</a>
+
                                 </td>
                             </tr>
                             @endforeach
@@ -110,6 +113,36 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalAssignOCTitle">Asignar Orden de Compra y Cotización</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('budgets.assignOC', ['budgetId' => $budget->id]) }}">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="assignOCCheck" name="assignOC" value="1" checked>
+                                <label class="form-check-label" for="assignOCCheck">
+                                    Ingresar OC del cliente
+                                </label>
+                            </div>
+                            <div class="mb-3" id="ocInputContainer">
+                                <label for="ocNumber" class="form-label">Número de Orden de Compra (OC)</label>
+                                <input type="text" class="form-control" id="ocNumber" name="ocNumber">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Enviar a produccion</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalModifyItem" tabindex="-1" aria-labelledby="modalModifyItemTitle" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalModifyItemTitle">Modificar partida</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="POST" action="{{ route('budgets.assignOC', ['budgetId' => $budget->id]) }}">

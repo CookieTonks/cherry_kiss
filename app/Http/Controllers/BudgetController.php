@@ -13,6 +13,7 @@ use setasign\Fpdi\Fpdi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\Proceso;
 
 
 
@@ -191,33 +192,54 @@ class BudgetController extends Controller
 
     public function assignOC(Request $request, $budgetId)
     {
-        $request->validate([
-            'assignOC' => 'nullable|boolean',
-            'ocNumber' => 'nullable|string|max:255',
-        ]);
+        try {
+            // Validar los datos de entrada
+            $request->validate([
+                'assignOC' => 'nullable|boolean',
+                'ocNumber' => 'nullable|string|max:255',
+            ]);
 
-        $budget = Budget::findOrFail($budgetId);
+            // Buscar el presupuesto
+            $budget = Budget::findOrFail($budgetId);
 
-        $delivery_date = Carbon::now()->addDays($budget->delivery_time);
+            // Calcular la fecha de entrega
+            $delivery_date = Carbon::now()->addDays($budget->delivery_time);
 
-        // Verificar si el cliente asignó una OC
-        if ($request->has('assignOC') && $request->assignOC) {
-            $budget->oc_number = $request->ocNumber;
-            $budget->estado = 'PROCESO';
-            $budget->delivery_date = $delivery_date;
-        } else {
+            // Verificar si el cliente asignó una OC
+            if ($request->has('assignOC') && $request->assignOC) {
+                $budget->oc_number = $request->ocNumber;
+                $budget->estado = 'PROCESO';
+                $budget->delivery_date = $delivery_date;
+            } else {
+                // Generar una OC interna si no fue asignada
+                $budget->oc_number = 'BAL-' . $budgetId;
+                $budget->estado = 'PROCESO';
+                $budget->delivery_date = $delivery_date;
+            }
 
-            // Generar una OC interna si no fue asignada
-            $budget->oc_number = 'BAL-' . $budgetId;
-            $budget->estado = 'PROCESO';
-            $budget->delivery_date = $delivery_date;
+            // Crear o encontrar un proceso relacionado con el presupuesto
+            Proceso::firstOrCreate([
+                'budget_id' => $budget->id,
+                'cotizaciones' => 1,
+            ]);
+
+            // Guardar los cambios en el presupuesto
+            $budget->save();
+
+            // Redirigir con mensaje de éxito
+            return redirect()->route('budgets.show', ['budgetId' => $budgetId])
+                ->with('success', 'Orden de Compra asignada correctamente.');
+        } catch (\Exception $e) {
+            // Manejar la excepción
+            // Registrar el error en el log
+            \Log::error('Error al asignar la Orden de Compra: ' . $e->getMessage());
+
+            // Devolver un mensaje de error al usuario
+            return redirect()->route('budgets.show', ['budgetId' => $budgetId])
+                ->with('error', 'Ocurrió un error al asignar la Orden de Compra. Intenta nuevamente.');
         }
-
-        $budget->save();
-
-        return redirect()->route('budgets.show', ['budgetId' => $budgetId])
-            ->with('success', 'Orden de Compra asignada correctamente.');
     }
+
 
 
     public function getUsersByClient($clientId)

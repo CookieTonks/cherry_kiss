@@ -40,4 +40,8 @@ class Budget extends Model
     {
         return $this->belongsTo(ClientUser::class, 'client_user_id');
     }
+    public function materiales()
+    {
+        return $this->hasMany(Material::class);
+    }
 }

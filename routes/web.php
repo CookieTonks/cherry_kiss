@@ -24,7 +24,7 @@ Route::get('/dashboard', function () {
 Route::group([], base_path('routes/base/budget.php'));
 Route::group([], base_path('routes/base/profiles.php'));
 Route::group([], base_path('routes/base/roles.php'));
-Route::group([], base_path('routes/base/orders.php'));
+Route::group([], base_path('routes/base/materials.php'));
 
 
 

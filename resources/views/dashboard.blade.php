@@ -33,8 +33,8 @@
                 <div class="col-12 col-sm-4">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('ordenes.home') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Ordenes
+                            <a href="{{ route('materiales.home') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Orden Trabajo / Materiales
                             </a>
                         </div>
                     </div>

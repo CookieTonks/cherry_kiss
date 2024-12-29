@@ -90,22 +90,23 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th data-field="id" data-sortable="true">ID</th>
-                                <th data-field="orderNumber" data-sortable="true">Cliente</th>
-                                <th data-field="supplier" data-sortable="true">Vendedor</th>
+                                <th data-field="orderNumber" data-sortable="true">Empresa</th>
+                                <th data-field="supplier" data-sortable="true">Usuario</th>
+                                <th data-field="sales" data-sortable="true">Vendedor</th>
                                 <th data-field="status" data-sortable="true">Estado</th>
                                 <th data-field="total" data-sortable="true">Monto</th>
                                 <th data-field="moneda" data-sortable="true">Moneda</th>
                                 <th data-field="partidas" data-sortable="true">Partidas</th>
                                 <th data-field="acciones" data-sortable="true">Acciones</th>
-
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($budgets as $budget)
                             <tr>
                                 <td>{{$budget->id}}</td>
-                                <td>{{ $budget->client?->name ?? 'Cliente no asignado' }}</td>
-                                <td>{{ $budget->user?->name ?? 'Usuario no asignado' }}</td>
+                                <td>{{ $budget->client?->name ?? 'Empresa no asignada' }}</td>
+                                <td> {{ $budget->clientUser?->name ?? 'Usuario no asignado' }} </td>
+                                <td>{{ $budget->user?->name ?? 'Vendedor no asignado' }}</td>
                                 <td>{{$budget->estado}}</td>
                                 <td>{{$budget->monto}}</td>
                                 <td>{{$budget->moneda}}</td>

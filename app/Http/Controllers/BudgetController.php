@@ -25,14 +25,12 @@ class BudgetController extends Controller
         $userId = auth()->id();
 
         // Obtener cotizaciones según el estado
-        $budgets = Budget::where('user_id', $userId)
+        $budgets = Budget::with(['client', 'user', 'clientUser'])
+            ->where('user_id', $userId)
             ->when($estado, function ($query) use ($estado) {
                 $query->where('estado', strtoupper($estado));
             })
             ->get();
-
-
-
 
 
         // Calcular el total por estado

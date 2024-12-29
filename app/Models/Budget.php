@@ -44,4 +44,9 @@ class Budget extends Model
     {
         return $this->hasMany(Material::class);
     }
+
+    public function proceso()
+    {
+        return $this->hasOne(Proceso::class);
+    }
 }

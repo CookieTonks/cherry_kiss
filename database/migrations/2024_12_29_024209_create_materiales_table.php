@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('materiales', function (Blueprint $table) {
+        Schema::create('materials', function (Blueprint $table) {
             $table->id();
             $table->foreignId('budget_id')->constrained()->onDelete('cascade'); // Relación con la tabla de presupuestos
-            $table->string('nombre');  // Nombre del material
+            $table->string('descripcion');  // Nombre del material
             $table->integer('cantidad'); // Cantidad solicitada
             $table->decimal('precio_unitario', 10, 2); // Precio unitario
             $table->enum('estatus', ['pendiente', 'en proceso', 'entregado'])->default('pendiente'); // Estatus de la solicitud

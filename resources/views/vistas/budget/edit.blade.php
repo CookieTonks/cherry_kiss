@@ -6,7 +6,7 @@
                     @csrf
                     <!-- Datos de la OC -->
                     <div class="mb-3">
-                        <label for="client" class="form-label">Cliente</label>
+                        <label for="client" class="form-label">Empresa</label>
                         <select class="form-control" id="client" name="client" required>
                             <option value="{{ $budget->client_id }}" selected>{{ $budget->client->name }}</option>
                             @foreach ($clients as $client)
@@ -16,7 +16,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="clientUser" class="form-label">Usuario de Cliente</label>
+                        <label for="clientUser" class="form-label">Usuario de Empresa</label>
                         <select class="form-control" id="clientUser" name="client_user_id" disabled>
                             <option value="{{ $budget->client_user_id }}" selected>{{ $budget->clientUser->name }}</option>
                         </select>

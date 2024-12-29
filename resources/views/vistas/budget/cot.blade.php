@@ -67,7 +67,7 @@
         </tbody>
     </table>
     <div class="footer">
-        <p>Total: {{$budget->monto }}</p>
+        <p>Total con IVA (16%): ${{ $budget->monto + ($budget->monto * 0.16) }}</p>
         <p>Gracias por su preferencia.</p>
     </div>
 </body>

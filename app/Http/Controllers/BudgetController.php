@@ -73,14 +73,14 @@ class BudgetController extends Controller
     public function store(Request $request)
     {
 
-        // try {
-        $this->createBudget($request);
+        try {
+            $this->createBudget($request);
 
-        return redirect()->route('budgets.index')->with('success', 'Orden de Compra creada con éxito.');
-        // } catch (\Throwable $th) {
-        //     Log::error('Error al crear el presupuesto: ' . $th->getMessage());
-        //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear el presupuesto.');
-        // }
+            return redirect()->route('budgets.index')->with('success', 'Cotizacion creada con éxito.');
+        } catch (\Throwable $th) {
+            Log::error('Error al crear el cotizacion: ' . $th->getMessage());
+            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear la cotizacion.');
+        }
     }
 
 
@@ -156,7 +156,8 @@ class BudgetController extends Controller
                     $fpdi->SetX($size['width'] - 60); // Ajustar según el tamaño de la página
                     $fpdi->SetFillColor(200, 200, 200); // Fondo gris
                     $fpdi->SetFont('Arial', '', 14);
-                    $fpdi->Cell(50, 10, $budget->codigo, 0, 0, 'C', true); // Agregar el código
+                    $fpdi->Cell(50, 10, $budget->codigo, 0, 0, 'C', true);
+
 
                     // Agregar pie de página
                     $fpdi->SetY(-15); // Pie de página a 15mm del borde inferior
@@ -271,14 +272,13 @@ class BudgetController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Budget $budget)
+    public function update(Request $request, $budgetId)
     {
 
+        $budget = Budget::findorfail($budgetId);
+
         try {
-            // Actualizar el modelo
-            $budget->update($request->only(['descripcion', 'cantidad', 'precio_unitario']));
-
-
+            $budget->update($request->only(['client', 'client_user_id', 'moneda', 'delivery_time', 'oc_number']));
             return back()->with('success', '¡Cotizacion modificada con éxito!');
         } catch (\Exception $e) {
             return back()->with('error', '¡Cotizacion no modificada, intenta de nuevo!');
@@ -318,31 +318,33 @@ class BudgetController extends Controller
                 // Importa las páginas del PDF original y ajusta tamaño
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $templateId = $fpdi->importPage($i);
-
-                    // Obtiene el tamaño y orientación de la página original
                     $size = $fpdi->getTemplateSize($templateId);
                     $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
 
-                    // Crea una nueva página con las dimensiones originales
                     $fpdi->AddPage($orientation, [$size['width'], $size['height']]);
-
-                    // Usa la plantilla de la página original
                     $fpdi->useTemplate($templateId);
 
-                    // Agregar el logo a la página
+                    // Agregar el logo
                     $fpdi->Image(public_path('logo.png'), 10, 10, 20);
 
-                    // Establecer las coordenadas y formato para agregar el código
+                    // Agregar el código
                     $fpdi->SetY(10);
-                    $fpdi->SetX($size['width'] - 60); // Ajustar según el tamaño de la página
-                    $fpdi->SetFillColor(200, 200, 200); // Fondo gris
+                    $fpdi->SetX($size['width'] - 60);
+                    $fpdi->SetFillColor(200, 200, 200);
                     $fpdi->SetFont('Arial', '', 14);
-                    $fpdi->Cell(50, 10, $budget->codigo, 0, 0, 'C', true); // Agregar el código
 
-                    // Agregar pie de página
-                    $fpdi->SetY(-15); // Pie de página a 15mm del borde inferior
-                    $fpdi->SetFont('Arial', 'I', 8);
-                    // $fpdi->Cell(0, 10, 'Página ' . $fpdi->PageNo(), 0, 0, 'C');
+                    // Información del cliente
+                    $clientName = $budget->client?->name ?? 'Sin cliente'; // Si no hay nombre, usamos un valor por defecto
+                    $clientInfo =  $clientName; // Concatenamos el ID y el nombre del cliente
+
+                    // Agregar código del presupuesto y cliente
+                    $fpdi->Cell(50, 10, $budget->codigo ?? 'Sin código', 0, 0, 'C', true); // Código
+                    $fpdi->SetX($size['width'] - 130); // Ajustamos la posición para la siguiente celda
+                    $fpdi->Cell(70, 10, $clientInfo, 0, 0, 'C', true); // Información del cliente
+
+                    // Agregar el nombre del usuario
+                    $fpdi->SetX($size['width'] - 210); // Ajustamos la posición para la siguiente celda
+                    $fpdi->Cell(80, 10, $budget->user?->name ?? 'Sin usuario', 0, 0, 'C', true);
                 }
 
                 // 3. Guardar el PDF procesado
@@ -381,5 +383,82 @@ class BudgetController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', '¡Partida no eliminada, intenta de nuevo!');
         }
+    }
+
+    public function updateItem(Request $request, $itemId)
+    {
+        $item = Item::findOrFail($itemId); // Busca el ítem por su ID o lanza un error 404 si no existe
+
+        $path = $item->imagen; // Mantener el path del archivo anterior
+
+        if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
+            // 1. Guardar el archivo original
+            $originalPath = $request->file('pdf')->store('partidas-imagenes', 'public');
+            $originalPdfPath = storage_path('app/public/' . $originalPath);
+
+            // 2. Procesar el archivo PDF con FPDI
+            $fpdi = new FPDI();
+            $pageCount = $fpdi->setSourceFile($originalPdfPath);
+
+            $processedPath = 'partidas-imagenes/processed-' . basename($originalPath);
+            $processedPdfPath = storage_path('app/public/' . $processedPath);
+
+            for ($i = 1; $i <= $pageCount; $i++) {
+                $templateId = $fpdi->importPage($i);
+                $size = $fpdi->getTemplateSize($templateId);
+                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+
+                $fpdi->AddPage($orientation, [$size['width'], $size['height']]);
+                $fpdi->useTemplate($templateId);
+
+                // Agregar el logo
+                $fpdi->Image(public_path('logo.png'), 10, 10, 20);
+
+                // Agregar el código
+                $fpdi->SetY(10);
+                $fpdi->SetX($size['width'] - 60);
+                $fpdi->SetFillColor(200, 200, 200);
+                $fpdi->SetFont('Arial', '', 14);
+
+                // Información del cliente
+                $clientName = $item->budget->client?->name ?? 'Sin cliente'; // Si no hay nombre, usamos un valor por defecto
+                $clientInfo =  $clientName; // Concatenamos el ID y el nombre del cliente
+
+                // Agregar código del presupuesto y cliente
+                $fpdi->Cell(50, 10, $item->budget->codigo ?? 'Sin código', 0, 0, 'C', true); // Código
+                $fpdi->SetX($size['width'] - 130); // Ajustamos la posición para la siguiente celda
+                $fpdi->Cell(70, 10, $clientInfo, 0, 0, 'C', true); // Información del cliente
+
+                // Agregar el nombre del usuario
+                $fpdi->SetX($size['width'] - 210); // Ajustamos la posición para la siguiente celda
+                $fpdi->Cell(80, 10, $item->budget->user?->name ?? 'Sin usuario', 0, 0, 'C', true);
+            }
+
+            // Guardar el PDF procesado
+            $fpdi->Output($processedPdfPath, 'F');
+
+            // Actualiza el path
+            $path = $processedPath;
+
+            // Eliminar el archivo anterior, si existe
+            if ($item->imagen) {
+                Storage::disk('public')->delete($item->imagen);
+            }
+        }
+
+        // 3. Actualizar los datos del ítem
+        $item->update([
+            'descripcion' => $request->input('descripcion'),
+            'cantidad' => $request->input('cantidad'),
+            'precio_unitario' => $request->input('precio_unitario'),
+            'subtotal' => $request->input('cantidad') * $request->input('precio_unitario'),
+            'imagen' => $path,
+        ]);
+
+        // 4. Recalcular el monto total del presupuesto
+        $total = $item->budget->items()->sum('subtotal');
+        $item->budget->update(['monto' => $total]);
+
+        return redirect()->back()->with('success', 'Ítem actualizado correctamente.');
     }
 }

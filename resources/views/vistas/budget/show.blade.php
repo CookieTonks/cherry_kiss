@@ -8,8 +8,21 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="tipo" class="form-label">Tipo</label>
-                    <input type="text" class="form-control" value="{{$budget->tipo}}" name="tipo" placeholder="Tipo" readonly>
+                    <label for="client" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" value="{{ $budget->clientUser->name }}" name="client" placeholder="Cliente" readonly>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Moneda</label>
+                    <input type="text" class="form-control" value="{{$budget->moneda}}" name="tipo" placeholder="Tipo" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Tiempo de Entrega</label>
+                    <input type="text" class="form-control" value="{{$budget->delivery_time}}" name="tipo" placeholder="Tipo" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="tipo" class="form-label">Número de Orden de Compra (OC)</label>
+                    <input type="text" class="form-control" value="{{$budget->oc_number}}" name="tipo" placeholder="Tipo" readonly>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="items-table">
@@ -44,7 +57,17 @@
                                         <button type="submit" class="btn btn-danger btn-sm delete-row">Eliminar</button>
                                     </form>
 
-                                    <a href="#" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#modalModifyItem">Editar</a>
+                                    <a href="#"
+                                        class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalModifyItem"
+                                        data-id="{{ $item->id }}"
+                                        data-descripcion="{{ $item->descripcion }}"
+                                        data-cantidad="{{ $item->cantidad }}"
+                                        data-pdf="{{ $item->imagen }}"
+                                        data-precio_unitario="{{ $item->precio_unitario }}">
+                                        Editar
+                                    </a>
 
                                 </td>
                             </tr>
@@ -107,7 +130,6 @@
             </div>
         </div>
 
-
         <div class="modal fade" id="modalAssignOC" tabindex="-1" aria-labelledby="modalAssignOCTitle" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -138,35 +160,52 @@
             </div>
         </div>
 
-        <div class="modal fade" id="modalModifyItem" tabindex="-1" aria-labelledby="modalModifyItemTitle" aria-hidden="true">
+        <div class="modal fade" id="modalModifyItem" tabindex="-1" aria-labelledby="modifyItemModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalModifyItemTitle">Modificar partida</h5>
+                        <h5 class="modal-title" id="modifyItemModalLabel">Editar Partida</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="POST" action="{{ route('budgets.assignOC', ['budgetId' => $budget->id]) }}">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="assignOCCheck" name="assignOC" value="1" checked>
-                                <label class="form-check-label" for="assignOCCheck">
-                                    Ingresar OC del cliente
-                                </label>
+                    <div class="modal-body">
+                        <form id="editItemForm" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <input type="hidden" id="editItemId" name="id"> <!-- Campo oculto para el ID -->
+
+                            <!-- Otros campos -->
+                            <div class="mb-3">
+                                <label for="editDescripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="editDescripcion" name="descripcion">
                             </div>
-                            <div class="mb-3" id="ocInputContainer">
-                                <label for="ocNumber" class="form-label">Número de Orden de Compra (OC)</label>
-                                <input type="text" class="form-control" id="ocNumber" name="ocNumber">
+                            <div class="mb-3">
+                                <label for="editCantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="editCantidad" name="cantidad">
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Enviar a produccion</button>
-                        </div>
-                    </form>
+                            <div class="mb-3">
+                                <label for="editPrecioUnitario" class="form-label">Precio Unitario</label>
+                                <input type="number" class="form-control" id="editPrecioUnitario" name="precio_unitario" step="0.01">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPdf" class="form-label">Archivo PDF</label>
+                                <div id="pdfPreview" class="mb-2">
+                                    <a href="#" id="existingPdfLink" target="_blank" style="display: none;">Ver archivo actual</a>
+                                </div>
+                                <input type="file" class="form-control" id="editPdf" name="pdf" accept="application/pdf">
+                                <small class="form-text text-muted">Sube un archivo para reemplazar el actual.</small>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                            </div>
+                        </form>
+
+                    </div>
                 </div>
             </div>
         </div>
+
 
 
         <script>
@@ -186,5 +225,36 @@
             });
         </script>
 
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modal = document.getElementById('modalModifyItem');
+                modal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget; // Botón que activó el modal
+                    const id = button.getAttribute('data-id'); // Obtener el ID del ítem
+
+                    // Actualizar la acción del formulario
+                    const form = modal.querySelector('#editItemForm');
+                    form.action = `/item/update/${id}`; // Construir la URL con el ID dinámico
+
+                    // Actualizar los campos del formulario
+                    modal.querySelector('#editItemId').value = id;
+                    modal.querySelector('#editDescripcion').value = button.getAttribute('data-descripcion');
+                    modal.querySelector('#editCantidad').value = button.getAttribute('data-cantidad');
+                    modal.querySelector('#editPrecioUnitario').value = button.getAttribute('data-precio_unitario');
+
+                    // Manejar el PDF actual (enlace o nombre)
+                    const pdfLink = modal.querySelector('#existingPdfLink');
+                    const pdfPath = button.getAttribute('data-pdf');
+                    if (pdfPath) {
+                        pdfLink.style.display = 'block';
+                        pdfLink.href = `/storage/${pdfPath}`; // Asegúrate de que esta ruta sea correcta
+                        pdfLink.textContent = 'Ver archivo actual';
+                    } else {
+                        pdfLink.style.display = 'none';
+                    }
+                });
+            });
+        </script>
     </x-slot>
 </x-app-layout>

@@ -26,6 +26,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/item/store/{budgetId}', [BudgetController::class, 'storeItem'])->name('item.store');
     Route::delete('/items/delete/{itemId}', [BudgetController::class, 'destroyItem'])->name('item.destroy');
+    Route::put('/item/update/{itemId}', [BudgetController::class, 'updateItem'])->name('item.update');
+
 
 
 

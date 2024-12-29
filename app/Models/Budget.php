@@ -35,4 +35,9 @@ class Budget extends Model
     {
         return $this->hasMany(Item::class); // Relación con partidas
     }
+
+    public function clientUser()
+    {
+        return $this->belongsTo(ClientUser::class, 'client_user_id');
+    }
 }

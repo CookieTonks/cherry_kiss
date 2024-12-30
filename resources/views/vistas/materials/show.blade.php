@@ -56,13 +56,16 @@
                                     <form action="{{ route('budgets.destroy.materials', ['materialId' => $material->id]) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm delete-row">Eliminar</button>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que deseas eliminar este material?')">
+                                            Eliminar
+                                        </button>
                                     </form>
+
 
                                     <a href="#"
                                         class="btn btn-info btn-sm"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#modalModifyItem"
+                                        data-bs-target="#modifyItemModal"
                                         data-id="{{ $material->id }}"
                                         data-descripcion="{{ $material->descripcion }}"
                                         data-cantidad="{{ $material->cantidad }}"
@@ -108,6 +111,68 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modifyItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addItemModalLabel">Editar Material</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="materialForm" action="{{ route('budgets.edit.materials', ['materialId' => $material->id]) }}" method="POST">
+                            @csrf
+                            @method('PUT') <!-- Cambiar dinámicamente a PUT para editar -->
+                            <input type="hidden" id="materialId" name="materialId" value=""> <!-- Para editar -->
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Actualizar Material</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const modifyItemModal = document.getElementById('modifyItemModal');
+                modifyItemModal.addEventListener('show.bs.modal', (event) => {
+                    const button = event.relatedTarget; // Botón que activó el modal
+                    const materialId = button.getAttribute('data-id');
+                    const descripcion = button.getAttribute('data-descripcion');
+                    const cantidad = button.getAttribute('data-cantidad');
+
+                    const form = modifyItemModal.querySelector('form');
+                    const idField = form.querySelector('#materialId');
+                    const descripcionField = form.querySelector('#descripcion');
+                    const cantidadField = form.querySelector('#cantidad');
+
+                    // Si es para editar, rellenar los campos
+                    if (materialId) {
+                        idField.value = materialId;
+                        descripcionField.value = descripcion;
+                        cantidadField.value = cantidad;
+                        form.action = `/budgets/edit/${materialId}/materials`; // Ruta para actualizar
+                        form.querySelector('button[type="submit"]').innerText = 'Actualizar Material';
+                        form.insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="PUT">');
+                    } else {
+                        // Si es para agregar, limpiar los campos
+                        idField.value = '';
+                        descripcionField.value = '';
+                        cantidadField.value = '';
+                        form.action = "{{ route('budgets.create.materials', ['budgetId' => $budget->id]) }}"; // Ruta para crear
+                        form.querySelector('button[type="submit"]').innerText = 'Guardar Material';
+                    }
+                });
+            });
+        </script>
 
     </x-slot>
 </x-app-layout>

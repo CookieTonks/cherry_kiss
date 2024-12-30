@@ -77,7 +77,7 @@
                                 <tr>
                                     <th>Material</th>
                                     <th>Cantidad</th>
-                                    <th>Precio</th>
+                                    <th>Estatus</th>
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody">
@@ -107,9 +107,9 @@
                         data.materials.forEach(material => {
                             let row = document.createElement('tr');
                             row.innerHTML = `
-                    <td>${material.name}</td>
-                    <td>${material.quantity}</td>
-                    <td>${material.price}</td>
+                    <td>${material.descripcion}</td>
+                    <td>${material.cantidad}</td>
+                    <td>${material.estatus}</td>
                 `;
                             tableBody.appendChild(row);
                         });

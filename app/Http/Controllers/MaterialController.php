@@ -109,24 +109,59 @@ class MaterialController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Material $material)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Material $material)
+    public function update(Request $request, $materialId)
     {
-        //
+
+
+        try {
+            // Validación de los datos del formulario
+            $validatedData = $request->validate([
+                'descripcion' => 'required|string|max:255',
+                'cantidad' => 'required|integer|min:1',
+            ]);
+
+            $data = [
+                'descripcion' => $request->descripcion,
+                'cantidad' => $request->cantidad,
+                'estatus' => 'PENDIENTE',
+            ];
+
+            $fieldsToUpper = ['descripcion'];
+
+            $data = StringHelper::convertToUpperCase($data, $fieldsToUpper);
+
+            $material = Material::findOrFail($materialId);
+            $material->descripcion = $data['descripcion'];
+            $material->cantidad = $data['cantidad'];
+            $material->save();
+
+            return redirect()->back()->with('success', 'Material actualizado correctamente.');
+        } catch (\Throwable $th) {
+            Log::error('Error al actualizar el material: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al actualizar el material. Intenta nuevamente.');
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Material $material)
+    public function destroy($materialId)
     {
-        //
+
+        try {
+            $material = Material::findOrFail($materialId);
+
+            $material->delete();
+            return redirect()->back()->with('success', 'Material eliminado correctamente.');
+        } catch (\Throwable $th) {
+            Log::error('Error al eliminar el material: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al eliminar el material. Intenta nuevamente.');
+        }
     }
 }

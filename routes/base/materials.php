@@ -15,5 +15,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/budgets/show/{budgetId}/materials', [MaterialController::class, 'show'])->name('budgets.show.materials');
     Route::post('/budgets/create/{budgetId}/materials', [MaterialController::class, 'store'])->name('budgets.create.materials');
     Route::delete('/budgets/destroy/{materialId}/materials', [MaterialController::class, 'destroy'])->name('budgets.destroy.materials');
+    Route::put('/budgets/edit/{materialId}/materials', [MaterialController::class, 'update'])->name('budgets.edit.materials');
+
     // });
 });

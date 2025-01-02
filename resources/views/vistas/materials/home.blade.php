@@ -47,6 +47,7 @@
                                         </button>
                                     </td>
 
+
                                     <td>
                                         <a href="{{ route('budgets.show.materials', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
                                             Opciones
@@ -70,7 +71,13 @@
                         <h5 class="modal-title" id="itemsModalLabel">Materiales Asignados</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+
+
                     <div class="modal-body">
+
+                        <div id="materialSummary" class="mb-3">
+                            <strong> Partidas material recibido:</strong> <span id="receivedStatus">0/0</span>
+                        </div>
                         <!-- Aquí se cargarán los materiales -->
                         <table class="table table-bordered">
                             <thead>
@@ -102,6 +109,11 @@
                         // Limpiar la tabla antes de cargar nuevos datos
                         let tableBody = document.getElementById('itemsTableBody');
                         tableBody.innerHTML = '';
+
+
+                        const summary = data.summary;
+                        document.getElementById('receivedStatus').innerText = `${summary.received}/${summary.total}`;
+
 
                         // Recorrer los materiales y agregarlos a la tabla
                         data.materials.forEach(material => {

@@ -37,11 +37,20 @@ class MaterialController extends Controller
         // Obtener los materiales relacionados con ese presupuesto
         $materials = $budget->materiales;
 
-        // Retornar los materiales en formato JSON
+        // Calcular el resumen de estatus
+        $totalMaterials = $materials->count();
+        $receivedMaterials = $materials->where('estatus', 'recibido')->count();
+
+        // Retornar los materiales en formato JSON con el resumen
         return response()->json([
             'materials' => $materials,
+            'summary' => [
+                'received' => $receivedMaterials,
+                'total' => $totalMaterials,
+            ],
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -138,6 +147,7 @@ class MaterialController extends Controller
             $material = Material::findOrFail($materialId);
             $material->descripcion = $data['descripcion'];
             $material->cantidad = $data['cantidad'];
+            $material->estatus = $data['estatus'];
             $material->save();
 
             return redirect()->back()->with('success', 'Material actualizado correctamente.');

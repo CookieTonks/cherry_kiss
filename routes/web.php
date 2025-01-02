@@ -25,6 +25,8 @@ Route::group([], base_path('routes/base/budget.php'));
 Route::group([], base_path('routes/base/profiles.php'));
 Route::group([], base_path('routes/base/roles.php'));
 Route::group([], base_path('routes/base/materials.php'));
+Route::group([], base_path('routes/base/compras.php'));
+
 
 
 

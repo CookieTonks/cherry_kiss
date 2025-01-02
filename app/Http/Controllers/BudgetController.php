@@ -272,6 +272,7 @@ class BudgetController extends Controller
 
         $items = $budget->items;
 
+
         $html = view('vistas.budget.cot', compact('budget', 'items'))->render();
 
         $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');

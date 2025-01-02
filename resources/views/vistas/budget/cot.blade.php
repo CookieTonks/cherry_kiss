@@ -78,11 +78,14 @@
             </tr>
         </thead>
         <tbody>
+
+            @foreach($items as $item)
             <tr>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
+                <td style="text-align: left;" colspan="1"> {{$item->descripcion}} </td>
+                <td style="text-align: left;" colspan="1"> {{$item->cantidad}}</td>
+                <td style="text-align: left;" colspan="1"> {{$item->precio_unitario}} </td>
             </tr>
+            @endforeach
         </tbody>
     </table>
 

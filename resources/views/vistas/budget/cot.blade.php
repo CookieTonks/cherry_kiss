@@ -17,12 +17,30 @@
         tbody:after {
             display: none;
         }
+
+        .table th {
+            background-color: #4682B4;
+            color: white;
+            text-align: left;
+            padding: 8px;
+        }
+
+        .table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .table-borderless td,
+        .table-borderless th {
+            border: none !important;
+        }
     </style>
 
 </head>
 
 <body>
-    <table class="table table-borderless">
+    <table class="table table-borderless" style="border: none;">
         <thead>
             <tr>
                 <td scope="col" style="font-size:xx-small;"><img src="logo.png" width="200px">
@@ -63,7 +81,7 @@
                 <td style="text-align: left;" colspan="1"> {{$budget->codigo}} </td>
                 <td style="text-align: left;" colspan="1"> {{$budget->client?->name}} </td>
                 <td style="text-align: left;" colspan="1"> {{$budget->clientUser?->name}} </td>
-                <td style="text-align: left;" colspan="1"> $ {{$budget->monto}}</td>
+                <td style="text-align: left;" colspan="1"> $ {{ number_format($budget->monto, 2) }}</td>
                 <td style="text-align: left;" colspan="1"> {{$budget->moneda}} </td>
             </tr>
         </tbody>
@@ -78,20 +96,15 @@
             </tr>
         </thead>
         <tbody>
-
             @foreach($items as $item)
             <tr>
                 <td style="text-align: left;" colspan="1"> {{$item->descripcion}} </td>
                 <td style="text-align: left;" colspan="1"> {{$item->cantidad}}</td>
-                <td style="text-align: left;" colspan="1"> {{$item->precio_unitario}} </td>
+                <td style="text-align: left;" colspan="1"> $ {{ number_format($item->precio_unitario, 2) }}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
-
-
-
-
 
 
     <table class="table table-bordered" style="text-align: center;font-size:x-small;">

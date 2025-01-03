@@ -28,8 +28,6 @@
                     <table class="table table-bordered" id="items-table">
                         <thead>
                             <tr>
-                                <td>Cotizacion</td>
-                                <th>Partida</th>
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
                                 <th>P/U</th>
@@ -40,12 +38,6 @@
                         <tbody>
                             @foreach($items as $item)
                             <tr>
-                                <td>
-                                    {{$budget->id}}
-                                </td>
-                                <td>
-                                    {{$item->partida}}
-                                </td>
                                 <td>
                                     {{$item->descripcion}}
                                 </td>
@@ -59,11 +51,18 @@
                                     <a href="/storage/{{ $item->imagen }}" target="_blank">Ver PDF</a>
                                 </td>
                                 <td class="text-center">
-                                    <form action="{{ route('item.destroy', ['itemId' => $item->id]) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm delete-row">Eliminar</button>
-                                    </form>
+                                    <a href="#"
+                                        class="btn btn-info btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalModifyItem"
+                                        data-id="{{ $item->id }}"
+                                        data-descripcion="{{ $item->descripcion }}"
+                                        data-cantidad="{{ $item->cantidad }}"
+                                        data-pdf="{{ $item->imagen }}"
+                                        data-precio_unitario="{{ $item->precio_unitario }}">
+                                        Material
+                                    </a>
+
 
                                     <a href="#"
                                         class="btn btn-info btn-sm"
@@ -74,7 +73,7 @@
                                         data-cantidad="{{ $item->cantidad }}"
                                         data-pdf="{{ $item->imagen }}"
                                         data-precio_unitario="{{ $item->precio_unitario }}">
-                                        Editar
+                                        OT
                                     </a>
 
                                 </td>
@@ -172,7 +171,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modifyItemModalLabel">Editar Partida</h5>
+                        <h5 class="modal-title" id="modifyItemModalLabel">Editar Pa rtida</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

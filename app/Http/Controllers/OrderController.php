@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Models\Material;
+use App\Models\Budget;
+
 
 class OrderController extends Controller
 {
@@ -12,15 +15,29 @@ class OrderController extends Controller
      */
     public function index()
     {
-        echo "hey";
+        $userId = auth()->id();
+
+        $budgets = Budget::where('user_id', $userId)
+            ->whereHas('proceso', function ($query) {
+                $query->where('cotizaciones', 1);
+            })
+            ->get();
+
+
+        $materials = Material::all();
+        return view('vistas.orders.home', compact('budgets'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function showBudgetOrders($budgetId)
     {
-        //
+        $budget = Budget::findOrFail($budgetId);
+        $items = $budget->items;
+
+        return view('vistas.orders.show', compact('budget', 'items'));
+
     }
 
     /**

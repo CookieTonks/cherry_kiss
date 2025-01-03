@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Orden Trabajo/ Materiales / Home
+            Orden Trabajo/ Home
         </h2>
         <div class="container">
             <div class="py-2">
@@ -21,35 +21,26 @@
                             data-toolbar="#toolbar">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th data-field="id" data-sortable="true">ID</th>
+                                    <th data-field="id" data-sortable="true">Codigo</th>
                                     <th data-field="orderNumber" data-sortable="true">Empresa</th>
                                     <th data-field="supplier" data-sortable="true">Usuario</th>
                                     <th data-field="sales" data-sortable="true">Vendedor</th>
+                                    <th data-field="oc" data-sortable="true">OC</th>
                                     <th data-field="status" data-sortable="true">Estado</th>
-                                    <th data-field="partidas" data-sortable="true">Material</th>
                                     <th data-field="acciones" data-sortable="true">Acciones</th>
-
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($budgets as $budget)
                                 <tr>
-                                    <td>{{$budget->id}}</td>
+                                    <td>{{$budget->codigo}}</td>
                                     <td>{{ $budget->client?->name ?? 'Empresa no asignada' }}</td>
                                     <td> {{ $budget->clientUser?->name ?? 'Usuario no asignado' }} </td>
                                     <td>{{ $budget->user?->name ?? 'Vendedor no asignado' }}</td>
+                                    <td>{{$budget->oc_number}}</td>
                                     <td>{{$budget->estado}}</td>
                                     <td>
-                                        <!-- Botón para abrir modal -->
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
-                                            onclick="loadItems({{ $budget->id }})">
-                                            Ver Material
-                                        </button>
-                                    </td>
-
-
-                                    <td>
-                                        <a href="{{ route('budgets.show.materials', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
+                                        <a href="{{ route('budgets.show.orders', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
                                             Opciones
                                         </a>
                                     </td>

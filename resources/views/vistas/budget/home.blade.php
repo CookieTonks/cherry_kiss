@@ -228,13 +228,15 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="itemsModalLabel">Detalles del Presupuesto</h5>
+                    <h5 class="modal-title" id="itemsModalLabel">Detalles de la cotizacion</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <table class="table table-striped table-bordered">
                         <thead>
                             <tr>
+                                <th>Cotizacion</th>
+                                <th>Partida</th>
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
                                 <th>Precio Unitario</th>
@@ -304,6 +306,8 @@
                     items.forEach(item => {
                         const row = `
                     <tr>
+                        <td>COT - ${budgetId}</td>
+                        <td>${item.partida}</td>
                         <td>${item.descripcion}</td>
                         <td>${item.cantidad}</td>
                         <td>${item.precio_unitario}</td>

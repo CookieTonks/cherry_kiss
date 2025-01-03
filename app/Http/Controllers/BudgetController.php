@@ -321,6 +321,8 @@ class BudgetController extends Controller
         try {
             $budget = Budget::findOrFail($budgetId);
 
+            $item_track = $budget->items()->count() + 1;
+
             $path = null;
 
             if (isset($request->pdf) && $request->pdf->isValid()) {
@@ -377,6 +379,7 @@ class BudgetController extends Controller
 
             $budget->items()->create([
                 'descripcion' => $request['descripcion'],
+                'partida' => $item_track,
                 'cantidad' => $request['cantidad'],
                 'precio_unitario' => $request['precio_unitario'],
                 'subtotal' => $request['cantidad'] * $request['precio_unitario'],

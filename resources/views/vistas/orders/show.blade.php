@@ -1,5 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Orden Trabajo/ Partidas
+        </h2>
         <div class="container">
             <div class="py-5">
                 <div class="mb-3">
@@ -28,6 +31,8 @@
                     <table class="table table-bordered" id="items-table">
                         <thead>
                             <tr>
+                                <th>Cotizacion</th>
+                                <th>Partida</th>
                                 <th>Descripción</th>
                                 <th>Cantidad</th>
                                 <th>P/U</th>
@@ -38,6 +43,12 @@
                         <tbody>
                             @foreach($items as $item)
                             <tr>
+                                <td>
+                                    {{$budget->codigo}}
+                                </td>
+                                <td>
+                                    {{$item->partida}}
+                                </td>
                                 <td>
                                     {{$item->descripcion}}
                                 </td>
@@ -51,40 +62,20 @@
                                     <a href="/storage/{{ $item->imagen }}" target="_blank">Ver PDF</a>
                                 </td>
                                 <td class="text-center">
-                                    <a href="#"
-                                        class="btn btn-info btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalModifyItem"
-                                        data-id="{{ $item->id }}"
-                                        data-descripcion="{{ $item->descripcion }}"
-                                        data-cantidad="{{ $item->cantidad }}"
-                                        data-pdf="{{ $item->imagen }}"
-                                        data-precio_unitario="{{ $item->precio_unitario }}">
-                                        Material
+                                    <a href="{{ route('budgets.pdf.order', ['budgetId' => $budget->id, 'ItemId' => $item->id]) }}" class="btn btn-success btn-sm">
+                                        Orden Trabajo
                                     </a>
 
-
-                                    <a href="#"
-                                        class="btn btn-info btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalModifyItem"
-                                        data-id="{{ $item->id }}"
-                                        data-descripcion="{{ $item->descripcion }}"
-                                        data-cantidad="{{ $item->cantidad }}"
-                                        data-pdf="{{ $item->imagen }}"
-                                        data-precio_unitario="{{ $item->precio_unitario }}">
-                                        OT
+                                    <a href="{{ route('budgets.show.orders', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
+                                        + Material
                                     </a>
-
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-                <button type="button" id="add-row" class="btn btn-primary mb-3 text-end" data-bs-toggle="modal" data-bs-target="#addItemModal">
-                    + Partida
-                </button>
+
             </div>
 
             <div class="py-12 text-end">
@@ -101,71 +92,7 @@
         </div>
 
 
-        <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addItemModalLabel">Agregar Partida</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('item.store', ['budgetId' => $budget->id] ) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="descripcion" class="form-label">Descripción</label>
-                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción">
-                            </div>
-                            <div class="mb-3">
-                                <label for="cantidad" class="form-label">Cantidad</label>
-                                <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Cantidad">
-                            </div>
-                            <div class="mb-3">
-                                <label for="precio_unitario" class="form-label">Precio Unitario</label>
-                                <input type="number" class="form-control" id="precio_unitario" name="precio_unitario" step="0.01" placeholder="Precio Unitario">
-                            </div>
-                            <div class="mb-3">
-                                <label for="pdf" class="form-label">Archivo PDF</label>
-                                <input type="file" class="form-control" id="pdf" name="pdf" accept="pdf/*">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Cerrar</button>
-                                <button type="submit" class="btn btn-success mb-3">Guardar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="modal fade" id="modalAssignOC" tabindex="-1" aria-labelledby="modalAssignOCTitle" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modalAssignOCTitle">Asignar Orden de Compra y Cotización</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form method="POST" action="{{ route('budgets.assignOC', ['budgetId' => $budget->id]) }}">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="form-check mb-3">
-                                <input class="form-check-input" type="checkbox" id="assignOCCheck" name="assignOC" value="1" checked>
-                                <label class="form-check-label" for="assignOCCheck">
-                                    Ingresar OC del cliente
-                                </label>
-                            </div>
-                            <div class="mb-3" id="ocInputContainer">
-                                <label for="ocNumber" class="form-label">Número de Orden de Compra (OC)</label>
-                                <input type="text" class="form-control" id="ocNumber" name="ocNumber">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Enviar a produccion</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <div class="modal fade" id="modalModifyItem" tabindex="-1" aria-labelledby="modifyItemModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -212,25 +139,6 @@
                 </div>
             </div>
         </div>
-
-
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const assignOCCheck = document.getElementById('assignOCCheck');
-                const ocInputContainer = document.getElementById('ocInputContainer');
-
-                assignOCCheck.addEventListener('change', function() {
-                    if (this.checked) {
-                        ocInputContainer.style.display = 'block';
-                        document.getElementById('ocNumber').required = true;
-                    } else {
-                        ocInputContainer.style.display = 'none';
-                        document.getElementById('ocNumber').required = false;
-                    }
-                });
-            });
-        </script>
 
 
         <script>

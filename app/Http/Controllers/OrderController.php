@@ -37,7 +37,20 @@ class OrderController extends Controller
         $items = $budget->items;
 
         return view('vistas.orders.show', compact('budget', 'items'));
+    }
 
+    public function makeOrder($budgetId, $ItemId)
+    {
+        $budget = Budget::findOrFail($budgetId);
+
+        $item = $budget->items->where('id', $ItemId)->first();
+
+        $html = view('vistas.orders.ot', compact('budget', 'item'))->render();
+
+        $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+
+        // Descargar el PDF
+        return $pdf->stream("budget_{$budget->codigo}_{$ItemId}.pdf");
     }
 
     /**

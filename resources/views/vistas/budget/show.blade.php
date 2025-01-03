@@ -41,7 +41,7 @@
                             @foreach($items as $item)
                             <tr>
                                 <td>
-                                    {{$budget->id}}
+                                    {{$budget->codigo}}
                                 </td>
                                 <td>
                                     {{$item->partida}}

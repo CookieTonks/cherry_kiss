@@ -103,10 +103,10 @@
                         <tbody>
                             @foreach($budgets as $budget)
                             <tr>
-                                <td>{{$budget->id}}</td>
-                                <td>{{ $budget->client?->name ?? 'Empresa no asignada' }}</td>
-                                <td> {{ $budget->clientUser?->name ?? 'Usuario no asignado' }} </td>
-                                <td>{{ $budget->user?->name ?? 'Vendedor no asignado' }}</td>
+                                <td>{{$budget->codigo}}</td>
+                                <td>{{$budget->client?->name ?? 'Empresa no asignada' }}</td>
+                                <td>{{$budget->clientUser?->name ?? 'Usuario no asignado' }} </td>
+                                <td>{{$budget->user?->name ?? 'Vendedor no asignado' }}</td>
                                 <td>{{$budget->estado}}</td>
                                 <td>{{$budget->monto}}</td>
                                 <td>{{$budget->moneda}}</td>

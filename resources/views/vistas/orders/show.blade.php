@@ -61,12 +61,12 @@
                                 <td>
                                     <a href="/storage/{{ $item->imagen }}" target="_blank">Ver PDF</a>
                                 </td>
-                                <td class="text-center">
-                                    <a href="{{ route('budgets.pdf.order', ['budgetId' => $budget->id, 'ItemId' => $item->id]) }}" class="btn btn-success btn-sm">
-                                        Orden Trabajo
+                                <td>
+                                    <a  target="_blank" href="{{ route('budgets.pdf.order', ['budgetId' => $budget->id, 'ItemId' => $item->id]) }}" class="btn btn-success btn-sm">
+                                        OT
                                     </a>
 
-                                    <a href="{{ route('budgets.show.orders', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
+                                    <a href="{{ route('budgets.show.orders', ['budgetId' => $budget->id]) }}" class="btn btn-primary btn-sm">
                                         + Material
                                     </a>
                                 </td>

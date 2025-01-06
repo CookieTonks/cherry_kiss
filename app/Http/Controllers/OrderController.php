@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Material;
 use App\Models\Budget;
 use App\Models\Item;
+use App\Helpers\StringHelper;
+
 
 class OrderController extends Controller
 {
@@ -101,9 +103,38 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function addMaterials($ItemId, Request $request)
     {
-        //
+        try {
+            $data = [
+                'item_id' => $ItemId,
+                'descripcion' => $request->descripcion,
+                'cantidad' => $request->cantidad,
+                'unidad' => $request->unidad,
+                'medida' => $request->medida,
+                'estatus'  => 'PENDIENTE',
+                'precio_unitario'   => '0.00'
+            ];
+
+            $fieldsToUpper = ['descripcion', 'medida', 'estatus'];
+
+            $data = StringHelper::convertToUpperCase($data, $fieldsToUpper);
+
+            $material = Material::create([
+                'item_id' => $ItemId,
+                'descripcion' =>  $data['descripcion'],
+                'cantidad' =>  $data['cantidad'],
+                'unidad' => $data['unidad'],
+                'medida' => $data['medida'],
+                'estatus' => $data['estatus'],
+                'precio_unitario' => $data['precio_unitario'],
+
+            ]);
+
+            return back()->with('success', '¡Material agregado con éxito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Material no agregado, intenta de nuevo!');
+        }
     }
 
     /**

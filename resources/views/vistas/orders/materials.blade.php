@@ -62,13 +62,10 @@
             </div>
 
             <div class="py-12 text-end">
-                <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
-
+                <a href="{{ route('orders.home') }}" class="btn btn-secondary btn-sm">Regresar</a>
+                <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addMaterial">+ Material</a>
             </div>
         </div>
-
-
-
 
 
         <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
@@ -96,5 +93,42 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="addMaterial" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addItemModalLabel">Agregar Material</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('budgets.order.materials.add', ['ItemId' => $item->id] ) }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción">
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad</label>
+                                <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Cantidad">
+                            </div>
+                            <div class="mb-3">
+                                <label for="unidad" class="form-label">Unidad</label>
+                                <input type="text" class="form-control" id="unidad" name="unidad" step="0.01" placeholder="Precio Unitario">
+                            </div>
+                            <div class="mb-3">
+                                <label for="medida" class="form-label">Medida</label>
+                                <input type="text" class="form-control" id="medida" name="medida" step="0.01" placeholder="Precio Unitario">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="btn btn-success mb-3">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </x-slot>
 </x-app-layout>

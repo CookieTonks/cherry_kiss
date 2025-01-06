@@ -17,6 +17,7 @@ class Material extends Model
         'unidad',
         'medida',
         'estatus',
+        'descripcion'
     ];
 
     public function item()

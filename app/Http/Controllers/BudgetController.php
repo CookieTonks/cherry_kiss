@@ -361,7 +361,7 @@ class BudgetController extends Controller
                     $clientInfo =  $clientName; // Concatenamos el ID y el nombre del cliente
 
                     // Agregar código del presupuesto y cliente
-                    $fpdi->Cell(50, 10, $budget->codigo ?? 'Sin código', 0, 0, 'C', true); // Código
+                    $fpdi->Cell(50, 10, $budget->codigo ?? 'Sin código' . '_' . $item_track, 0, 0, 'C', true); // Código
                     $fpdi->SetX($size['width'] - 130); // Ajustamos la posición para la siguiente celda
                     $fpdi->Cell(70, 10, $clientInfo, 0, 0, 'C', true); // Información del cliente
 
@@ -413,6 +413,9 @@ class BudgetController extends Controller
     {
         $item = Item::findOrFail($itemId); // Busca el ítem por su ID o lanza un error 404 si no existe
 
+        $budget = Budget::findOrFail($item->budget->id);
+
+
         $path = $item->imagen; // Mantener el path del archivo anterior
 
         if ($request->hasFile('pdf') && $request->file('pdf')->isValid()) {
@@ -449,7 +452,7 @@ class BudgetController extends Controller
                 $clientInfo =  $clientName; // Concatenamos el ID y el nombre del cliente
 
                 // Agregar código del presupuesto y cliente
-                $fpdi->Cell(50, 10, $item->budget->codigo ?? 'Sin código', 0, 0, 'C', true); // Código
+                $fpdi->Cell(50, 10, ($item->budget->codigo ?? 'Sin código') . '_' . $item->partida, 0, 0, 'C', true); // Código
                 $fpdi->SetX($size['width'] - 130); // Ajustamos la posición para la siguiente celda
                 $fpdi->Cell(70, 10, $clientInfo, 0, 0, 'C', true); // Información del cliente
 

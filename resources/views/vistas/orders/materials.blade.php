@@ -62,7 +62,7 @@
             </div>
 
             <div class="py-12 text-end">
-                <a href="{{ route('orders.home') }}" class="btn btn-secondary btn-sm">Regresar</a>
+                <a href="{{ route('budgets.show.orders', ['budgetId' => $item->budget->id] ) }}" class="btn btn-secondary btn-sm">Regresar</a>
                 <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addMaterial">+ Material</a>
             </div>
         </div>

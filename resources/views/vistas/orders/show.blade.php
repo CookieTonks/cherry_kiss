@@ -119,6 +119,8 @@
                                     <th>Cantidad</th>
                                     <th>Unidad</th>
                                     <th>Medida</th>
+                                    <th>Estatus</th>
+
                                 </tr>
                             </thead>
                             <tbody id="itemsTableBody">
@@ -146,6 +148,8 @@
                         <td>${item.cantidad}</td>
                         <td>${item.unidad}</td>
                         <td>${item.medida}</td>
+                        <td>${item.estatus}</td>
+
                     </tr>
                 `;
                             tbody.innerHTML += row;

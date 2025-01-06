@@ -130,7 +130,7 @@
 
 
     <p style="font-size:x-small; text-align:center;">
-        Orden de trabajo badilsa para uso interno
+        BADILSA: ORDEN DE TRABAJO PARA USO INTERNO
     </p>
 
 </html>

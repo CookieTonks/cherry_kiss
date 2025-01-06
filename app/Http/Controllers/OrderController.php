@@ -6,7 +6,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Models\Material;
 use App\Models\Budget;
-
+use App\Models\Item;
 
 class OrderController extends Controller
 {
@@ -56,25 +56,46 @@ class OrderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function getMaterials($ItemId)
     {
-        //
+        // Busca el item con su relación de materiales
+        $order = Item::findOrFail($ItemId);
+
+        // Obtén los materiales relacionados
+        $materials = $order->materials;
+
+        // Retorna los materiales
+        return $materials;
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function showMaterials($ItemId)
     {
-        //
+        // Busca el item con su relación de materiales
+        $item = Item::findOrFail($ItemId);
+
+        // Obtén los materiales relacionados
+        $materials = $item->materials;
+
+        return view('vistas.orders.materials', compact('materials', 'item'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Order $order)
+    public function detroyMaterial($materialId)
     {
-        //
+        try {
+            $material = Material::findOrFail($materialId);
+            $material->delete();
+
+            return back()->with('success', '¡Material eliminado con éxito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Material no eliminada, intenta de nuevo!');
+        }
     }
 
     /**

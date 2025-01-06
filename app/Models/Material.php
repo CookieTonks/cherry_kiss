@@ -10,16 +10,17 @@ class Material extends Model
     use HasFactory;
 
     protected $fillable = [
-        'budget_id',
+        'item_id',
         'nombre',
         'cantidad',
         'precio_unitario',
+        'unidad',
+        'medida',
         'estatus',
     ];
 
-    // Relación con el presupuesto
-    public function budget()
+    public function item()
     {
-        return $this->belongsTo(Budget::class);
+        return $this->belongsTo(Item::class);
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('materials', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('budget_id')->constrained()->onDelete('cascade'); // Relación con la tabla de presupuestos
+            $table->foreignId('item_id')->constrained()->onDelete('cascade'); // Relación con la tabla de presupuestos
             $table->string('descripcion');  // Nombre del material
             $table->integer('cantidad'); // Cantidad solicitada
             $table->decimal('precio_unitario', 10, 2); // Precio unitario

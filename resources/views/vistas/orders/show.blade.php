@@ -91,12 +91,7 @@
             </div>
 
             <div class="py-12 text-end">
-                <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
-                <a href="{{ route('budgets.destroy', ['budgetId' => $budget->id]) }}"
-                    class="btn btn-danger btn-sm"
-                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta cotización?')">
-                    Eliminar Cotización
-                </a>
+                <a href="{{ route('orders.home') }}" class="btn btn-secondary btn-sm">Regresar</a>
             </div>
         </div>
 

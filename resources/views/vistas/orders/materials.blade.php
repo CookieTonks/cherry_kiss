@@ -47,6 +47,7 @@
                                 </td>
 
                                 <td>
+
                                     <a href="{{ route('budgets.order.materials.delete', ['materialId' => $material->id]) }}"
                                         class="btn btn-danger btn-sm"
                                         onclick="return confirm('¿Estás seguro de que deseas eliminar este material?')">
@@ -63,6 +64,7 @@
 
             <div class="py-12 text-end">
                 <a href="{{ route('budgets.show.orders', ['budgetId' => $item->budget->id] ) }}" class="btn btn-secondary btn-sm">Regresar</a>
+                <a href="{{ route('budgets.order.materials.send', ['ItemId' => $item->id] ) }}" class="btn btn-success btn-sm">Solicitar</a>
                 <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addMaterial">+ Material</a>
             </div>
         </div>

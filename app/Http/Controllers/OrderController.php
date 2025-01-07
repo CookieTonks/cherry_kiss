@@ -112,7 +112,7 @@ class OrderController extends Controller
                 'cantidad' => $request->cantidad,
                 'unidad' => $request->unidad,
                 'medida' => $request->medida,
-                'estatus'  => 'PENDIENTE',
+                'estatus'  => 'REGISTRADO',
                 'precio_unitario'   => '0.00'
             ];
 
@@ -140,8 +140,16 @@ class OrderController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Order $order)
+    public function sendMaterials($ItemId)
     {
-        //
+        try {
+            $item = Item::findOrFail($ItemId);
+
+            $item->materials()->where('estatus', 'registrado')->update(['estatus' => 'pendiente']);
+            $item->budget->proceso()->update(['ordenes' => 1]);
+            return back()->with('success', '¡Materiales solicitados con exito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Materiales no fueron solicitados, intenta de nuevo!');
+        }
     }
 }

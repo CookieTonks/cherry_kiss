@@ -19,7 +19,7 @@
         }
 
         .table th {
-            background-color: #4682B4;
+            background-color:rgb(0, 0, 0);
             color: white;
             text-align: left;
             padding: 8px;

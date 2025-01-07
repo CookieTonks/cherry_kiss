@@ -144,7 +144,6 @@ class OrderController extends Controller
     {
         try {
             $item = Item::findOrFail($ItemId);
-
             $item->materials()->where('estatus', 'registrado')->update(['estatus' => 'pendiente']);
             $item->budget->proceso()->update(['ordenes' => 1]);
             return back()->with('success', '¡Materiales solicitados con exito!');

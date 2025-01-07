@@ -18,14 +18,8 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        $userId = auth()->id();
-        $budgets = Budget::where('user_id', $userId)
-            ->whereHas('proceso', function ($query) {
-                $query->where('cotizaciones', 1);
-            })
-            ->get();
-        $materials = Material::all();
-        return view('vistas.materials.home', compact('budgets'));
+        $materiales = Material::all();
+        return view('vistas.shooping.home', compact('materiales'));
     }
 
 

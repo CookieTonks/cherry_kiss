@@ -64,6 +64,6 @@ class ComprasController extends Controller
     }
 
     public function ocPdf() {
-        
+
     }
-}
+

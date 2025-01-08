@@ -12,7 +12,7 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material proceso: 
+                                    Material sin asignar:
                                 </a>
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material proceso:
+                                    Material en proceso:
                                 </a>
                             </div>
                         </div>
@@ -33,7 +33,7 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="{{ route('budgets.index', ['estado' => 'PENDIENTE']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material pendientes: 
+                                    Material pendientes:
                                 </a>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="{{ route('budgets.index', ['estado' => 'ENTREGADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material entregadas: 
+                                    Material entregados:
                                 </a>
                             </div>
                         </div>
@@ -54,61 +54,266 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material rechazadas:
+                                    Material cancelado:
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
             <div class="py-2">
                 <div class="row">
-                    <div class="table-responsive">
-                        <div id="toolbar">
+                    <!-- Tabla existente -->
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <div id="toolbar"></div>
+                            <table id="orders-table"
+                                class="table table-striped table-bordered"
+                                data-toggle="table"
+                                data-search="true"
+                                data-pagination="true"
+                                data-show-columns="true"
+                                data-show-refresh="true"
+                                data-page-list="[5, 10, 20, All]"
+                                data-toolbar="#toolbar">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th data-field="ot" data-sortable="true">OT</th>
+                                        <th data-field="orderNumber" data-sortable="true">Empresa</th>
+                                        <th data-field="supplier" data-sortable="true">Usuario</th>
+                                        <th data-field="sales" data-sortable="true">Vendedor</th>
+                                        <th data-field="oc" data-sortable="true">OC</th>
+                                        <th data-field="status" data-sortable="true">Estado</th>
+                                        <th data-field="acciones" data-sortable="true">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($materiales as $material)
+                                    <tr>
+                                        <td>OT-{{$material->item->budget->id}}_{{$material->item_id}}</td>
+                                        <td>{{$material->item->budget->client->name}}</td>
+                                        <td>{{$material->item->budget->clientUser->name}}</td>
+                                        <td>{{$material->item->budget->user->name}}</td>
+                                        <td>{{$material->oc->codigo ?? 'NO OC'}}</td>
+                                        <td>{{$material->estatus}}</td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#materialOc"
+                                                data-material-id="{{ $material->id }}">
+                                                OC
+                                            </button>
 
+                                        </td>
+
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <table id="orders-table"
-                            class="table table-striped table-bordered"
-                            data-toggle="table"
-                            data-search="true"
-                            data-pagination="true"
-                            data-show-columns="true"
-                            data-show-refresh="true"
-                            data-page-list="[5, 10, 20, All]"
-                            data-toolbar="#toolbar">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th data-field="id" data-sortable="true">Codigo</th>
-                                    <th data-field="orderNumber" data-sortable="true">Empresa</th>
-                                    <th data-field="supplier" data-sortable="true">Usuario</th>
-                                    <th data-field="sales" data-sortable="true">Vendedor</th>
-                                    <th data-field="oc" data-sortable="true">OC</th>
-                                    <th data-field="status" data-sortable="true">Estado</th>
-                                    <th data-field="acciones" data-sortable="true">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($materiales as $material)
-                                <tr>
-                                    <td>{{$material->id}}</td>
-                                    <td>{{$material->id}}</td>
-                                    <td>{{$material->id}}</td>
-                                    <td>{{$material->id}}</td>
-                                    <td>{{$material->id}}</td>
-                                    <td>{{$material->id}}</td>
-                                    <td>
-                                        <a href="{{ route('budgets.show.orders', ['budgetId' => $material->id]) }}" class="btn btn-success btn-sm">
+                    </div>
+
+                    <!-- Nueva columna para mostrar las OC -->
+                    <div class="col-md-4">
+                        <div class="card">
+                            <!-- Encabezado de la tarjeta -->
+                            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                                <span>Órdenes de Compra (OC)</span>
+                                <!-- Botón alineado dentro del header -->
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#itemsModal" class="btn btn-primary mb-3"> + OC</button>
+
+                            </div>
+
+                            <!-- Cuerpo de la tarjeta -->
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    @foreach($ocs as $oc)
+                                    <li class="list-group-item">
+                                        <strong>Código:</strong> {{ $oc->codigo }}<br>
+                                        <strong>Proveedor:</strong> {{ $oc->supplier->nombre }}<br>
+                                        <strong>Estado:</strong> {{ $oc->estatus }}
+                                        <br>
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ocMaterials"
+                                            onclick="loadMaterials({{ $oc->id }})">
+                                            Ver Material
+                                        </button>
+                                        <a href="{{ route('compras.oc.pdf', ['ocId' => $oc->id]) }}" class="btn btn-success btn-sm">
                                             Opciones
                                         </a>
-                                    </td>
+
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="modifyItemModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modifyItemModalLabel">Nueva OC</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('compras.oc.store')}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <!-- Datos de la OC -->
+                            <div class="mb-3">
+                                <label for="client" class="form-label">Proveedor</label>
+                                <select class="form-control" id="supplier_id" name="supplier_id" required>
+                                    @foreach ($proveedores as $proveedor)
+                                    <option value="{{ $proveedor->id }}" required>{{ $proveedor->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Datos de la OC -->
+                            <div class="mb-3">
+                                <label for="moneda" class="form-label">Moneda</label>
+                                <select class="form-control" id="moneda" name="moneda" required>
+                                    <option value="MXN">MXN</option>
+                                    <option value="USD">USD</option>
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <a href="" class="btn btn-secondary mb-3" style="margin-right: 15px;">Regresar</a>
+                                <button type="submit" class="btn btn-success mb-3">Guardar</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="materialOc" tabindex="-1" aria-labelledby="materialOcLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="materialOcLabel">Asignar OC</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ route('compras.material.oc', ['materialId' => $material->id]) }}" method="POST" enctype="multipart/form-data"> @csrf
+                            @method('POST')
+
+                            <!-- Campo oculto para el ID del material -->
+                            <input type="hidden" id="materialIdInput" name="materialId">
+
+                            <!-- Selector de OC -->
+                            <div class="mb-3">
+                                <label for="supplier_id" class="form-label">OC</label>
+                                <select class="form-control" id="oc_id" name="oc_id" required>
+                                    @foreach ($ocs as $oc)
+                                    <option value="{{ $oc->id }}">{{ $oc->codigo }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Precio Unitario -->
+                            <div class="mb-3">
+                                <label for="precio_unitario" class="form-label">P/U</label>
+                                <input type="number" step="0.01" class="form-control" name="precio_unitario" placeholder="Precio Unitario" required>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Regresar</button>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="ocMaterials" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="itemsModalLabel">Detalles de la OC</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>OT</th>
+                                    <th>Empresa</th>
+                                    <th>Vendedor</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Estatus</th>
                                 </tr>
-                                @endforeach
+                            </thead>
+                            <tbody id="materialTableBody">
+                                <!-- Se llenará dinámicamente -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var materialOcModal = document.getElementById('materialOc');
+                materialOcModal.addEventListener('show.bs.modal', function(event) {
+                    var button = event.relatedTarget; // Botón que activó el modal
+                    var materialId = button.getAttribute('data-material-id'); // Obtén el ID del material desde el atributo data-material-id
+                    var materialIdInput = materialOcModal.querySelector('#materialIdInput'); // Campo oculto en el formulario
+                    materialIdInput.value = materialId; // Asigna el valor al input oculto
+                });
+            });
+        </script>
+
+        <script>
+            function loadMaterials(ocId) {
+                fetch(`/compras/oc/${ocId}/materials`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la respuesta del servidor');
+                        }
+                        return response.json();
+                    })
+                    .then(materials => {
+                        const tbody = document.getElementById('materialTableBody');
+                        tbody.innerHTML = ''; // Limpiar datos anteriores
+
+                        materials.forEach(material => {
+                            const row = `
+                        <tr>
+                            <td>OT-${material.item?.budget?.id}_${material.item_id}</td>
+                            <td>${material.item?.budget?.client?.name || 'N/A'}</td>
+                            <td>${material.item?.budget?.user?.name || 'N/A'}</td>
+                            <td>${material.oc?.codigo || 'NO OC'}</td>
+                            <td>${material.estatus || 'N/A'}</td>
+                        </tr>
+                    `;
+                            tbody.innerHTML += row;
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar los materiales:', error));
+            }
+        </script>
+
+
+
+
+
+
     </x-slot>
 </x-app-layout>

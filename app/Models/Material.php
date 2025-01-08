@@ -17,11 +17,17 @@ class Material extends Model
         'unidad',
         'medida',
         'estatus',
-        'descripcion'
+        'descripcion',
+        'oc_id'
     ];
 
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function oc()
+    {
+        return $this->belongsTo(Oc::class);
     }
 }

@@ -171,12 +171,16 @@ class BudgetController extends Controller
                 $path = $processedPath;
             }
 
+            $item_track = $budget->items()->count() + 1;
+
+
             $budget->items()->create([
                 'descripcion' => $item['descripcion'],
                 'cantidad' => $item['cantidad'],
                 'precio_unitario' => $item['precio_unitario'],
                 'subtotal' => $item['cantidad'] * $item['precio_unitario'],
                 'imagen' => $path,
+                'partida' => $item_track,
             ]);
         }
 
@@ -322,6 +326,7 @@ class BudgetController extends Controller
             $budget = Budget::findOrFail($budgetId);
 
             $item_track = $budget->items()->count() + 1;
+
 
             $path = null;
 

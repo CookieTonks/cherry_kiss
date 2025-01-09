@@ -75,7 +75,7 @@
         </thead>
         <tbody>
             <tr>
-                <td colspan="1" style="text-align:center">{{$budget->codigo}}_{{$item->partida}}</td>
+                <td colspan="1" style="text-align:center">OT-{{$budget->id}}_{{$item->partida}}</td>
             </tr>
         </tbody>
     </table>

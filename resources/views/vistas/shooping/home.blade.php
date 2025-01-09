@@ -93,7 +93,7 @@
                                 <tbody>
                                     @foreach($materiales as $material)
                                     <tr>
-                                        <td>OT-{{$material->item->budget->id}}_{{$material->item_id}}</td>
+                                        <td>OT-{{$material->item->budget->id}}_{{$material->item->partida}}</td>
                                         <td>{{$material->item->budget->client->name}}</td>
                                         <td>{{$material->item->budget->clientUser->name}}</td>
                                         <td>{{$material->item->budget->user->name}}</td>
@@ -144,7 +144,7 @@
                                             Ver Material
                                         </button>
                                         <a href="{{ route('compras.oc.pdf', ['ocId' => $oc->id]) }}" class="btn btn-success btn-sm">
-                                            Opciones
+                                            OC PDF
                                         </a>
 
                                     </li>

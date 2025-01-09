@@ -44,7 +44,7 @@ class ComprasController extends Controller
             ]);
             return back()->with('success', '¡Material asignada a OC con exito!');
         } catch (\Exception $e) {
-            return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!');
+            return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
         }
     }
 
@@ -63,7 +63,14 @@ class ComprasController extends Controller
         return response()->json($materials); // Devuelve la respuesta en formato JSON.
     }
 
-    public function ocPdf() {
-        
+    public function ocPdf()
+    {
+
+        $html = view('vistas.shooping.oc')->render();
+
+        $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+
+        // Descargar el PDF
+        return $pdf->stream("budget.pdf");
     }
 }

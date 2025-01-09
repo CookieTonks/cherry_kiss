@@ -112,7 +112,7 @@ class OrderController extends Controller
                 'cantidad' => $request->cantidad,
                 'unidad' => $request->unidad,
                 'medida' => $request->medida,
-                'estatus'  => 'REGISTRADO',
+                'estatus'  => 'registrado',
                 'precio_unitario'   => '0.00'
             ];
 
@@ -133,7 +133,7 @@ class OrderController extends Controller
 
             return back()->with('success', '¡Material agregado con éxito!');
         } catch (\Throwable $th) {
-            return back()->with('error', '¡Material no agregado, intenta de nuevo!');
+            return back()->with('error', '¡Material no agregado, intenta de nuevo!' . $th);
         }
     }
 

@@ -66,11 +66,15 @@ class ComprasController extends Controller
     public function ocPdf()
     {
 
-        $html = view('vistas.shooping.oc')->render();
+        try {
 
-        $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+            $html = view('vistas.shooping.oc')->render();
 
-        // Descargar el PDF
-        return $pdf->stream("budget.pdf");
+            $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+
+            return $pdf->stream("budget.pdf");
+        } catch (\Exception $e) {
+            return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
+        }
     }
 }

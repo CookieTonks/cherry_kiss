@@ -12,6 +12,7 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::middleware(['can:ver_cotizaciones'])->group(function () {
     Route::get('/almacen/home', [AlmacenController::class, 'home'])->name('almacen.home');
     Route::get('/almacen/material/{materialId}/receive', [AlmacenController::class, 'check'])->name('almacen.material.check');
+    Route::post('/almacen/material/add', [AlmacenController::class, 'askMaterial'])->name('almacen.material.ask');
 
     // });
 });

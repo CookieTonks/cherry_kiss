@@ -83,9 +83,10 @@
                                     <tr>
                                         <th data-field="ot" data-sortable="true">OT</th>
                                         <th data-field="orderNumber" data-sortable="true">Empresa</th>
-                                        <th data-field="supplier" data-sortable="true">Usuario</th>
                                         <th data-field="sales" data-sortable="true">Vendedor</th>
                                         <th data-field="oc" data-sortable="true">OC</th>
+                                        <th data-field="cantidad" data-sortable="true">Descripcion</th>
+                                        <th data-field="descripcion" data-sortable="true">Cantidad</th>
                                         <th data-field="status" data-sortable="true">Estado</th>
                                         <th data-field="acciones" data-sortable="true">Acciones</th>
                                     </tr>
@@ -94,10 +95,11 @@
                                     @foreach($materiales as $material)
                                     <tr>
                                         <td>OT-{{$material->item->budget->id}}_{{$material->item->partida}}</td>
-                                        <td>{{$material->item->budget->client->name}}</td>
                                         <td>{{$material->item->budget->clientUser->name}}</td>
                                         <td>{{$material->item->budget->user->name}}</td>
                                         <td>{{$material->oc->codigo ?? 'NO OC'}}</td>
+                                        <td>{{$material->descripcion}}</td>
+                                        <td>{{$material->cantidad}}</td>
                                         <td>{{$material->estatus}}</td>
                                         <td>
                                             <button
@@ -108,10 +110,7 @@
                                                 data-material-id="{{ $material->id }}">
                                                 OC
                                             </button>
-
                                         </td>
-
-
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -255,6 +254,8 @@
                                     <th>OT</th>
                                     <th>Empresa</th>
                                     <th>Vendedor</th>
+                                    <th>Descripcion</th>
+                                    <th>Cantidad</th>
                                     <th>Precio Unitario</th>
                                     <th>Estatus</th>
                                 </tr>
@@ -299,6 +300,8 @@
                             <td>OT-${material.item?.budget?.id}_${material.item_id}</td>
                             <td>${material.item?.budget?.client?.name || 'N/A'}</td>
                             <td>${material.item?.budget?.user?.name || 'N/A'}</td>
+                            <td>${material.descripcion || 'N/A'}</td>
+                            <td>${material.cantidad || 'N/A'}</td>
                             <td>${material.oc?.codigo || 'NO OC'}</td>
                             <td>${material.estatus || 'N/A'}</td>
                         </tr>

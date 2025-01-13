@@ -11,57 +11,28 @@
 
             <div class="row justify-content-center">
                 <!-- Módulo 1 -->
-                <div class="col-12 col-sm-2">
+                <div class="col-12 col-sm-6">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material proceso:
+                                Material pendiente:
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-2">
-                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body text-center">
-                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material proceso:
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulo 2 -->
-                <div class="col-12 col-sm-2">
-                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body text-center">
-                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material pendientes:
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Módulo 3 -->
-                <div class="col-12 col-sm-2">
+                <div class="col-12 col-sm-6">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material entregadas:
+                                Material entregado:
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-2">
-                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body text-center">
-                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material rechazadas:
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -97,7 +68,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach($materiales as $material)
                             <tr>
                                 <td>OT-{{$material->item->budget->id}}_{{$material->item->partida}}</td>
@@ -109,7 +79,7 @@
                                 <td>{{$material->cantidad}}</td>
                                 <td>{{$material->estatus}}</td>
                                 <td>
-                                    <a href="" class="btn btn-success btn-sm">
+                                    <a href="{{ route('almacen.material.check', ['materialId' => $material->id]) }}" class="btn btn-success btn-sm">
                                         Check
                                     </a>
                                 </td>
@@ -122,6 +92,8 @@
         </div>
     </div>
     </div>
+
+   
 
 
 

@@ -58,9 +58,9 @@
                     <br>
                     <br>
                     <br>
-                    <p class="h6" style="text-align: right;">Cotizacion: </p>
-                    <p class="h7" style="text-align: right;">Vendedor:</p>
-                    <p class="h7" style="text-align: right;">Fecha creada:</p>
+                    <p class="h6" style="text-align: right;">OC: {{$oc->codigo}} </p>
+                    <p class="h7" style="text-align: right;">Comprador: </p>
+                    <p class="h7" style="text-align: right;">Fecha creada: {{$oc->created_at}}</p>
                 </td>
             </tr>
         </thead>
@@ -69,20 +69,16 @@
     <table class="table  table-sm" style="text-align:center;font-size:xx-small;" width="100%">
         <thead style="background-color: #4682B4; color:white;">
             <tr>
-                <th colspan="1" style="text-align:left">#COT</th>
-                <th colspan="1" style="text-align:left">CLIENTE</th>
-                <th colspan="1" style="text-align:left">USUARIO</th>
-                <th colspan="1" style="text-align:left">MONTO</th>
+                <th colspan="1" style="text-align:left">#OC</th>
+                <th colspan="1" style="text-align:left">Proveedor</th>
                 <th colspan="1" style="text-align:left">MONEDA</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
+                <td style="text-align: left;" colspan="1"> {{$oc->codigo}} </td>
+                <td style="text-align: left;" colspan="1"> {{$oc->supplier->nombre}}</td>
+                <td style="text-align: left;" colspan="1"> {{$oc->moneda}} </td>
             </tr>
         </tbody>
     </table>
@@ -96,11 +92,14 @@
             </tr>
         </thead>
         <tbody>
+
+            @foreach($oc->materials as $materiales)
             <tr>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"> </td>
-                <td style="text-align: left;" colspan="1"></td>
+                <td style="text-align: left;" colspan="1"> {{$materiales->descripcion}} </td>
+                <td style="text-align: left;" colspan="1"> {{$materiales->cantidad}} </td>
+                <td style="text-align: left;" colspan="1"> {{$materiales->precio_unitario}} </td>
             </tr>
+            @endforeach
         </tbody>
     </table>
 
@@ -108,12 +107,16 @@
     <table class="table table-bordered" style="text-align: center;font-size:x-small;">
         <thead style="background-color: #4682B4; color:white;">
             <tr>
-                <th>TIEMPO DE ENTREGA (DIAS)</th>
+                <th>SUBTOTAL</th>
+                <th>IVA</th>
+                <th>TOTAL</th>
             </tr>
         </thead>
         <tbody style="font-size:xx-small;">
             <tr>
-                <td></td>
+                <td>${{ number_format($subtotal, 2) }}</td>
+                <td>${{ number_format($iva, 2) }}</td>
+                <td>${{ number_format($total, 2) }}</td>
             </tr>
         </tbody>
     </table>
@@ -121,7 +124,7 @@
 
 
     <p style="font-size:x-small; text-align:center;">
-        Nota de página
+        NOTA DE PAGINA
     </p>
 
 </html>

@@ -63,16 +63,25 @@ class ComprasController extends Controller
         return response()->json($materials); // Devuelve la respuesta en formato JSON.
     }
 
-    public function ocPdf()
+    public function ocPdf($ocId)
     {
+        // try {
 
-        try {
+        $oc = Oc::findOrfail($ocId);
 
-            $html = view('vistas.shooping.oc')->render();
+        $subtotal = 0;
+        foreach ($oc->materials as $material) {
+            $subtotal += $material->cantidad * $material->precio_unitario;
+        }
 
-            $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+        $iva = $subtotal * 0.16; // Asumiendo un IVA del 16%
+        $total = $subtotal + $iva;
 
-            return $pdf->stream("budget.pdf");
+        $html = view('vistas.shooping.oc', compact('oc', 'subtotal', 'iva', 'total'))->render();
+
+
+        $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+        return $pdf->stream("budget.pdf");
         } catch (\Exception $e) {
             return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
         }

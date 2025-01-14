@@ -61,6 +61,73 @@
                 </div> -->
 
             </div>
+
+            <div class="row" style="padding-top: 20px;">
+                <div class="col-12 col-sm-4">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('almacen.home') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Almacen
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Produccion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Calidad
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row" style="padding-top: 20px;">
+                <div class="col-12 col-sm-4">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Embarques
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Facturacion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4">
+                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                        <div class="card-body text-center">
+                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Administracion
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
     </div>

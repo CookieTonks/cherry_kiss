@@ -82,8 +82,8 @@ class ComprasController extends Controller
 
         $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
         return $pdf->stream("budget.pdf");
-        } catch (\Exception $e) {
-            return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
-        }
+        // } catch (\Exception $e) {
+        //     return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
+        // }
     }
 }

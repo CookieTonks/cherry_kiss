@@ -223,7 +223,7 @@
                                     @endforeach
                                 </select>
                             </div>
-
+1
                             <!-- Precio Unitario -->
                             <div class="mb-3">
                                 <label for="precio_unitario" class="form-label">P/U</label>

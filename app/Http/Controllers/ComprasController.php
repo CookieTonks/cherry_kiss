@@ -65,25 +65,25 @@ class ComprasController extends Controller
 
     public function ocPdf($ocId)
     {
-        // try {
+        try {
 
-        $oc = Oc::findOrfail($ocId);
+            $oc = Oc::findOrfail($ocId);
 
-        $subtotal = 0;
-        foreach ($oc->materials as $material) {
-            $subtotal += $material->cantidad * $material->precio_unitario;
+            $subtotal = 0;
+            foreach ($oc->materials as $material) {
+                $subtotal += $material->cantidad * $material->precio_unitario;
+            }
+
+            $iva = $subtotal * 0.16; // Asumiendo un IVA del 16%
+            $total = $subtotal + $iva;
+
+            $html = view('vistas.shooping.oc', compact('oc', 'subtotal', 'iva', 'total'))->render();
+
+            //Saludos
+            $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
+            return $pdf->stream("budget.pdf");
+        } catch (\Exception $e) {
+            return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
         }
-
-        $iva = $subtotal * 0.16; // Asumiendo un IVA del 16%
-        $total = $subtotal + $iva;
-
-        $html = view('vistas.shooping.oc', compact('oc', 'subtotal', 'iva', 'total'))->render();
-
-
-        $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
-        return $pdf->stream("budget.pdf");
-        // } catch (\Exception $e) {
-        //     return back()->with('error', '¡Hubo un problema al asignar el material a OC, intenta de nuevo!' . $e);
-        // }
     }
 }

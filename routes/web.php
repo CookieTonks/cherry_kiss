@@ -28,6 +28,7 @@ Route::group([], base_path('routes/base/materials.php'));
 Route::group([], base_path('routes/base/compras.php'));
 Route::group([], base_path('routes/base/order.php'));
 Route::group([], base_path('routes/base/almacen.php'));
+Route::group([], base_path('routes/base/production.php'));
 
 
 require __DIR__ . '/auth.php';

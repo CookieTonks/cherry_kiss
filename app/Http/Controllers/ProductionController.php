@@ -10,7 +10,7 @@ class ProductionController extends Controller
 {
     public function Home()
     {
-        $ordenes = Item::all();
+        $ordenes = Item::where('estado', '=', 'P.PRODUCCION')->orwhere('estado', '=', 'P.ASIGNADA')->get();
 
         $tecnicos = User::role('Tecnico')->get();
 
@@ -23,7 +23,7 @@ class ProductionController extends Controller
 
             $orden = Item::findOrFail($otId);
             $orden->tecnico = $request->tecnico_id;
-            $orden->estado = 'ASIGNADA';
+            $orden->estado = 'P.ASIGNADA';
             $orden->save();
             return redirect()->route('production.home')->with('success', 'Tecnico asignado con éxito.');
         } catch (\Throwable $th) {

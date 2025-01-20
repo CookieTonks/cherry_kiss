@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Material;
 use App\Helpers\StringHelper;
+use App\Models\Proceso;
 
 
 class AlmacenController extends Controller
@@ -20,7 +21,18 @@ class AlmacenController extends Controller
     public function check($materialId)
     {
         try {
-            Material::where('id', $materialId)->update(['estatus' => 'entregado']);
+
+            $material = Material::findOrFail($materialId);
+            $item = $material->item;
+            $material->estatus = 'entregado';
+            $material->save();
+
+            $allDelivered = !$item->materials()->where('estatus', '!=', 'entregado')->exists();
+
+            if ($allDelivered) {
+                $item->estado = 'P.PRODUCCION';
+                $item->save();
+            }
             return redirect()->route('almacen.home')->with('success', 'Material recibido con éxito.');
         } catch (\Throwable $th) {
             Log::error('Error dar entrada al material: ' . $th->getMessage());

@@ -107,7 +107,7 @@
                                     </div>
                                     <button
                                         type="button"
-                                        class="btn btn-primary mb-3"
+                                        class="btn btn-success mb-3"
                                         data-bs-toggle="modal"
                                         data-bs-target="#liberarOTModal{{$orden->id}}">
                                         Liberar
@@ -122,16 +122,8 @@
                                                 <div class="modal-body">
                                                     <form action="{{ route('production.liberacion.ot', $orden->id) }}" method="POST">
                                                         @csrf
-                                                        <div class="form-group">
-                                                            <label for="tecnico{{$orden->id}}">Seleccionar Técnico</label>
-                                                            <select class="form-control" id="tecnico{{$orden->id}}" name="tecnico_id" required>
-                                                                <option value="" disabled selected>Seleccione un técnico</option>
-                                                                @foreach($tecnicos as $tecnico)
-                                                                <option value="{{ $tecnico->id }}">{{ $tecnico->name }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                        <button type="submit" class="btn btn-success mt-3">Asignar</button>
+
+                                                        <button type="submit" class="btn btn-success mt-3">Liberar</button>
                                                     </form>
                                                 </div>
                                             </div>

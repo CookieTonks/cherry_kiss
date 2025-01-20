@@ -35,7 +35,7 @@ class ProductionController extends Controller
     {
         try {
             $orden = Item::findOrFail($otId);
-            $orden->estado = 'E.CALIDAD';
+            $orden->estado = 'C.ENVIADA';
             $orden->save();
             return redirect()->route('production.home')->with('success', 'OT enviada a calidad con éxito.');
         } catch (\Throwable $th) {

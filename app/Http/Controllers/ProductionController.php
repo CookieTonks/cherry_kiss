@@ -23,7 +23,7 @@ class ProductionController extends Controller
 
             $orden = Item::findOrFail($otId);
             $orden->tecnico = $request->tecnico_id;
-            $orden->estado = 'P.ASIGNADA';
+            $orden->estado = 'P.ASIGNADAS';
             $orden->save();
             return redirect()->route('production.home')->with('success', 'Tecnico asignado con éxito.');
         } catch (\Throwable $th) {

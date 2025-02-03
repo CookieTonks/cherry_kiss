@@ -12,6 +12,7 @@ class ProductionController extends Controller
     {
         $ordenes = Item::where('estado', '=', 'P.PRODUCCION')->orwhere('estado', '=', 'P.ASIGNADA')->get();
 
+
         $tecnicos = User::role('Tecnico')->get();
 
         return view('vistas.production.home', compact('ordenes', 'tecnicos'));
@@ -23,7 +24,7 @@ class ProductionController extends Controller
 
             $orden = Item::findOrFail($otId);
             $orden->tecnico = $request->tecnico_id;
-            $orden->estado = 'P.ASIGNADAS';
+            $orden->estado = 'P.ASIGNADA';
             $orden->save();
             return redirect()->route('production.home')->with('success', 'Tecnico asignado con éxito.');
         } catch (\Throwable $th) {

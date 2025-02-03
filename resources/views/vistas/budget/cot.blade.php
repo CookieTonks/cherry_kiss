@@ -107,7 +107,7 @@
     </table>
 
 
-    <table class="table table-bordered" style="text-align: center;font-size:x-small;">
+    <table class="table table-bordered" style="text-align: center;font-size:x-small;" width="100%">
         <thead style="background-color: #4682B4; color:white;">
             <tr>
                 <th>TIEMPO DE ENTREGA (DIAS)</th>

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Almacen / Materiales
+            Calidad / Ordenes de trabajo
         </h2>
 
     </x-slot>
@@ -15,7 +15,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material pendiente:
+                                Ordenes pendientes:
                             </a>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material entregado:
+                                Ordenes entregadas:
                             </a>
                         </div>
                     </div>
@@ -68,7 +68,44 @@
                             </tr>
                         </thead>
                         <tbody>
-
+                            tbody>
+                            @foreach($ordenes as $orden)
+                            <tr>
+                                <td>OT-{{$orden->budget->id}}_{{$orden->id}}</td>
+                                <td>{{$orden->budget->client->name}}</td>
+                                <td>{{$orden->budget->clientUser->name}}</td>
+                                <td>{{$orden->budget->user->name}}</td>
+                                <td>{{$orden->budget->oc_number}}</td>
+                                <td>{{$orden->descripcion}}</td>
+                                <td>{{$orden->cantidad}}</td>
+                                <td>{{$orden->estado}}</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-success mb-3"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#liberarOTModal{{$orden->id}}">
+                                        Liberar
+                                    </button>
+                                    <div class="modal fade" id="liberarOTModal{{$orden->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$orden->id}}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="asignarTecnicoLabel{{$orden->id}}">Liberar - OT-{{$orden->budget->id}}_{{$orden->id}}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('quality.ot.liberacion', $orden->id) }}" method="POST">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-success mt-3">Liberar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

@@ -72,7 +72,9 @@
                 <th colspan="1" style="text-align:left">#COT</th>
                 <th colspan="1" style="text-align:left">CLIENTE</th>
                 <th colspan="1" style="text-align:left">USUARIO</th>
-                <th colspan="1" style="text-align:left">MONTO</th>
+                <th colspan="1" style="text-align:left">SUBTOTAL</th>
+                <th colspan="1" style="text-align:left">IVA</th>
+                <th colspan="1" style="text-align:left">TOTAL</th>
                 <th colspan="1" style="text-align:left">MONEDA</th>
             </tr>
         </thead>
@@ -81,6 +83,8 @@
                 <td style="text-align: left;" colspan="1"> {{$budget->codigo}} </td>
                 <td style="text-align: left;" colspan="1"> {{$budget->client?->name}} </td>
                 <td style="text-align: left;" colspan="1"> {{$budget->clientUser?->name}} </td>
+                <td style="text-align: left;" colspan="1"> $ {{ number_format($subtotal, 2) }}</td>
+                <td style="text-align: left;" colspan="1"> $ {{ number_format($iva, 2) }}</td>
                 <td style="text-align: left;" colspan="1"> $ {{ number_format($budget->monto, 2) }}</td>
                 <td style="text-align: left;" colspan="1"> {{$budget->moneda}} </td>
             </tr>

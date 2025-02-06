@@ -15,7 +15,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones proceso: {{$totales['abiertas']}}
+                                Cotizaciones abiertas: {{$totales['abiertas']}}
                             </a>
                         </div>
                     </div>
@@ -24,8 +24,8 @@
                 <div class="col-12 col-sm-2">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones proceso: {{$totales['proceso']}}
+                            <a href="{{ route('budgets.index', ['estado' => 'ENVIADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Cotizaciones enviadas: {{$totales['enviadas']}}
                             </a>
                         </div>
                     </div>
@@ -46,8 +46,8 @@
                 <div class="col-12 col-sm-2">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index', ['estado' => 'ENTREGADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones entregadas: {{$totales['entregadas']}}
+                            <a href="{{ route('budgets.index', ['estado' => 'PROCESO']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Cotizaciones proceso: {{$totales['en_proceso']}}
                             </a>
                         </div>
                     </div>
@@ -56,8 +56,8 @@
                 <div class="col-12 col-sm-2">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones rechazadas: {{$totales['rechazadas']}}
+                            <a href="{{ route('budgets.index', ['estado' => 'ENTREGADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                                Cotizaciones entregadas: {{$totales['entregadas']}}
                             </a>
                         </div>
                     </div>
@@ -94,30 +94,26 @@
                                 <th data-field="supplier" data-sortable="true">Usuario</th>
                                 <th data-field="sales" data-sortable="true">Vendedor</th>
                                 <th data-field="status" data-sortable="true">Estado</th>
-                                <th data-field="total" data-sortable="true">Monto</th>
-                                <th data-field="moneda" data-sortable="true">Moneda</th>
                                 <th data-field="partidas" data-sortable="true">Partidas</th>
+                                <th data-field="creada" data-sortable="true">Creada</th>
                                 <th data-field="acciones" data-sortable="true">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($budgets as $budget)
-                            <tr>
+                            @foreach($budgets->sortByDesc(fn($b) => $b->estado === 'PENDIENTE' ? 1 : 0) as $budget)
+                            <tr class="{{ $budget->estado === 'PENDIENTE' ? 'table-danger' : '' }}">
                                 <td>{{$budget->codigo}}</td>
                                 <td>{{$budget->client?->name ?? 'Empresa no asignada' }}</td>
-                                <td>{{$budget->clientUser?->name ?? 'Usuario no asignado' }} </td>
+                                <td>{{$budget->clientUser?->name ?? 'Usuario no asignado' }}</td>
                                 <td>{{$budget->user?->name ?? 'Vendedor no asignado' }}</td>
                                 <td>{{$budget->estado}}</td>
-                                <td>{{$budget->monto}}</td>
-                                <td>{{$budget->moneda}}</td>
                                 <td>
-                                    <!-- Botón para abrir modal -->
                                     <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
                                         onclick="loadItems({{ $budget->id }})">
                                         Ver Partidas
                                     </button>
                                 </td>
-
+                                <td>{{$budget->created_at}}</td>
                                 <td>
                                     <a href="{{ route('budgets.show', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
                                         Opciones
@@ -125,6 +121,8 @@
                                 </td>
                             </tr>
                             @endforeach
+
+
                         </tbody>
                     </table>
                 </div>

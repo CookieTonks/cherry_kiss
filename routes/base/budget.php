@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/budgets/edit/{budgetId}', [BudgetController::class, 'edit'])->name('budgets.edit');
     Route::post('/budgets/update/{budgetId}', [BudgetController::class, 'update'])->name('budgets.update');
     Route::delete('/budgets/delete/{budgetId}', [BudgetController::class, 'destroyBudget'])->name('budgets.destroy');
+    Route::get('/budgets/rejected/{budgetId}', [BudgetController::class, 'rejectedBudget'])->name('budgets.rejected');
     Route::post('/budgets/assign-oc/{budgetId}', [BudgetController::class, 'assignOC'])->name('budgets.assignOC');
     Route::get('/getClientUsers/{clientId}', [BudgetController::class, 'getClientUsers']);
 

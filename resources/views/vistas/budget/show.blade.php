@@ -92,7 +92,12 @@
                 <a href="{{ route('budgets.index') }}" class="btn btn-secondary btn-sm">Regresar</a>
                 <a href="{{ route('budgets.make', ['budgetId' => $budget->id]) }}" target="_blank" class="btn btn-success btn-sm">Crear Cotización</a>
                 <a href="{{ route('budgets.edit', ['budgetId' => $budget->id]) }}" target="_blank" class="btn btn-info btn-sm">Editar Cotización</a>
-                <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalAssignOC">Aprobar</a>
+                <a href="#" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalAssignOC">Aprobada</a>
+                <a href="{{ route('budgets.rejected', ['budgetId' => $budget->id]) }}"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('¿Estás seguro de que deseas eliminar esta cotización?')">
+                    Rechazada
+                </a>
                 <a href="{{ route('budgets.destroy', ['budgetId' => $budget->id]) }}"
                     class="btn btn-danger btn-sm"
                     onclick="return confirm('¿Estás seguro de que deseas eliminar esta cotización?')">
@@ -161,7 +166,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-success">Enviar a produccion</button>
+                            <button type="submit" class="btn btn-success">Enviar a Ordenes de Trabajo</button>
                         </div>
                     </form>
                 </div>

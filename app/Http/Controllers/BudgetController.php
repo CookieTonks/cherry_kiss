@@ -33,13 +33,15 @@ class BudgetController extends Controller
             ->get();
 
 
+
+
         // Calcular el total por estado
         $totales = [
-            'abiertas' => Budget::where('user_id', $userId)->where('estado', 'ABIERTA')->count(),
-            'proceso' => Budget::where('user_id', $userId)->where('estado', 'PROCESO')->count(),
-            'pendientes' => Budget::where('user_id', $userId)->where('estado', 'PENDIENTE')->count(),
-            'entregadas' => Budget::where('user_id', $userId)->where('estado', 'ENTREGADAS')->count(),
-            'rechazadas' => Budget::where('user_id', $userId)->where('estado', 'CERRADA')->count(),
+            'abiertas' => Budget::where('user_id', $userId)->where('estado', 'ABIERTA')->count(), //Cuando se crea cotizacion
+            'enviadas' => Budget::where('user_id', $userId)->where('estado', 'ENVIADA')->count(), //Al mandar a ordenes de trabajo
+            'pendientes' => Budget::where('user_id', $userId)->where('estado', 'PENDIENTE')->count(), //Aqui va a aplicar de que cuando se abra y no cambie a proceso
+            'en_proceso' => Budget::where('user_id', $userId)->where('estado', 'PROCESO')->count(), //Cuando se cierre en facturacion
+            'entregadas' => Budget::where('user_id', $userId)->where('estado', 'ENTREGADA')->count(), //Cuando cancele una cotizacion
         ];
 
 
@@ -335,6 +337,20 @@ class BudgetController extends Controller
     {
         //
     }
+
+    public function rejectedBudget($budgetId)
+    {
+        $budget = Budget::findOrFail($budgetId);
+
+        try {
+            $budget->estado = 'RECHAZADA';
+            $budget->save();
+            return redirect()->route('budgets.index')->with('success', '¡Cotizacion rechazada con éxito!');
+        } catch (\Exception $e) {
+            return redirect()->route('budgets.index')->with('error', '¡Cotizacion no rechazada, intenta de nuevo!');
+        }
+    }
+
 
     public function storeItem(Request $request, $budgetId)
     {

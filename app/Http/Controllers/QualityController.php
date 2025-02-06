@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Item;
+
 
 class QualityController extends Controller
 {
@@ -10,6 +12,9 @@ class QualityController extends Controller
 
     public function Home()
     {
-        return view('vistas.quality.home');
+
+        $ordenes = Item::where('estado', '=', 'C.ENVIADA')->get();
+
+        return view('vistas.quality.home', compact('ordenes'));
     }
 }

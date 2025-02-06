@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Embarques / Ordenes de Trabajo
+            Facturacion / Ordenes de Trabajo
         </h2>
 
     </x-slot>
@@ -68,7 +68,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                         </tbody>
                     </table>
                 </div>

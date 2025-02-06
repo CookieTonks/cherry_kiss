@@ -116,11 +116,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="unidad" class="form-label">Unidad</label>
-                                <input type="text" class="form-control" id="unidad" name="unidad" step="0.01" placeholder="Precio Unitario">
+                                <input type="text" class="form-control" id="unidad" name="unidad" step="0.01" placeholder="Unidad">
                             </div>
                             <div class="mb-3">
                                 <label for="medida" class="form-label">Medida</label>
-                                <input type="text" class="form-control" id="medida" name="medida" step="0.01" placeholder="Precio Unitario">
+                                <input type="text" class="form-control" id="medida" name="medida" step="0.01" placeholder="Medida">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Cerrar</button>

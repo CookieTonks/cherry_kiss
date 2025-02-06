@@ -269,15 +269,18 @@ class BudgetController extends Controller
 
     public function make($budgetId)
     {
+
         $budget = Budget::findOrFail($budgetId);
-        $totalSubtotal = $budget->items->sum('subtotal');
-        $budget->monto = $totalSubtotal;
+        $subtotal = $budget->items->sum('subtotal');
+        $iva = $subtotal * 0.16;
+        $total = $subtotal + $iva;
+        $budget->monto = $total;
         $budget->save();
 
         $items = $budget->items;
 
 
-        $html = view('vistas.budget.cot', compact('budget', 'items'))->render();
+        $html = view('vistas.budget.cot', compact('budget', 'items', 'subtotal', 'iva', 'total'))->render();
 
         $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
 
@@ -488,7 +491,7 @@ class BudgetController extends Controller
         ]);
 
         // 4. Recalcular el monto total del presupuesto
-        $total = $item->budget->items()->sum('subtotal');
+        $total = $item->budget->items()->sum('subtotal') * .16;
         $item->budget->update(['monto' => $total]);
 
         return redirect()->back()->with('success', 'Ítem actualizado correctamente.');

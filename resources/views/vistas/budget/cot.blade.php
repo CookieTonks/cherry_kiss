@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title></title>
-    <link rel="stylesheet" href="/build/assets/app-C38joj50.css">
+    <link rel="stylesheet" href="build/assets/app-C38joj50.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <style type="text/css">
         thead:before,
@@ -72,10 +72,10 @@
                 <th colspan="1" style="text-align:left">#COT</th>
                 <th colspan="1" style="text-align:left">CLIENTE</th>
                 <th colspan="1" style="text-align:left">USUARIO</th>
+                <th colspan="1" style="text-align:left">MONEDA</th>
                 <th colspan="1" style="text-align:left">SUBTOTAL</th>
                 <th colspan="1" style="text-align:left">IVA</th>
                 <th colspan="1" style="text-align:left">TOTAL</th>
-                <th colspan="1" style="text-align:left">MONEDA</th>
             </tr>
         </thead>
         <tbody>
@@ -83,10 +83,10 @@
                 <td style="text-align: left;" colspan="1"> {{$budget->codigo}} </td>
                 <td style="text-align: left;" colspan="1"> {{$budget->client?->name}} </td>
                 <td style="text-align: left;" colspan="1"> {{$budget->clientUser?->name}} </td>
+                <td style="text-align: left;" colspan="1"> {{$budget->moneda}} </td>
                 <td style="text-align: left;" colspan="1"> $ {{ number_format($subtotal, 2) }}</td>
                 <td style="text-align: left;" colspan="1"> $ {{ number_format($iva, 2) }}</td>
                 <td style="text-align: left;" colspan="1"> $ {{ number_format($budget->monto, 2) }}</td>
-                <td style="text-align: left;" colspan="1"> {{$budget->moneda}} </td>
             </tr>
         </tbody>
     </table>
@@ -97,6 +97,7 @@
                 <th colspan="1" style="text-align:left">DESCRIPCION</th>
                 <th colspan="1" style="text-align:left">CANTIDAD</th>
                 <th colspan="1" style="text-align:left">P/U</th>
+                <th colspan="1" style="text-align:left">SUBTOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -105,6 +106,7 @@
                 <td style="text-align: left;" colspan="1"> {{$item->descripcion}} </td>
                 <td style="text-align: left;" colspan="1"> {{$item->cantidad}}</td>
                 <td style="text-align: left;" colspan="1"> $ {{ number_format($item->precio_unitario, 2) }}</td>
+                <td style="text-align: left;" colspan="1"> $ {{ number_format($item->subtotal, 2) }}</td>
             </tr>
             @endforeach
         </tbody>
@@ -114,12 +116,12 @@
     <table class="table table-bordered" style="text-align: center;font-size:x-small;" width="100%">
         <thead style="background-color: #4682B4; color:white;">
             <tr>
-                <th>TIEMPO DE ENTREGA (DIAS)</th>
+                <th style="text-align: center;">TIEMPO DE ENTREGA (DIAS)</th>
             </tr>
         </thead>
         <tbody style="font-size:xx-small;">
             <tr>
-                <td>{{$budget->delivery_time}}</td>
+                <td style="text-align: center;">{{$budget->delivery_time}}</td>
             </tr>
         </tbody>
     </table>

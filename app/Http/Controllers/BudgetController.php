@@ -72,14 +72,14 @@ class BudgetController extends Controller
     public function store(Request $request)
     {
 
-        try {
-            $this->createBudget($request);
+        // try {
+        $this->createBudget($request);
 
-            return redirect()->route('budgets.index')->with('success', 'Cotizacion creada con éxito.');
-        } catch (\Throwable $th) {
-            Log::error('Error al crear el cotizacion: ' . $th->getMessage());
-            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear la cotizacion.');
-        }
+        return redirect()->route('budgets.index')->with('success', 'Cotizacion creada con éxito.');
+        // } catch (\Throwable $th) {
+        //     Log::error('Error al crear el cotizacion: ' . $th->getMessage());
+        //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear la cotizacion.');
+        // }
     }
 
 
@@ -117,6 +117,7 @@ class BudgetController extends Controller
         // Crear partidas y convertir descripciones de items a mayúsculas
         $items = StringHelper::convertItemsToUpperCase($request->items);
         foreach ($request->items as $index => $item) {
+            $item_track = $budget->items()->count() + 1;
 
             $path = null;
 
@@ -137,6 +138,8 @@ class BudgetController extends Controller
                 for ($i = 1; $i <= $pageCount; $i++) {
                     $templateId = $fpdi->importPage($i);
 
+
+
                     // Obtiene el tamaño y orientación de la página original
                     $size = $fpdi->getTemplateSize($templateId);
                     $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
@@ -147,16 +150,28 @@ class BudgetController extends Controller
                     // Usa la plantilla de la página original
                     $fpdi->useTemplate($templateId);
 
+                    // Agregar el código
+                    $fpdi->SetY(10);
+                    $fpdi->SetX($size['width'] - 60);
+                    $fpdi->SetFillColor(200, 200, 200);
+                    $fpdi->SetFont('Arial', '', 14);
+
                     // Agregar el logo a la página
                     $fpdi->Image(public_path('logo.png'), 10, 10, 20);
 
-                    // Establecer las coordenadas y formato para agregar el código
-                    $fpdi->SetY(10);
-                    $fpdi->SetX($size['width'] - 60); // Ajustar según el tamaño de la página
-                    $fpdi->SetFillColor(200, 200, 200); // Fondo gris
-                    $fpdi->SetFont('Arial', '', 14);
-                    $fpdi->Cell(50, 10, $budget->codigo, 0, 0, 'C', true);
 
+                    // Información del cliente
+                    $clientName = $budget->client?->name ?? 'Sin cliente'; // Si no hay nombre, usamos un valor por defecto
+                    $clientInfo =  $clientName; // Concatenamos el ID y el nombre del cliente
+
+                    // Agregar código del presupuesto y cliente
+                    $fpdi->Cell(50, 10, $budget->codigo ?? 'Sin código' . '_' . $item_track, 0, 0, 'C', true); // Código
+                    $fpdi->SetX($size['width'] - 130); // Ajustamos la posición para la siguiente celda
+                    $fpdi->Cell(70, 10, $clientInfo, 0, 0, 'C', true); // Información del cliente
+
+                    // Agregar el nombre del usuario
+                    $fpdi->SetX($size['width'] - 210); // Ajustamos la posición para la siguiente celda
+                    $fpdi->Cell(80, 10, $budget->user?->name ?? 'Sin usuario', 0, 0, 'C', true);
 
                     // Agregar pie de página
                     $fpdi->SetY(-15); // Pie de página a 15mm del borde inferior
@@ -171,7 +186,6 @@ class BudgetController extends Controller
                 $path = $processedPath;
             }
 
-            $item_track = $budget->items()->count() + 1;
 
 
             $budget->items()->create([

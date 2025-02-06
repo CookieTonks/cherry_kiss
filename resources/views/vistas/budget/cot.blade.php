@@ -45,7 +45,7 @@
             <tr>
                 <td scope="col" style="font-size:xx-small;"><img src="logo.png" width="200px">
                     <p> <strong>BADILSA</strong> <br>
-                        RFC: BAAR561015-TU5 <br>
+                        RFC: MBA140904LY0 <br>
                         Carretera Agua Fría , Km.1.5<br>
                         Col. Cerritos de Agua Fría, Apodaca, Nuevo León.<br>
                         CP: 66200 <br>

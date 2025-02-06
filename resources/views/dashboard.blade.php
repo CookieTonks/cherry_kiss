@@ -86,7 +86,7 @@
                 <div class="col-12 col-sm-4">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('production.home') }}" class="text-decoration-none text-dark fw-bold fs-5">
+                            <a href="{{ route('quality.home') }}" class="text-decoration-none text-dark fw-bold fs-5">
                                 Calidad
                             </a>
                         </div>

@@ -8,6 +8,6 @@ class AdministrationController extends Controller
 {
     public function home()
     {
-        return view('administration.home');
+        return view('vistas.administration.home');
     }
 }

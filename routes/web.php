@@ -32,6 +32,8 @@ Route::group([], base_path('routes/base/production.php'));
 Route::group([], base_path('routes/base/quality.php'));
 Route::group([], base_path('routes/base/shipping.php'));
 Route::group([], base_path('routes/base/invoices.php'));
+Route::group([], base_path('routes/base/administration.php'));
+
 
 
 

@@ -17,7 +17,12 @@ class ComprasController extends Controller
         // $materiales = Material::all();
         $ocs = Oc::all();
         $proveedores = Supplier::all();
-        return view('vistas.shooping.home', compact('materiales', 'ocs', 'proveedores'));
+        $totales = [
+            'sin_asignar' => Material::where('estatus', 'PENDIENTE')->count(), //Cuando se cierre en facturacion
+            'en_proceso' => Material::where('estatus', 'EN PROCESO')->count(), //Cuando cancele una cotizacion
+        ];
+
+        return view('vistas.shooping.home', compact('materiales', 'ocs', 'proveedores', 'totales'));
     }
 
     public function store(Request $request)

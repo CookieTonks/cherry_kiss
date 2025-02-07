@@ -8,57 +8,26 @@
 
                 <div class="row justify-content-center">
                     <!-- Módulo 1 -->
-                    <div class="col-12 col-sm-2">
+                    <div class="col-12 col-sm-6">
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
-                                <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material sin asignar:
+                                <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                    Material sin asignar: {{$totales['sin_asignar']}}
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 col-sm-2">
+                    <div class="col-12 col-sm-6">
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
-                                <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material en proceso:
+                                <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                    Material en proceso: {{$totales['en_proceso']}}
                                 </a>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Módulo 2 -->
-                    <div class="col-12 col-sm-2">
-                        <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                            <div class="card-body text-center">
-                                <a href="{{ route('budgets.index', ['estado' => 'PENDIENTE']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material pendientes:
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Módulo 3 -->
-                    <div class="col-12 col-sm-2">
-                        <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                            <div class="card-body text-center">
-                                <a href="{{ route('budgets.index', ['estado' => 'ENTREGADA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material entregados:
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-sm-2">
-                        <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                            <div class="card-body text-center">
-                                <a href="{{ route('budgets.index', ['estado' => 'RECHAZADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material cancelado:
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
 

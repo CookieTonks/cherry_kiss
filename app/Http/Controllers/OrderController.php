@@ -26,8 +26,13 @@ class OrderController extends Controller
             ->get();
 
 
-        $materials = Material::all();
-        return view('vistas.orders.home', compact('budgets'));
+        $totales = [
+            'en_proceso' => Budget::where('user_id', $userId)->where('estado', 'PROCESO')->count(), //Cuando se cierre en facturacion
+            'entregadas' => Budget::where('user_id', $userId)->where('estado', 'ENTREGADA')->count(), //Cuando cancele una cotizacion
+        ];
+
+
+        return view('vistas.orders.home', compact('budgets', 'totales'));
     }
 
     /**

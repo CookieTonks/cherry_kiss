@@ -48,7 +48,7 @@ class AlmacenController extends Controller
                 'cantidad' => $request->cantidad,
                 'unidad' => $request->unidad,
                 'medida' => $request->medida,
-                'estatus'  => 'registrado',
+                'estatus'  => 'REGISTRADO',
                 'precio_unitario'   => '0.00'
             ];
 

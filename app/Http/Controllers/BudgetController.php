@@ -33,8 +33,6 @@ class BudgetController extends Controller
             ->get();
 
 
-
-
         // Calcular el total por estado
         $totales = [
             'abiertas' => Budget::where('user_id', $userId)->where('estado', 'ABIERTA')->count(), //Cuando se crea cotizacion

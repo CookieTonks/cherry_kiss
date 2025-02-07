@@ -11,7 +11,10 @@ class ComprasController extends Controller
 {
     public function Home()
     {
-        $materiales = Material::all();
+
+        $materiales = Material::where('estatus', '=', 'PENDIENTE')->where('estatus', '=', 'EN PROCESO')->get();
+
+        // $materiales = Material::all();
         $ocs = Oc::all();
         $proveedores = Supplier::all();
         return view('vistas.shooping.home', compact('materiales', 'ocs', 'proveedores'));

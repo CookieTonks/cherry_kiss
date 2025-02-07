@@ -4,6 +4,41 @@
             Orden Trabajo/ Home
         </h2>
         <div class="container">
+
+            <div class="py-5">
+
+                <div class="row justify-content-center">
+                    <!-- Módulo 1 -->
+
+
+
+
+                    <!-- Módulo 3 -->
+                    <div class="col-12 col-sm-6">
+                        <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                            <div class="card-body text-center">
+                                <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                    Cotizaciones proceso: {{$totales['en_proceso']}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6">
+                        <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                            <div class="card-body text-center">
+                                <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                    Cotizaciones entregadas: {{$totales['entregadas']}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
             <div class="py-2">
                 <div class="row">
                     <div class="table-responsive">

@@ -106,14 +106,55 @@
                                                 type="button"
                                                 class="btn btn-success"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#materialOc"
+                                                data-bs-target="#materialOc-{{ $material->id }}"
                                                 data-material-id="{{ $material->id }}">
                                                 OC
                                             </button>
                                         </td>
                                     </tr>
+
+                                    <!-- Modal ÚNICO para cada material -->
+                                    <div class="modal fade" id="materialOc-{{ $material->id }}" tabindex="-1" aria-labelledby="materialOcLabel-{{ $material->id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="materialOcLabel-{{ $material->id }}">Asignar OC</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ route('compras.material.oc', ['materialId' => $material->id]) }}" method="POST" enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('POST')
+
+                                                        <!-- Campo oculto para el ID del material -->
+                                                        <input type="hidden" name="materialId" value="{{ $material->id }}">
+
+                                                        <!-- Selector de OC -->
+                                                        <div class="mb-3">
+                                                            <label for="oc_id-{{ $material->id }}" class="form-label">OC</label>
+                                                            <select class="form-control" id="oc_id-{{ $material->id }}" name="oc_id" required>
+                                                                @foreach ($ocs as $oc)
+                                                                <option value="{{ $oc->id }}">{{ $oc->codigo }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Precio Unitario -->
+                                                        <div class="mb-3">
+                                                            <label for="precio_unitario-{{ $material->id }}" class="form-label">P/U</label>
+                                                            <input type="number" step="0.01" class="form-control" id="precio_unitario-{{ $material->id }}" name="precio_unitario" placeholder="Precio Unitario" required>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Regresar</button>
+                                                            <button type="submit" class="btn btn-success">Guardar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endforeach
-                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -194,46 +235,6 @@
                             </div>
                         </form>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="materialOc" tabindex="-1" aria-labelledby="materialOcLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="materialOcLabel">Asignar OC</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('compras.material.oc', ['materialId' => $material->id]) }}" method="POST" enctype="multipart/form-data"> @csrf
-                            @method('POST')
-
-                            <!-- Campo oculto para el ID del material -->
-                            <input type="hidden" id="materialIdInput" name="materialId">
-
-                            <!-- Selector de OC -->
-                            <div class="mb-3">
-                                <label for="supplier_id" class="form-label">OC</label>
-                                <select class="form-control" id="oc_id" name="oc_id" required>
-                                    @foreach ($ocs as $oc)
-                                    <option value="{{ $oc->id }}">{{ $oc->codigo }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-1
-                            <!-- Precio Unitario -->
-                            <div class="mb-3">
-                                <label for="precio_unitario" class="form-label">P/U</label>
-                                <input type="number" step="0.01" class="form-control" name="precio_unitario" placeholder="Precio Unitario" required>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Regresar</button>
-                                <button type="submit" class="btn btn-success">Guardar</button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>

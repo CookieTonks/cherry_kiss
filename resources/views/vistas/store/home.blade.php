@@ -11,28 +11,15 @@
 
             <div class="row justify-content-center">
                 <!-- Módulo 1 -->
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-12">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                            <a href="" class="text-decoration-none text-dark fw-bold fs-5">
                                 Material pendiente:
                             </a>
                         </div>
                     </div>
                 </div>
-
-
-                <!-- Módulo 3 -->
-                <div class="col-12 col-sm-6">
-                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body text-center">
-                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material entregado:
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 

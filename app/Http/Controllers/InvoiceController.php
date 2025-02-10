@@ -9,7 +9,7 @@ class InvoiceController extends Controller
 {
     public function home()
     {
-        return view('invoices.home');
+        return view('vistas.invoice.home');
     }
 
     public function liberacion($otId)

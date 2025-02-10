@@ -8,29 +8,31 @@
     <div class="container">
         <div class="py-5">
             <div class="row">
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card shadow rounded h-100 text-center p-3">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Cotizaciones Aprobadas</h5>
+                            <h2 id="ventasMes">85</h2>
+                        </div>
+                    </div>
+                </div>
                 <!-- Conteos -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Usuarios Activos</h5>
+                            <h5 class="fw-bold">Ordenes Trabajadas</h5>
                             <h2 id="usuariosActivos">120</h2>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6 col-md-3">
-                    <div class="card shadow rounded h-100 text-center p-3">
-                        <div class="card-body">
-                            <h5 class="fw-bold">Ventas del Mes</h5>
-                            <h2 id="ventasMes">85</h2>
-                        </div>
-                    </div>
-                </div>
+
 
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Productos Vendidos</h5>
+                            <h5 class="fw-bold">Proveedores Pendientes</h5>
                             <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
                         </div>
                     </div>
@@ -39,20 +41,19 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Productos Vendidos</h5>
+                            <h5 class="fw-bold">Facturas Pendientes</h5>
                             <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Gráficas -->
-            <div class="py-5">
-                <div class="row">
-
+            <div class="py-12">
+                <div class="row d-flex flex-wrap">
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card shadow rounded h-100">
                             <div class="card-header">
-                                <h5 class="card-title">Usuarios Registrados</h5>
+                                <h5 class="card-title">Cotizaciones por Vendedor</h5>
                             </div>
                             <div class="card-body">
                                 <canvas id="usuariosChart" width="100" height="50"></canvas>
@@ -63,15 +64,38 @@
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card shadow rounded h-100">
                             <div class="card-header">
-                                <h5 class="card-title">Ventas por Categoría</h5>
+                                <h5 class="card-title">Órdenes por Cliente</h5>
                             </div>
                             <div class="card-body">
                                 <canvas id="ventasChart" width="100" height="50"></canvas>
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="card shadow rounded h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">Facturas Pagadas por Mes</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="facturasPagadasChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="card shadow rounded h-100">
+                            <div class="card-header">
+                                <h5 class="card-title">Facturas Enviadas vs Pendientes</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="facturasEstadoChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
 
 
@@ -123,14 +147,87 @@
     </div>
     </div>
 
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Datos de ejemplo (puedes reemplazarlos con datos reales desde backend)
+            const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+            // Facturas pagadas por mes (ejemplo)
+            const facturasPagadas = [10, 15, 20, 18, 25, 30, 28, 35, 40, 42, 38, 45];
+
+            // Facturas enviadas y pendientes por mes
+            const facturasEnviadas = [20, 25, 30, 28, 35, 40, 38, 45, 50, 55, 52, 60];
+            const facturasPendientes = facturasEnviadas.map((env, i) => env - facturasPagadas[i]);
+
+            // Gráfico de Facturas Pagadas
+            new Chart(document.getElementById("facturasPagadasChart"), {
+                type: "line",
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: "Facturas Pagadas",
+                        data: facturasPagadas,
+                        borderColor: "#45B880",
+                        backgroundColor: "rgba(69, 184, 128, 0.2)",
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    }
+                }
+            });
+
+            // Gráfico de Facturas Enviadas vs Pendientes
+            new Chart(document.getElementById("facturasEstadoChart"), {
+                type: "bar",
+                data: {
+                    labels: meses,
+                    datasets: [{
+                            label: "Facturas Enviadas",
+                            data: facturasEnviadas,
+                            backgroundColor: "rgba(54, 162, 235, 0.7)"
+                        },
+                        {
+                            label: "Facturas Pendientes",
+                            data: facturasPendientes,
+                            backgroundColor: "rgba(255, 99, 132, 0.7)"
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     <script>
         // Gráfico de Usuarios Registrados
         var usuariosChart = new Chart(document.getElementById('usuariosChart'), {
             type: 'bar', // Cambiar tipo de gráfico si es necesario
             data: {
-                labels: ['Enero', 'Febrero', 'Marzo'],
+                labels: ['Vendedor 1', 'Vendedor 2', 'Vendedor 3'],
                 datasets: [{
-                    label: 'Usuarios Registrados',
+                    label: 'Cotizaciones Aprobadadas',
                     data: [120, 150, 180],
                     backgroundColor: '#4e73df',
                     borderColor: '#4e73df',
@@ -154,7 +251,7 @@
         var ventasChart = new Chart(document.getElementById('ventasChart'), {
             type: 'pie', // Gráfico circular
             data: {
-                labels: ['Electrónica', 'Hogar', 'Moda'],
+                labels: ['Empresa 1', 'Empresa 2', 'Empresa 3'],
                 datasets: [{
                     label: 'Ventas por Categoría',
                     data: [55, 25, 20],

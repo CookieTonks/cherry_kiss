@@ -11,9 +11,10 @@
         <div class="py-12">
             <div class="row">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        {{ __("¡Bienvenido!") }}
+                    <div class="p-6 text-black-100 dark:text-black-100">
+                        {{ __("¡Bienvenido, ") }} {{ Auth::user()->name }}{{ __("!") }}
                     </div>
+
                 </div>
             </div>
         </div>

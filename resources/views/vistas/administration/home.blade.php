@@ -7,13 +7,16 @@
 
     <div class="container">
         <div class="py-5">
+
             <div class="row">
 
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Cotizaciones Aprobadas</h5>
-                            <h2 id="ventasMes">85</h2>
+                            <h5 class="fw-bold">Cotizaciones Monto</h5>
+                            <h2 id="ventasMes">$85,000.00</h2>
+                            <a href="{{ route('export.general.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
+
                         </div>
                     </div>
                 </div>
@@ -21,33 +24,38 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Ordenes Trabajadas</h5>
+                            <h5 class="fw-bold">Cotizaciones abiertas</h5>
                             <h2 id="usuariosActivos">120</h2>
+                            <a href="{{ route('export.closed.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
+
                         </div>
                     </div>
                 </div>
 
 
-
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Proveedores Pendientes</h5>
-                            <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
+                            <h5 class="fw-bold">Cotizaciones cerradas</h5>
+                            <h2 id="productosVendidos">320</h2>
+                            <a href="{{ route('export.open.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
                     </div>
                 </div>
 
+
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Facturas Pendientes</h5>
-                            <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
+                            <h5 class="fw-bold">Cotizaciones rechazadas</h5>
+                            <h2 id="productosVendidos">320</h2>
+                            <a href="{{ route('export.rejected.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
+
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Gráficas -->
+
             <div class="py-12">
                 <div class="row d-flex flex-wrap">
                     <div class="col-12 col-sm-6 col-md-3">
@@ -64,7 +72,7 @@
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card shadow rounded h-100">
                             <div class="card-header">
-                                <h5 class="card-title">Órdenes por Cliente</h5>
+                                <h5 class="card-title">Cotizaciones por Cliente</h5>
                             </div>
                             <div class="card-body">
                                 <canvas id="ventasChart" width="100" height="50"></canvas>
@@ -75,7 +83,7 @@
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card shadow rounded h-100">
                             <div class="card-header">
-                                <h5 class="card-title">Facturas Pagadas por Mes</h5>
+                                <h5 class="card-title">Cotizaciones por mes </h5>
                             </div>
                             <div class="card-body">
                                 <canvas id="facturasPagadasChart"></canvas>
@@ -86,7 +94,7 @@
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card shadow rounded h-100">
                             <div class="card-header">
-                                <h5 class="card-title">Facturas Enviadas vs Pendientes</h5>
+                                <h5 class="card-title">Cotizaciones aprobadas vs Cotizaciones rechazadas</h5>
                             </div>
                             <div class="card-body">
                                 <canvas id="facturasEstadoChart"></canvas>
@@ -96,6 +104,49 @@
                 </div>
             </div>
 
+
+
+            <div class="row">
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card shadow rounded h-100 text-center p-3">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Ordenes en proceso</h5>
+                            <h2 id="ventasMes">85</h2>
+                        </div>
+                    </div>
+                </div>
+                <!-- Conteos -->
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card shadow rounded h-100 text-center p-3">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Ordenes proximas a entregar</h5>
+                            <h2 id="usuariosActivos">120</h2>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card shadow rounded h-100 text-center p-3">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Ordenes vencidas</h5>
+                            <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card shadow rounded h-100 text-center p-3">
+                        <div class="card-body">
+                            <h5 class="fw-bold">Ordenes cerradas</h5>
+                            <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Gráficas -->
         </div>
 
 

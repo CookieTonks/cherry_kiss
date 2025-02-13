@@ -24,6 +24,7 @@ Route::middleware(['web'])->group(function () {
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
+
     Route::group([], base_path('routes/base/budget.php'));
     Route::group([], base_path('routes/base/profiles.php'));
     Route::group([], base_path('routes/base/roles.php'));
@@ -37,8 +38,3 @@ Route::middleware(['web'])->group(function () {
     Route::group([], base_path('routes/base/invoices.php'));
     Route::group([], base_path('routes/base/administration.php'));
 });
-
-
-
-
-

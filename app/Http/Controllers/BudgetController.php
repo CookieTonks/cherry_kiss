@@ -219,7 +219,7 @@ class BudgetController extends Controller
             $budget = Budget::findOrFail($budgetId);
 
 
-            $budget->items()->where('estado', '!=', 'PROCESO')->update(['estado' => 'PROCESO']);
+            $budget->items()->update(['estado' => 'PROCESO']);
 
             // Calcular la fecha de entrega
             $delivery_date = Carbon::now()->addDays($budget->delivery_time);

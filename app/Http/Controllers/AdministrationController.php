@@ -2,12 +2,89 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Budget;
 use Illuminate\Http\Request;
 
 class AdministrationController extends Controller
 {
     public function home()
     {
-        return view('vistas.administration.home');
+        $budgetMonto = Budget::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estado', '!=', 'rechazado')
+            ->sum('monto');
+
+        $budgetOpen = Budget::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estado', '=', 'ABIERTA')
+            ->count();
+
+
+        $budgetClosed = Budget::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estado', '=', 'CERRADA')
+            ->count();
+
+
+        $budgetRejected = Budget::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estado', '=', 'RECHAZADA')
+            ->count();
+
+        $budgetsBySeller = Budget::join('users', 'budgets.user_id', '=', 'users.id')
+            ->whereYear('budgets.created_at', Carbon::now()->year)
+            ->whereMonth('budgets.created_at', Carbon::now()->month)
+            ->groupBy('budgets.user_id', 'users.name')
+            ->selectRaw('users.name as vendedor, COUNT(*) as total')
+            ->get();
+
+
+        $budgetsByClient = Budget::join('users', 'budgets.user_id', '=', 'users.id')
+            ->join('clients', 'budgets.client_id', '=', 'clients.id')  // Asegúrate de tener la relación con 'clients'
+            ->whereYear('budgets.created_at', Carbon::now()->year)
+            ->whereMonth('budgets.created_at', Carbon::now()->month)
+            ->groupBy('budgets.client_id', 'clients.name') // Agrupar por client_id y client name
+            ->selectRaw('clients.name as cliente, COUNT(*) as total')
+            ->get();
+
+        $budgetsByMonth = Budget::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as total')
+            ->whereYear('created_at', Carbon::now()->year)  // Año actual (puedes cambiarlo si quieres todos los años)
+            ->groupBy('year', 'month')  // Agrupar por año y mes
+            ->orderBy('year', 'asc')  // Ordenar por año descendente
+            ->orderBy('month', 'asc') // Ordenar por mes descendente
+            ->get();
+
+
+        $budgetStatus = Budget::selectRaw('MONTH(created_at) as month, 
+            COUNT(CASE WHEN estado = "APROBADA" OR estado = "PROCESO" THEN 1 END) as aprobadas_en_proceso, 
+            COUNT(CASE WHEN estado = "RECHAZADA" THEN 1 END) as rechazadas')
+            ->whereYear('created_at', Carbon::now()->year) // Current year
+            ->whereMonth('created_at', Carbon::now()->month) // Current month
+            ->groupBy('month')
+            ->get()
+            ->map(function ($item) {
+                // Convert the month number to month name using Carbon
+                $item->month_name = Carbon::parse("2022-{$item->month}-01")->format('F');
+                return $item;
+            });
+
+
+
+
+
+        return view(
+            'vistas.administration.home',
+            compact(
+                'budgetMonto',
+                'budgetOpen',
+                'budgetClosed',
+                'budgetRejected',
+                'budgetsBySeller',
+                'budgetsByClient',
+                'budgetsByMonth',
+                'budgetStatus'
+            )
+        );
     }
 }

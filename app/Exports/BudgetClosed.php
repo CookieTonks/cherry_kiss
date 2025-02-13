@@ -17,7 +17,7 @@ class BudgetClosed implements FromCollection, WithHeadings, WithMapping
     public function collection()
     {
         return Budget::with('client', 'clientUser', 'user')
-            ->where('estado', 'PROCESO')
+            ->where('estado', 'CERRADA')
             ->whereMonth('created_at', Carbon::now()->month)
             ->whereYear('created_at', Carbon::now()->year)
             ->get();
@@ -29,7 +29,7 @@ class BudgetClosed implements FromCollection, WithHeadings, WithMapping
      */
     public function headings(): array
     {
-        return ['ID', 'Código', 'Monto', 'Vendedor', 'Cliente', 'Usuario', 'Fecha de Creación'];
+        return ['ID', 'Código', 'Monto', 'Estatus', 'Vendedor', 'Cliente', 'Usuario', 'Fecha de Creación'];
     }
 
     /**
@@ -43,6 +43,7 @@ class BudgetClosed implements FromCollection, WithHeadings, WithMapping
             $budget->id,
             $budget->codigo,
             $budget->monto,
+            $budget->estado,
             $budget->user->name ?? 'Sin Vendedor',
             $budget->client->name ?? 'Sin Cliente',
             $budget->clientUser->name ?? 'Sin Usuario',

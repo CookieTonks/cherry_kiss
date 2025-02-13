@@ -29,7 +29,7 @@ class BudgetRejected implements FromCollection, WithHeadings, WithMapping
      */
     public function headings(): array
     {
-        return ['ID', 'Código', 'Monto', 'Vendedor', 'Cliente', 'Usuario', 'Fecha de Creación'];
+        return ['ID', 'Código', 'Monto', 'Estado', 'Vendedor', 'Cliente', 'Usuario', 'Fecha de Creación'];
     }
 
     /**
@@ -43,6 +43,7 @@ class BudgetRejected implements FromCollection, WithHeadings, WithMapping
             $budget->id,
             $budget->codigo,
             $budget->monto,
+            $budget->estado,
             $budget->user->name ?? 'Sin Vendedor',
             $budget->client->name ?? 'Sin Cliente',
             $budget->clientUser->name ?? 'Sin Usuario',

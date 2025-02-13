@@ -185,8 +185,10 @@
                                 <td>{{$orden->descripcion}}</td>
                                 <td>{{$orden->cantidad}}</td>
                                 <td>{{$orden->estado}}</td>
-                                <td>{{$orden->budget->delivery_date}}</td>
+                                <td>{{$orden->budget->delivery_time}}</td>
+
                             </tr>
+
                             @endforeach
                         </tbody>
                     </table>
@@ -203,14 +205,10 @@
             var vendedores = [];
             var cotizaciones = [];
             @foreach($budgetsBySeller as $budget)
-            vendedores.push("{{ $budget->vendedor }}");
-            cotizaciones.push({
-                {
-                    $budget - > total
-                }
-            });
+                vendedores.push("{{ $budget->vendedor }}");
+                cotizaciones.push({{ $budget->total }});
             @endforeach
-
+    
             // Gráfico de Usuarios Registrados
             var vendedoresBudget = new Chart(document.getElementById('vendedoresBudget'), {
                 type: 'bar',
@@ -238,7 +236,7 @@
             });
         });
     </script>
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Datos desde Laravel a JavaScript
@@ -246,14 +244,10 @@
             var cotizaciones = [];
             var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40']; // Colores adicionales si es necesario
             @foreach($budgetsByClient as $budget)
-            clientes.push("{{ $budget->cliente }}");
-            cotizaciones.push({
-                {
-                    $budget - > total
-                }
-            });
+                clientes.push("{{ $budget->cliente }}");
+                cotizaciones.push({{ $budget->total }});
             @endforeach
-
+    
             // Gráfico de Ventas por Categoría (Por Cliente)
             var ventasChart = new Chart(document.getElementById('clientBudget'), {
                 type: 'pie', // Tipo de gráfico circular
@@ -281,21 +275,17 @@
             });
         });
     </script>
-
+    
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Datos de Laravel a JavaScript
             var meses = [];
             var cotizaciones = [];
             @foreach($budgetsByMonth as $budget)
-            meses.push("{{ $budget->month }}/{{ $budget->year }}");
-            cotizaciones.push({
-                {
-                    $budget - > total
-                }
-            });
+                meses.push("{{ $budget->month }}/{{ $budget->year }}");
+                cotizaciones.push({{ $budget->total }});
             @endforeach
-
+    
             // Gráfico de Cotizaciones por Mes
             new Chart(document.getElementById("budgetsByMonth"), {
                 type: "line",
@@ -326,9 +316,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Prepare the data arrays from Blade
-            const meses = @json($budgetStatus - > pluck('month'));
-            const facturasEnviadas = @json($budgetStatus - > pluck('aprobadas_en_proceso'));
-            const facturasPendientes = @json($budgetStatus - > pluck('rechazadas'));
+            const meses = @json($budgetStatus->pluck('month'));
+            const facturasEnviadas = @json($budgetStatus->pluck('aprobadas_en_proceso'));
+            const facturasPendientes = @json($budgetStatus->pluck('rechazadas'));
 
             // Gráfico de Facturas Enviadas vs Pendientes
             new Chart(document.getElementById("facturasEstadoChart"), {

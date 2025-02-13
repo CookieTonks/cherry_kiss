@@ -9,11 +9,11 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['item_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'imagen', 'partida', 'estado'];
+    protected $fillable = ['item_id', 'budget_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'imagen', 'partida', 'estado'];
 
     public function budget()
     {
-        return $this->belongsTo(Budget::class); // Relación inversa con la OC
+        return $this->belongsTo(Budget::class, 'budget_id'); // Relación inversa con la OC
     }
 
     // En el modelo Item.php

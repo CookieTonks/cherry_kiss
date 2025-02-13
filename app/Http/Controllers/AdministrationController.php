@@ -104,8 +104,9 @@ class AdministrationController extends Controller
             ->count();
 
 
-        $ordenes = Item::all();
+        $ordenes = Item::with('budget')->get();
 
+       
 
         return view(
             'vistas.administration.home',

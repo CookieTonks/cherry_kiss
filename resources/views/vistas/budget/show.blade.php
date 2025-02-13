@@ -9,20 +9,20 @@
                 </div>
                 <div class="mb-3">
                     <label for="client" class="form-label">Usuario</label>
-                    <input type="text" class="form-control" value="{{ $budget->clientUser->name }}" name="client" placeholder="Cliente" readonly>
+                    <input type="text" class="form-control" value="{{ $budget->clientUser->name }}" name="client" placeholder="Usuario" readonly>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="tipo" class="form-label">Moneda</label>
-                    <input type="text" class="form-control" value="{{$budget->moneda}}" name="tipo" placeholder="Tipo" readonly>
+                    <input type="text" class="form-control" value="{{$budget->moneda}}" name="tipo" placeholder="Moneda" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="tipo" class="form-label">Tiempo de Entrega</label>
-                    <input type="text" class="form-control" value="{{$budget->delivery_time}}" name="tipo" placeholder="Tipo" readonly>
+                    <input type="text" class="form-control" value="{{$budget->delivery_time}}" name="tipo" placeholder="Tiempo de Entrega" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="tipo" class="form-label">Número de Orden de Compra (OC)</label>
-                    <input type="text" class="form-control" value="{{$budget->oc_number}}" name="tipo" placeholder="Tipo" readonly>
+                    <input type="text" class="form-control" value="{{$budget->oc_number}}" name="tipo" placeholder="Número de Orden de Compra (OC)" readonly>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-bordered" id="items-table">

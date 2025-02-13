@@ -24,7 +24,7 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Cotizaciones abiertas</h5>
+                            <h5 class="fw-bold">Cotizaciones Abiertas</h5>
                             <h2 id="usuariosActivos">{{$budgetOpen}}</h2>
                             <a href="{{ route('export.open.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
 
@@ -36,7 +36,7 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Cotizaciones cerradas</h5>
+                            <h5 class="fw-bold">Cotizaciones Cerradas</h5>
                             <h2 id="productosVendidos">{{$budgetClosed}}</h2>
                             <a href="{{ route('export.closed.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
@@ -47,7 +47,7 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Cotizaciones rechazadas</h5>
+                            <h5 class="fw-bold">Cotizaciones Rechazadas</h5>
                             <h2 id="productosVendidos">{{$budgetRejected}}</h2>
                             <a href="{{ route('export.rejected.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
@@ -111,7 +111,7 @@
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
                             <h5 class="fw-bold">Ordenes en proceso</h5>
-                            <h2 id="ventasMes">85</h2>
+                            <h2 id="ventasMes">{{$itemProcess}}</h2>
                         </div>
                     </div>
                 </div>
@@ -120,7 +120,7 @@
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
                             <h5 class="fw-bold">Ordenes proximas a entregar</h5>
-                            <h2 id="usuariosActivos">120</h2>
+                            <h2 id="usuariosActivos">{{$itemToDelivery}}</h2>
                         </div>
                     </div>
                 </div>
@@ -130,8 +130,8 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Ordenes vencidas</h5>
-                            <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
+                            <h5 class="fw-bold">Ordenes Vencidas</h5>
+                            <h2 id="productosVendidos">{{$itemPastDelivery}}</h2> <!-- Conteo estático -->
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
                             <h5 class="fw-bold">Ordenes cerradas</h5>
-                            <h2 id="productosVendidos">320</h2> <!-- Conteo estático -->
+                            <h2 id="productosVendidos">{{$itemClosed}}</h2> <!-- Conteo estático -->
                         </div>
                     </div>
                 </div>
@@ -150,45 +150,44 @@
 
 
 
-        <div class="py-5">
-            <!-- Tabla de Datos -->
-            <div class="card shadow">
-                <div class="card-header">
-                    <h5 class="card-title">Productos</h5>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
+        <div class="py-2">
+            <div class="row">
+                <div class="table-responsive">
+                    <div id="toolbar">
+                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMaterial">
+                            +
+                        </button> -->
+                    </div>
+                    <table id="orders-table"
+                        class="table table-striped table-bordered"
+                        data-toggle="table"
+                        data-search="true"
+                        data-pagination="true"
+                        data-show-columns="true"
+                        data-show-refresh="true"
+                        data-page-list="[5, 10, 20, All]"
+                        data-toolbar="#toolbar">
+                        <thead class="thead-dark">
                             <tr>
-                                <th>#</th>
-                                <th>Producto</th>
-                                <th>Categoría</th>
-                                <th>Precio</th>
-                                <th>Stock</th>
+                                <th data-field="ot" data-sortable="true">OT</th>
+                                <th data-field="cliente" data-sortable="true">Cliente</th>
+                                <th data-field="descripcion" data-sortable="true">Descripcion</th>
+                                <th data-field="cantidad" data-sortable="true">Cantidad</th>
+                                <th data-field="estado" data-sortable="true">Estado</th>
+                                <th data-field="tecnico" data-sortable="true">Fecha de entrega</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($ordenes as $orden)
                             <tr>
-                                <td>1</td>
-                                <td>Producto A</td>
-                                <td>Electrónica</td>
-                                <td>$120</td>
-                                <td>25</td>
+                                <td>OT-{{$orden->budget->id}}_{{$orden->id}}</td>
+                                <td>{{$orden->budget->client->name}}</td>
+                                <td>{{$orden->descripcion}}</td>
+                                <td>{{$orden->cantidad}}</td>
+                                <td>{{$orden->estado}}</td>
+                                <td>{{$orden->budget->delivery_date}}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Producto B</td>
-                                <td>Hogar</td>
-                                <td>$85</td>
-                                <td>45</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>Producto C</td>
-                                <td>Moda</td>
-                                <td>$45</td>
-                                <td>60</td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -204,10 +203,14 @@
             var vendedores = [];
             var cotizaciones = [];
             @foreach($budgetsBySeller as $budget)
-                vendedores.push("{{ $budget->vendedor }}");
-                cotizaciones.push({{ $budget->total }});
+            vendedores.push("{{ $budget->vendedor }}");
+            cotizaciones.push({
+                {
+                    $budget - > total
+                }
+            });
             @endforeach
-    
+
             // Gráfico de Usuarios Registrados
             var vendedoresBudget = new Chart(document.getElementById('vendedoresBudget'), {
                 type: 'bar',
@@ -235,7 +238,7 @@
             });
         });
     </script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Datos desde Laravel a JavaScript
@@ -243,10 +246,14 @@
             var cotizaciones = [];
             var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40']; // Colores adicionales si es necesario
             @foreach($budgetsByClient as $budget)
-                clientes.push("{{ $budget->cliente }}");
-                cotizaciones.push({{ $budget->total }});
+            clientes.push("{{ $budget->cliente }}");
+            cotizaciones.push({
+                {
+                    $budget - > total
+                }
+            });
             @endforeach
-    
+
             // Gráfico de Ventas por Categoría (Por Cliente)
             var ventasChart = new Chart(document.getElementById('clientBudget'), {
                 type: 'pie', // Tipo de gráfico circular
@@ -274,17 +281,21 @@
             });
         });
     </script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Datos de Laravel a JavaScript
             var meses = [];
             var cotizaciones = [];
             @foreach($budgetsByMonth as $budget)
-                meses.push("{{ $budget->month }}/{{ $budget->year }}");
-                cotizaciones.push({{ $budget->total }});
+            meses.push("{{ $budget->month }}/{{ $budget->year }}");
+            cotizaciones.push({
+                {
+                    $budget - > total
+                }
+            });
             @endforeach
-    
+
             // Gráfico de Cotizaciones por Mes
             new Chart(document.getElementById("budgetsByMonth"), {
                 type: "line",
@@ -315,9 +326,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Prepare the data arrays from Blade
-            const meses = @json($budgetStatus->pluck('month'));
-            const facturasEnviadas = @json($budgetStatus->pluck('aprobadas_en_proceso'));
-            const facturasPendientes = @json($budgetStatus->pluck('rechazadas'));
+            const meses = @json($budgetStatus - > pluck('month'));
+            const facturasEnviadas = @json($budgetStatus - > pluck('aprobadas_en_proceso'));
+            const facturasPendientes = @json($budgetStatus - > pluck('rechazadas'));
 
             // Gráfico de Facturas Enviadas vs Pendientes
             new Chart(document.getElementById("facturasEstadoChart"), {

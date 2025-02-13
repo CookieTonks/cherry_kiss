@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Budget;
+use App\Models\Item;
 use Illuminate\Http\Request;
 
 class AdministrationController extends Controller
@@ -71,6 +72,39 @@ class AdministrationController extends Controller
 
 
 
+        //Inicio desgloce de ordenes
+        $itemProcess = Item::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estado', '!=', 'F.CERRADA')
+            ->where('estado', '!=', 'RECHAZADA')
+            ->count();
+
+        $itemToDelivery = Item::join('budgets', 'items.budget_id', '=', 'budgets.id')
+            ->whereYear('items.created_at', Carbon::now()->year)
+            ->whereMonth('items.created_at', Carbon::now()->month)
+            ->where('items.estado', '!=', 'F.CERRADA')
+            ->where('items.estado', '!=', 'RECHAZADA')
+            ->whereBetween('budgets.delivery_date', [
+                Carbon::now()->addDays(1)->startOfDay(), // Start of the next day
+                Carbon::now()->addDays(7)->endOfDay()    // End of the 7th day
+            ])
+            ->count();
+
+
+        $itemPastDelivery = Item::join('budgets', 'items.budget_id', '=', 'budgets.id')
+            ->where('items.estado', '!=', 'F.CERRADA')
+            ->where('items.estado', '!=', 'RECHAZADA')
+            ->where('budgets.delivery_date', '<', Carbon::now()) // Delivery date has passed
+            ->count();
+
+
+        $itemClosed = Item::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estado', '=', 'F.CERRADA')
+            ->count();
+
+
+        $ordenes = Item::all();
 
 
         return view(
@@ -83,7 +117,12 @@ class AdministrationController extends Controller
                 'budgetsBySeller',
                 'budgetsByClient',
                 'budgetsByMonth',
-                'budgetStatus'
+                'budgetStatus',
+                'itemProcess',
+                'itemToDelivery',
+                'itemPastDelivery',
+                'itemClosed',
+                'ordenes'
             )
         );
     }

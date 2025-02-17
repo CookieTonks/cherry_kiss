@@ -67,7 +67,7 @@
                                 <td>{{$material->estatus}}</td>
                                 <td>
                                     <a href="{{ route('almacen.material.check', ['materialId' => $material->id]) }}" class="btn btn-success btn-sm">
-                                        Check
+                                        Entrada
                                     </a>
                                 </td>
                             </tr>
@@ -89,7 +89,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addItemModalLabel">Agregar Material</h5>
+                    <h5 class="modal-title" id="addItemModalLabel">Solicitar Material</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -105,15 +105,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="unidad" class="form-label">Unidad</label>
-                            <input type="text" class="form-control" id="unidad" name="unidad" step="0.01" placeholder="Precio Unitario">
+                            <input type="text" class="form-control" id="unidad" name="unidad" step="0.01" placeholder="Unidad">
                         </div>
                         <div class="mb-3">
                             <label for="medida" class="form-label">Medida</label>
-                            <input type="text" class="form-control" id="medida" name="medida" step="0.01" placeholder="Precio Unitario">
+                            <input type="text" class="form-control" id="medida" name="medida" step="0.01" placeholder="Medida">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-success mb-3">Guardar</button>
+                            <button type="submit" class="btn btn-success mb-3">Solicitar</button>
                         </div>
                     </form>
                 </div>

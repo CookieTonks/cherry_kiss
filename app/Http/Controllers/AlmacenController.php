@@ -12,9 +12,8 @@ class AlmacenController extends Controller
 {
     public function Home()
     {
-        $materiales = Material::where('estatus', '=', 'pendiente')->get();
-        // $ocs = Oc::all();
-        // $proveedores = Supplier::all();
+        $materiales = Material::where('estatus', '=', 'EN PROCESO')->get();
+
         return view('vistas.store.home', compact('materiales'));
     }
 
@@ -42,13 +41,15 @@ class AlmacenController extends Controller
 
     public function askMaterial(Request $request)
     {
+
+        //This bitch is saving with one
         try {
             $data = [
                 'descripcion' => $request->descripcion,
                 'cantidad' => $request->cantidad,
                 'unidad' => $request->unidad,
                 'medida' => $request->medida,
-                'estatus'  => 'REGISTRADO',
+                'estatus'  => 'PENDIENTE',
                 'precio_unitario'   => '0.00'
             ];
 
@@ -56,9 +57,9 @@ class AlmacenController extends Controller
 
             $data = StringHelper::convertToUpperCase($data, $fieldsToUpper);
 
-            //Asignanr OT default para material interno
+            //TODO-C : Asignar un budget y una OT para que sea interna
 
-            $ItemId = 1;
+            $ItemId = 0;
 
 
             $material = Material::create([

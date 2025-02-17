@@ -185,7 +185,7 @@
                                 <td>{{$orden->descripcion}}</td>
                                 <td>{{$orden->cantidad}}</td>
                                 <td>{{$orden->estado}}</td>
-                                <td>{{$orden->budget->delivery_time}}</td>
+                                <td>{{$orden->budget->delivery_date}}</td>
 
                             </tr>
 

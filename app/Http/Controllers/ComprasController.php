@@ -12,8 +12,9 @@ class ComprasController extends Controller
     public function Home()
     {
 
-        $materiales = Material::where('estatus', '=', 'PENDIENTE')->where('estatus', '=', 'EN PROCESO')->get();
+        $materiales = Material::where('estatus', '=', 'PENDIENTE')->orwhere('estatus', '=', 'EN PROCESO')->get();
 
+       
         // $materiales = Material::all();
         $ocs = Oc::all();
         $proveedores = Supplier::all();
@@ -80,6 +81,8 @@ class ComprasController extends Controller
             $subtotal = 0;
             foreach ($oc->materials as $material) {
                 $subtotal += $material->cantidad * $material->precio_unitario;
+                $material->estatus = 'EN PROCESO';
+                $material->save();
             }
 
             $iva = $subtotal * 0.16; // Asumiendo un IVA del 16%
@@ -87,7 +90,6 @@ class ComprasController extends Controller
 
             $html = view('vistas.shooping.oc', compact('oc', 'subtotal', 'iva', 'total'))->render();
 
-            //Saludos
             $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
             return $pdf->stream("budget.pdf");
         } catch (\Exception $e) {

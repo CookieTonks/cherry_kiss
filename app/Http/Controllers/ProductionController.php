@@ -12,10 +12,15 @@ class ProductionController extends Controller
     {
         $ordenes = Item::where('estado', '=', 'P.PRODUCCION')->orwhere('estado', '=', 'P.ASIGNADA')->get();
 
+        $totales = [
+            'sin_asignar' => Item::where('estado', 'P.PRODUCCION')->count(), //Cuando se cierre en facturacion
+            'en_proceso' => Item::where('estado', 'P.ASIGNADA')->count(), //Cuando cancele una cotizacion
+        ];
+
 
         $tecnicos = User::role('Tecnico')->get();
 
-        return view('vistas.production.home', compact('ordenes', 'tecnicos'));
+        return view('vistas.production.home', compact('ordenes', 'tecnicos', 'totales'));
     }
 
     public function tecnicoOt(Request $request, $otId)

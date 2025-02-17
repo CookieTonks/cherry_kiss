@@ -63,7 +63,7 @@
                                 <tbody>
                                     @foreach($materiales as $material)
                                     <tr>
-                                        <td>OT-{{$material->item->budget->id}}_{{$material->item->partida}}</td>
+                                        <td>OT-{{$material->item->budget->id}}_{{$material->item->id}}</td>
                                         <td>{{$material->item->budget->clientUser->name}}</td>
                                         <td>{{$material->item->budget->user->name}}</td>
                                         <td>{{$material->oc->codigo ?? 'NO OC'}}</td>

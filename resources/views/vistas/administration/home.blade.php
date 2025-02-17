@@ -7,14 +7,14 @@
 
     <div class="container">
         <div class="py-5">
-        <div class="row">
-            <div class="col-12 d-flex justify-content-end gap-2 mb-3">
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProveedor">Agregar Proveedor</button>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCliente">Agregar Cliente</button>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalUsuario">Agregar Usuario</button>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTecnico">Agregar Empleado</button>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-end gap-2 mb-3">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProveedor">Agregar Proveedor</button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCliente">Agregar Cliente</button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalUsuario">Agregar Usuario</button>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTecnico">Agregar Empleado</button>
+                </div>
             </div>
-        </div>
             <div class="row">
 
                 <div class="col-12 col-sm-6 col-md-3">
@@ -207,130 +207,130 @@
 
 
     <!-- Modal Proveedor -->
-<div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="modalProveedorLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalProveedorLabel">Agregar Proveedor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{route('administracion.proveedor')}}">
-            @csrf
-            <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Razon social</label>
-                        <input type="text" id="razon_social" name="razon_social" class="form-control" required>
-                    </div>
+    <div class="modal fade" id="modalProveedor" tabindex="-1" aria-labelledby="modalProveedorLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProveedorLabel">Agregar Proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{route('administracion.proveedor')}}">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Razon social</label>
+                            <input type="text" id="razon_social" name="razon_social" class="form-control" required>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Direccion</label>
-                        <input type="text" id="direccion" name="direccion" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </form>
+                        <div class="mb-3">
+                            <label class="form-label">Direccion</label>
+                            <input type="text" id="direccion" name="direccion" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Cliente -->
-<div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalClienteLabel">Agregar Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Teléfono</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Direccion</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </form>
+    <!-- Modal Cliente -->
+    <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalClienteLabel">Agregar Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Direccion</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal Técnico -->
-<div class="modal fade" id="modalTecnico" tabindex="-1" aria-labelledby="modalTecnicoLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTecnicoLabel">Agregar Empleado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            <form method="POST" action="{{route('administracion.empleado')}}">
-            @csrf
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" id="nombre" name="nombre" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Roles</label>
-                        <select class="form-control" name="role" required>
-                            @foreach ($roles as $role)
+    <!-- Modal Técnico -->
+    <div class="modal fade" id="modalTecnico" tabindex="-1" aria-labelledby="modalTecnicoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTecnicoLabel">Agregar Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{route('administracion.empleado')}}">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Roles</label>
+                            <select class="form-control" name="role" required>
+                                @foreach ($roles as $role)
                                 <option id="role" name="role" value="{{ $role->id }}">{{ $role->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </form>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalTecnicoLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTecnicoLabel">Agregar Usuario</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                <div class="mb-3">
-                        <label class="form-label">Cliente</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
-                </form>
+    <div class="modal fade" id="modalUsuario" tabindex="-1" aria-labelledby="modalTecnicoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTecnicoLabel">Agregar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Cliente</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <script>
@@ -339,10 +339,14 @@
             var vendedores = [];
             var cotizaciones = [];
             @foreach($budgetsBySeller as $budget)
-                vendedores.push("{{ $budget->vendedor }}");
-                cotizaciones.push({{ $budget->total }});
+            vendedores.push("{{ $budget->vendedor }}");
+            cotizaciones.push({
+                {
+                    $budget - > total
+                }
+            });
             @endforeach
-    
+
             // Gráfico de Usuarios Registrados
             var vendedoresBudget = new Chart(document.getElementById('vendedoresBudget'), {
                 type: 'bar',
@@ -370,7 +374,7 @@
             });
         });
     </script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Datos desde Laravel a JavaScript
@@ -378,10 +382,14 @@
             var cotizaciones = [];
             var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40']; // Colores adicionales si es necesario
             @foreach($budgetsByClient as $budget)
-                clientes.push("{{ $budget->cliente }}");
-                cotizaciones.push({{ $budget->total }});
+            clientes.push("{{ $budget->cliente }}");
+            cotizaciones.push({
+                {
+                    $budget - > total
+                }
+            });
             @endforeach
-    
+
             // Gráfico de Ventas por Categoría (Por Cliente)
             var ventasChart = new Chart(document.getElementById('clientBudget'), {
                 type: 'pie', // Tipo de gráfico circular
@@ -409,17 +417,21 @@
             });
         });
     </script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Datos de Laravel a JavaScript
             var meses = [];
             var cotizaciones = [];
             @foreach($budgetsByMonth as $budget)
-                meses.push("{{ $budget->month }}/{{ $budget->year }}");
-                cotizaciones.push({{ $budget->total }});
+            meses.push("{{ $budget->month }}/{{ $budget->year }}");
+            cotizaciones.push({
+                {
+                    $budget - > total
+                }
+            });
             @endforeach
-    
+
             // Gráfico de Cotizaciones por Mes
             new Chart(document.getElementById("budgetsByMonth"), {
                 type: "line",
@@ -450,9 +462,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Prepare the data arrays from Blade
-            const meses = @json($budgetStatus->pluck('month'));
-            const facturasEnviadas = @json($budgetStatus->pluck('aprobadas_en_proceso'));
-            const facturasPendientes = @json($budgetStatus->pluck('rechazadas'));
+            const meses = @json($budgetStatus - > pluck('month'));
+            const facturasEnviadas = @json($budgetStatus - > pluck('aprobadas_en_proceso'));
+            const facturasPendientes = @json($budgetStatus - > pluck('rechazadas'));
 
             // Gráfico de Facturas Enviadas vs Pendientes
             new Chart(document.getElementById("facturasEstadoChart"), {

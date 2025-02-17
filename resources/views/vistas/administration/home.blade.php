@@ -12,7 +12,7 @@
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProveedor">Agregar Proveedor</button>
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCliente">Agregar Cliente</button>
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalUsuario">Agregar Usuario</button>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTecnico">Agregar Técnico</button>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTecnico">Agregar Empleado</button>
             </div>
         </div>
             <div class="row">

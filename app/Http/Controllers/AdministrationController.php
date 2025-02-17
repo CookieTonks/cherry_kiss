@@ -153,17 +153,21 @@ class AdministrationController extends Controller
 
     public function empleado(Request $request)
     {
-        // Crear el usuario
-        $user = new User();
-        $user->name = $request->nombre;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
+        try {
+            $user = new User();
+            $user->name = $request->nombre;
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->save();
 
-        $role = Role::findById($request->role);
-        $user->assignRole($role->name);
+            $role = Role::findById($request->role);
+            $user->assignRole($role->name);
 
-        // Devolver la respuesta
-        return back()->with('success', 'Role assigned to user successfully!');
+            return redirect()->route('administration.home')
+                ->with('success', 'Usuario dado de alta con exito!');
+        } catch (\Exception $e) {
+            return redirect()->route('administration.home')
+                ->with('error', 'Ocurrió un error al dar de alta al usuario. Intenta nuevamente.');
+        }
     }
 }

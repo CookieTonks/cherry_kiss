@@ -59,7 +59,7 @@ class AlmacenController extends Controller
 
             //TODO-C : Asignar un budget y una OT para que sea interna
 
-            $ItemId = 0;
+            $ItemId = 1;
 
 
             $material = Material::create([

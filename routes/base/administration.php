@@ -35,5 +35,10 @@ Route::group(['middleware' => ['auth']], function () {
         return Excel::download(new BudgetGeneral, 'general_budgets.xlsx');
     })->name('export.general.budgets');
 
+
+    Route::post('/dashboard/administrador/proveedor', [AdministrationController::class, 'proveedor'])->name('administracion.proveedor');
+    Route::post('/dashboard/administrador/empleado', [AdministrationController::class, 'empleado'])->name('administracion.empleado');
+
+
     // });
 });

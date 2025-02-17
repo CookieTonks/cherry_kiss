@@ -20,6 +20,8 @@ class ProductionController extends Controller
 
         $tecnicos = User::role('Tecnico')->get();
 
+        dd($tecnicos);
+
         return view('vistas.production.home', compact('ordenes', 'tecnicos', 'totales'));
     }
 

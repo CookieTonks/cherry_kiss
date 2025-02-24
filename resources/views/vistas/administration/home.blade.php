@@ -459,27 +459,43 @@
         });
     </script>
 
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Prepare the data arrays from Blade
-            const meses = @json($budgetStatus -> pluck('month'));
-            const facturasEnviadas = @json($budgetStatus -> pluck('aprobadas_en_proceso'));
-            const facturasPendientes = @json($budgetStatus -> pluck('rechazadas'));
+            // Inicializar los arrays para los datos
+            var meses = [];
+            var facturasEnviadas = [];
+            var facturasPendientes = [];
+
+            // Iterar sobre los datos enviados desde Blade
+            @foreach($budgetStatus as $budget)
+            meses.push("{{ $budget->month }}"); // Obtener mes
+            facturasEnviadas.push({
+                {
+                    $budget - > aprobadas_en_proceso
+                }
+            }); // Obtener facturas enviadas
+            facturasPendientes.push({
+                {
+                    $budget - > rechazadas
+                }
+            }); // Obtener facturas pendientes
+            @endforeach
 
             // Gráfico de Facturas Enviadas vs Pendientes
             new Chart(document.getElementById("facturasEstadoChart"), {
-                type: "bar", // Bar chart type
+                type: "bar", // Tipo de gráfico: barras
                 data: {
-                    labels: meses.map(month => `Mes`), // Modify as needed for the month format
+                    labels: meses, // Meses como etiquetas del gráfico
                     datasets: [{
                             label: "Facturas Enviadas",
                             data: facturasEnviadas,
-                            backgroundColor: "rgba(54, 162, 235, 0.7)", // Blue color
+                            backgroundColor: "rgba(54, 162, 235, 0.7)", // Color azul
                         },
                         {
                             label: "Facturas Pendientes",
                             data: facturasPendientes,
-                            backgroundColor: "rgba(255, 99, 132, 0.7)", // Red color
+                            backgroundColor: "rgba(255, 99, 132, 0.7)", // Color rojo
                         }
                     ]
                 },
@@ -500,6 +516,8 @@
             });
         });
     </script>
+
+
 
 
 

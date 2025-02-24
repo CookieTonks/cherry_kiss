@@ -462,9 +462,9 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Prepare the data arrays from Blade
-            const meses = @json($budgetStatus - > pluck('month'));
-            const facturasEnviadas = @json($budgetStatus - > pluck('aprobadas_en_proceso'));
-            const facturasPendientes = @json($budgetStatus - > pluck('rechazadas'));
+            const meses = @json($budgetStatus -> pluck('month'));
+            const facturasEnviadas = @json($budgetStatus -> pluck('aprobadas_en_proceso'));
+            const facturasPendientes = @json($budgetStatus -> pluck('rechazadas'));
 
             // Gráfico de Facturas Enviadas vs Pendientes
             new Chart(document.getElementById("facturasEstadoChart"), {

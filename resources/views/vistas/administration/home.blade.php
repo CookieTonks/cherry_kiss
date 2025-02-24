@@ -396,7 +396,7 @@
                 data: {
                     labels: clientes, // Nombres de los clientes
                     datasets: [{
-                        label: 'Ventas por Categoría',
+                        label: 'Ventas por Categorías',
                         data: cotizaciones, // Cotizaciones totales por cliente
                         backgroundColor: colores.slice(0, clientes.length), // Colores para cada segmento
                         borderColor: colores.slice(0, clientes.length),

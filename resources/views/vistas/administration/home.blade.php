@@ -333,190 +333,143 @@
     </div>
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Datos desde Laravel a JavaScript
-            var vendedores = [];
-            var cotizaciones = [];
-            @foreach($budgetsBySeller as $budget)
-            vendedores.push("{{ $budget->vendedor }}");
-            cotizaciones.push({
-                {
-                    $budget - > total
-                }
-            });
-            @endforeach
+ 
+                <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Datos desde Laravel a JavaScript
+                    var vendedores = [];
+                    var cotizacionesVendedores = [];
 
-            // Gráfico de Usuarios Registrados
-            var vendedoresBudget = new Chart(document.getElementById('vendedoresBudget'), {
-                type: 'bar',
-                data: {
-                    labels: vendedores, // Nombres de los vendedores
-                    datasets: [{
-                        label: 'Cotizaciones Aprobadas',
-                        data: cotizaciones, // Cantidad de cotizaciones por vendedor
-                        backgroundColor: '#4e73df',
-                        borderColor: '#4e73df',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
+                    @foreach($budgetsBySeller as $budget)
+                        vendedores.push("{{ $budget->vendedor }}");
+                        cotizacionesVendedores.push({{ $budget->total }});
+                    @endforeach
+
+                    // Gráfico de Cotizaciones por Vendedor
+                    new Chart(document.getElementById('vendedoresBudget'), {
+                        type: 'bar',
+                        data: {
+                            labels: vendedores,
+                            datasets: [{
+                                label: 'Cotizaciones Aprobadas',
+                                data: cotizacionesVendedores,
+                                backgroundColor: '#4e73df',
+                                borderColor: '#4e73df',
+                                borderWidth: 1
+                            }]
                         },
-                        tooltip: {
-                            enabled: true,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { position: 'top' },
+                                tooltip: { enabled: true }
+                            }
                         }
-                    }
-                }
-            });
-        });
-    </script>
+                    });
+                });
+            </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Datos desde Laravel a JavaScript
-            var clientes = [];
-            var cotizaciones = [];
-            var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40']; // Colores adicionales si es necesario
-            @foreach($budgetsByClient as $budget)
-            clientes.push("{{ $budget->cliente }}");
-            cotizaciones.push({
-                {
-                    $budget - > total
-                }
-            });
-            @endforeach
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var clientes = [];
+                    var cotizacionesClientes = [];
+                    var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40'];
 
-            // Gráfico de Ventas por Categoría (Por Cliente)
-            var ventasChart = new Chart(document.getElementById('clientBudget'), {
-                type: 'pie', // Tipo de gráfico circular
-                data: {
-                    labels: clientes, // Nombres de los clientes
-                    datasets: [{
-                        label: 'Ventas por Categorías',
-                        data: cotizaciones, // Cotizaciones totales por cliente
-                        backgroundColor: colores.slice(0, clientes.length), // Colores para cada segmento
-                        borderColor: colores.slice(0, clientes.length),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
+                    @foreach($budgetsByClient as $budget)
+                        clientes.push("{{ $budget->cliente }}");
+                        cotizacionesClientes.push({{ $budget->total }});
+                    @endforeach
+
+                    new Chart(document.getElementById('clientBudget'), {
+                        type: 'pie',
+                        data: {
+                            labels: clientes,
+                            datasets: [{
+                                label: 'Ventas por Cliente',
+                                data: cotizacionesClientes,
+                                backgroundColor: colores.slice(0, clientes.length),
+                                borderColor: colores.slice(0, clientes.length),
+                                borderWidth: 1
+                            }]
                         },
-                        tooltip: {
-                            enabled: true,
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { position: 'top' },
+                                tooltip: { enabled: true }
+                            }
                         }
-                    }
-                }
-            });
-        });
-    </script>
+                    });
+                });
+            </script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Datos de Laravel a JavaScript
-            var meses = [];
-            var cotizaciones = [];
-            @foreach($budgetsByMonth as $budget)
-            meses.push("{{ $budget->month }}/{{ $budget->year }}");
-            cotizaciones.push({
-                {
-                    $budget - > total
-                }
-            });
-            @endforeach
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var meses = [];
+                    var cotizacionesMeses = [];
 
-            // Gráfico de Cotizaciones por Mes
-            new Chart(document.getElementById("budgetsByMonth"), {
-                type: "line",
-                data: {
-                    labels: meses, // Meses/Años obtenidos desde Laravel
-                    datasets: [{
-                        label: "Cotizaciones por Mes",
-                        data: cotizaciones, // Total de cotizaciones por mes
-                        borderColor: "#45B880", // Color de la línea
-                        backgroundColor: "rgba(69, 184, 128, 0.2)", // Color de relleno (transparente)
-                        borderWidth: 2,
-                        fill: true // Rellenar el área bajo la línea
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    }
-                }
-            });
-        });
-    </script>
+                    @foreach($budgetsByMonth as $budget)
+                        meses.push("{{ $budget->month }}/{{ $budget->year }}");
+                        cotizacionesMeses.push({{ $budget->total }});
+                    @endforeach
 
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Inicializar los arrays para los datos
-            var meses = [];
-            var facturasEnviadas = [];
-            var facturasPendientes = [];
-
-            // Iterar sobre los datos enviados desde Blade
-            @foreach($budgetStatus as $budget)
-            meses.push("{{ $budget->month }}"); // Obtener mes
-            facturasEnviadas.push({
-                {
-                    $budget - > aprobadas_en_proceso
-                }
-            }); // Obtener facturas enviadas
-            facturasPendientes.push({
-                {
-                    $budget - > rechazadas
-                }
-            }); // Obtener facturas pendientes
-            @endforeach
-
-            // Gráfico de Facturas Enviadas vs Pendientes
-            new Chart(document.getElementById("facturasEstadoChart"), {
-                type: "bar", // Tipo de gráfico: barras
-                data: {
-                    labels: meses, // Meses como etiquetas del gráfico
-                    datasets: [{
-                            label: "Facturas Enviadas",
-                            data: facturasEnviadas,
-                            backgroundColor: "rgba(54, 162, 235, 0.7)", // Color azul
+                    new Chart(document.getElementById("budgetsByMonth"), {
+                        type: "line",
+                        data: {
+                            labels: meses,
+                            datasets: [{
+                                label: "Cotizaciones por Mes",
+                                data: cotizacionesMeses,
+                                borderColor: "#45B880",
+                                backgroundColor: "rgba(69, 184, 128, 0.2)",
+                                borderWidth: 2,
+                                fill: true
+                            }]
                         },
-                        {
-                            label: "Facturas Pendientes",
-                            data: facturasPendientes,
-                            backgroundColor: "rgba(255, 99, 132, 0.7)", // Color rojo
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: true }
+                            }
                         }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: true
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        });
-    </script>
+                    });
+                });
+            </script>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const meses = @json($budgetStatus->pluck('month'));
+                    const facturasEnviadas = @json($budgetStatus->pluck('aprobadas_en_proceso'));
+                    const facturasPendientes = @json($budgetStatus->pluck('rechazadas'));
+
+                    new Chart(document.getElementById("facturasEstadoChart"), {
+                        type: "bar",
+                        data: {
+                            labels: meses,
+                            datasets: [{
+                                label: "Facturas Enviadas",
+                                data: facturasEnviadas,
+                                backgroundColor: "rgba(54, 162, 235, 0.7)"
+                            }, {
+                                label: "Facturas Pendientes",
+                                data: facturasPendientes,
+                                backgroundColor: "rgba(255, 99, 132, 0.7)"
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: true }
+                            },
+                            scales: {
+                                y: { beginAtZero: true }
+                            }
+                        }
+                    });
+                });
+            </script>
 
 
 

@@ -53,7 +53,7 @@ class AlmacenController extends Controller
                 'precio_unitario'   => '0.00'
             ];
 
-            $fieldsToUpper = ['descripciones', 'medida', 'estatus'];
+            $fieldsToUpper = ['descripcion', 'medida', 'estatus'];
 
             $data = StringHelper::convertToUpperCase($data, $fieldsToUpper);
 

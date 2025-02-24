@@ -91,7 +91,7 @@
             <tr>
                 <td style="text-align: center;" colspan="1"> {{$budget->codigo}} </td>
                 <td style="text-align: center;" colspan="1"> {{$budget->client?->name}} </td>
-                <td style="text-align: center;" colspan="1"> {{$budget->clientUser?->name}} </td>
+                <td style="text-align: center;" colspan="1" >{{ strtoupper(collect(explode(' ', $budget->clientUser?->name))->map(fn($word) => substr($word, 0, 1))->implode('')) }}</td>
             </tr>
         </tbody>
     </table>

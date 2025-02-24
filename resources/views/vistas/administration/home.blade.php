@@ -161,9 +161,7 @@
             <div class="row">
                 <div class="table-responsive">
                     <div id="toolbar">
-                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMaterial">
-                            +
-                        </button> -->
+                      
                     </div>
                     <table id="orders-table"
                         class="table table-striped table-bordered"
@@ -173,6 +171,7 @@
                         data-show-columns="true"
                         data-show-refresh="true"
                         data-page-list="[5, 10, 20, All]"
+                        data-export-types="['excel']"  
                         data-toolbar="#toolbar">
                         <thead class="thead-dark">
                             <tr>

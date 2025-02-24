@@ -14,7 +14,7 @@
                 <div class="col-12 col-sm-6">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
+                            <a href="" class="text-decoration-none text-dark fw-bold fs-5">
                                 OT pendientes:
                             </a>
                         </div>
@@ -26,8 +26,8 @@
                 <div class="col-12 col-sm-6">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                OT recibidas:
+                            <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                OT PROCESO:
                             </a>
                         </div>
                     </div>

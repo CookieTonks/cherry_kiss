@@ -68,7 +68,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            tbody>
                             @foreach($ordenes as $orden)
                             <tr>
                                 <td>OT-{{$orden->budget->id}}_{{$orden->id}}</td>

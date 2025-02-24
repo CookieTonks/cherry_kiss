@@ -57,7 +57,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ENTREGADAS']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Cotizaciones entregadas: {{$totales['entregadas']}}
+                                Cotizaciones cerradas: {{$totales['entregadas']}}
                             </a>
                         </div>
                     </div>

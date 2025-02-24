@@ -19,7 +19,7 @@
         }
 
         .table th {
-            background-color: rgb(255, 0, 162);
+            background-color: #4682B4;
             color: white;
             text-align: left;
             padding: 8px;
@@ -59,7 +59,7 @@
                     <br>
                     <br>
                     <p class="h6" style="text-align: right;">OC: {{$oc->codigo}} </p>
-                    <p class="h7" style="text-align: right;">Comprador: </p>
+                    <p class="h7" style="text-align: right;">Comprador: {{ Auth::user()->name }}</p>
                     <p class="h7" style="text-align: right;">Fecha creada: {{$oc->created_at}}</p>
                 </td>
             </tr>
@@ -97,7 +97,7 @@
             <tr>
                 <td style="text-align: left;" colspan="1"> {{$materiales->descripcion}} </td>
                 <td style="text-align: left;" colspan="1"> {{$materiales->cantidad}} </td>
-                <td style="text-align: left;" colspan="1"> {{$materiales->precio_unitario}} </td>
+                <td style="text-align: left;" colspan="1">${{ number_format($materiales->precio_unitario, 2) }}</td>
             </tr>
             @endforeach
         </tbody>

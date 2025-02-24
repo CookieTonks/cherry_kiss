@@ -10,6 +10,8 @@ class ShippingController extends Controller
 {
     public function Home()
     {
+
+        $ordenes = Item::where('estado', 'E.PENDIENTE')->get();
         return view('vistas.shipping.home');
     }
 

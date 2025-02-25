@@ -8,6 +8,8 @@ use App\Models\Item;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Client;
+use App\Models\ClientUser;
 use Spatie\Permission\Models\Role;
 
 
@@ -114,6 +116,8 @@ class AdministrationController extends Controller
         $roles = Role::all();
 
 
+        $clientes = Client::all();
+
         return view(
             'vistas.administration.home',
             compact(
@@ -130,7 +134,8 @@ class AdministrationController extends Controller
                 'itemPastDelivery',
                 'itemClosed',
                 'ordenes',
-                'roles'
+                'roles',
+                'clientes'
             )
         );
     }
@@ -149,6 +154,43 @@ class AdministrationController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('administration.home')
                 ->with('error', 'Ocurrió un error al dar de alta el proveedor. Intenta nuevamente.');
+        }
+    }
+
+
+    public function cliente(Request $request)
+    {
+
+        try {
+            $cliente = new Client();
+            $cliente->name = $request->nombre;
+            $cliente->email = $request->email;
+            $cliente->phone = $request->telefono;
+            $cliente->address = $request->direccion;
+            $cliente->save();
+            return redirect()->route('administration.home')
+                ->with('success', '¡Cliente dado de alta con exito!');
+        } catch (\Exception $e) {
+            return redirect()->route('administration.home')
+                ->with('error', 'Ocurrió un error al dar de alta el cliente. Intenta nuevamente.');
+        }
+    }
+
+
+    public function clienteUsuario(Request $request)
+    {
+        try {
+            $cliente = new ClientUser();
+            $cliente->name = $request->nombre;
+            $cliente->client_id = $request->cliente_id;
+            $cliente->email = $request->email;
+            $cliente->phone = $request->telefono;
+            $cliente->save();
+            return redirect()->route('administration.home')
+                ->with('success', '¡Usuario dado de alta con exito!');
+        } catch (\Exception $e) {
+            return redirect()->route('administration.home')
+                ->with('error', 'Ocurrió un error al dar de alta el usuario. Intenta nuevamente.'. $e);
         }
     }
 

@@ -245,22 +245,23 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
+                <form method="POST" action="{{route('administracion.cliente')}}">
+                @csrf
+                <div class="mb-3">
                             <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name="nombre" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name="telefono" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name="email" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Direccion</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name="direccion" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
@@ -315,14 +316,31 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label class="form-label">Cliente</label>
-                            <input type="text" class="form-control" required>
-                        </div>
+                    <form method="POST" action="{{route('administracion.clienteUsuario')}}">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Cliente</label>
+                        <select class="form-control" name="cliente_id" required>
+                            <option value="">Seleccione un cliente</option>
+                            @foreach ($clientes as $cliente)
+                                <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                         <div class="mb-3">
                             <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name="nombre" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Telefono</label>
+                            <input type="text" name="telefono" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" name="email" class="form-control" required>
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>

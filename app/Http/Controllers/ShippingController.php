@@ -12,7 +12,7 @@ class ShippingController extends Controller
     {
 
         $ordenes = Item::where('estado', 'E.PENDIENTE')->get();
-        return view('vistas.shipping.home');
+        return view('vistas.shipping.home', compact('ordenes'));
     }
 
     public function liberacion($id)

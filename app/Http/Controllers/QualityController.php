@@ -15,14 +15,17 @@ class QualityController extends Controller
     {
         $ordenes = Item::where('estado', '=', 'C.ENVIADA')->get();
 
-        return view('vistas.quality.home', compact('ordenes'));
+        $contador = Item::where('estado', '=', 'C.ENVIADA')->count();
+
+
+        return view('vistas.quality.home', compact('ordenes', 'contador'));
     }
 
     public function liberacion($id)
     {
         try {
             $orden = Item::findOrFail($id);
-            $orden->estado = 'C.LIBERADA';
+            $orden->estado = 'E.PENDIENTE';
             $orden->save();
             return redirect()->route('quality.home')->with('success', 'OT liberada con éxito.');
         } catch (\Throwable $th) {

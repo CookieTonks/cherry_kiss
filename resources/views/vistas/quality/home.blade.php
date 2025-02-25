@@ -15,7 +15,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Ordenes pendientes:
+                                Ordenes pendientes: {{$contador}}
                             </a>
                         </div>
                     </div>
@@ -28,9 +28,7 @@
             <div class="row">
                 <div class="table-responsive">
                     <div id="toolbar">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMaterial">
-                            +
-                        </button>
+
                     </div>
                     <table id="orders-table"
                         class="table table-striped table-bordered"

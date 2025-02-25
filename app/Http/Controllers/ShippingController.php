@@ -12,14 +12,16 @@ class ShippingController extends Controller
     {
 
         $ordenes = Item::where('estado', 'E.PENDIENTE')->get();
-        return view('vistas.shipping.home', compact('ordenes'));
+        $contador = Item::where('estado', 'E.PENDIENTE')->count();
+
+        return view('vistas.shipping.home', compact('ordenes', 'contador'));
     }
 
     public function liberacion($id)
     {
         try {
             $orden = Item::findOrFail($id);
-            $orden->estado = 'E.LIBERADA';
+            $orden->estado = 'F.PENDIENTE';
             $orden->save();
             return redirect()->route('shipping.home')->with('success', 'OT liberada con éxito.');
         } catch (\Throwable $th) {

@@ -15,24 +15,11 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Ordenes pendientes:
+                                Ordenes pendientes: {{$contador}}
                             </a>
                         </div>
                     </div>
                 </div>
-
-
-                <!-- Módulo 3 -->
-                <div class="col-12 col-sm-6">
-                    <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
-                        <div class="card-body text-center">
-                            <a href="{{ route('budgets.index') }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Ordenes entregadas:
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -41,9 +28,6 @@
             <div class="row">
                 <div class="table-responsive">
                     <div id="toolbar">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMaterial">
-                            +
-                        </button>
                     </div>
                     <table id="orders-table"
                         class="table table-striped table-bordered"
@@ -68,6 +52,52 @@
                             </tr>
                         </thead>
                         <tbody>
+
+                            @foreach($ordenes as $orden)
+                            <tr>
+                                <td>OT-{{$orden->budget->id}}_{{$orden->id}}</td>
+                                <td>{{$orden->budget->client->name}}</td>
+                                <td>{{$orden->budget->clientUser->name}}</td>
+                                <td>{{$orden->budget->user->name}}</td>
+                                <td>{{$orden->budget->oc_number}}</td>
+                                <td>{{$orden->descripcion}}</td>
+                                <td>{{$orden->cantidad}}</td>
+                                <td>{{$orden->estado}}</td>
+                                <td>
+                                    <button
+                                        type="button"
+                                        class="btn btn-success mb-3"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#liberarOTModal{{$orden->id}}">
+                                        Liberar
+                                    </button>
+                                    <div class="modal fade" id="liberarOTModal{{$orden->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$orden->id}}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="asignarTecnicoLabel{{$orden->id}}">
+                                                        Liberar - OT-{{$orden->budget->id}}_{{$orden->id}}
+                                                    </h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p><strong>Descripción:</strong> {{$orden->descripcion}}</p>
+                                                    <form action="{{ route('invoice.ot.liberacion', $orden->id) }}" method="POST">
+                                                        @csrf
+                                                        <div class="mb-3">
+                                                            <label for="factura{{$orden->id}}" class="form-label">Número de Factura</label>
+                                                            <input type="text" class="form-control" id="factura{{$orden->id}}" name="factura" required>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-success mt-3">Liberar</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

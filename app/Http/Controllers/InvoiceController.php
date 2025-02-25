@@ -9,21 +9,24 @@ class InvoiceController extends Controller
 {
     public function home()
     {
-        return view('vistas.invoice.home');
+
+        $ordenes = Item::where('estado', 'F.PENDIENTE')->get();
+
+        $contador = Item::where('estado', 'F.PENDIENTE')->count();
+
+        return view('vistas.invoice.home', compact('ordenes', 'contador'));
     }
 
-    public function liberacion($otId)
+    public function liberacion($otId, Request $request)
     {
-
-        //Aqui se va a añadir un valor la factura a la OT o remision.
         try {
             $orden = Item::findOrFail($otId);
             $orden->estado = 'F.LIBERADA';
-            $orden->factura = 'F0001';
+            $orden->invoice_number = $request->factura;
             $orden->save();
-            return redirect()->route('invoices.home')->with('success', 'OT liberada con éxito.');
+            return redirect()->route('invoice.home')->with('success', 'OT liberada con éxito.');
         } catch (\Throwable $th) {
-            return redirect()->route('invoices.home')->with('error', 'Hubo un problema al liberar OT, por favor intenta de nuevo.');
+            return redirect()->route('invoice.home')->with('error', 'Hubo un problema al liberar OT, por favor intenta de nuevo.' .$th);
         }
     }
 }

@@ -9,7 +9,7 @@ class Item extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['item_id', 'budget_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'imagen', 'partida', 'estado'];
+    protected $fillable = ['item_id', 'budget_id', 'descripcion', 'cantidad', 'precio_unitario', 'subtotal', 'imagen', 'partida', 'estado', 'invoice_number'];
 
     public function budget()
     {

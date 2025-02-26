@@ -69,21 +69,71 @@
                                         type="button"
                                         class="btn btn-success mb-3"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#liberarOTModal{{$orden->id}}">
-                                        Liberar
+                                        data-bs-target="#facturaOTModal{{$orden->id}}">
+                                        Factura
                                     </button>
-                                    <div class="modal fade" id="liberarOTModal{{$orden->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$orden->id}}" aria-hidden="true">
+                                    <div class="modal fade" id="facturaOTModal{{$orden->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$orden->id}}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <p><strong>SAL - {{$next_id}}</strong></p>
+                                                    <p>Descripción:{{$orden->descripcion}}</p>
+                                                    <form action="{{ route('shipping.ot.salida_factura', $orden->id) }}" method="POST">
+                                                        @csrf
+                                                        <div class="mb-3">
+                                                            <label for="cantidad" class="form-label"><strong>Cantidad Enviada:</strong></label>
+                                                            <input type="number" class="form-control" name="cantidad" id="cantidad" required min="1">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="tipo_documento" class="form-label"><strong>Tipo de salida:</strong></label>
+                                                            <input type="text" class="form-control" name="tipo_documento" id="tipo_documento" value="FACTURA" readonly>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="razon_social" class="form-label"><strong>Razon Social:</strong></label>
+                                                            <select class="form-control" name="razon_social" id="razon_social" required>
+                                                                <option value="MAQUINADOS BADILSA S.A DE C.V">MAQUINADOS BADILSA S.A DE C.V</option>
+                                                                <option value="RICARDO JAVIER BADILLO AMAYA">RICARDO JAVIER BADILLO AMAYA</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="numero_documento" class="form-label"><strong>Número de Factura:</strong></label>
+                                                            <input type="text" class="form-control" name="numero_documento" id="numero_documento" required>
+                                                        </div>
+
+                                                        <div class="mb-3 form-check">
+                                                            <input type="checkbox" class="form-check-input" id="ultima_entrega" name="ultima_entrega" value="1">
+                                                            <label class="form-check-label" for="ultima_entrega">Última entrega</label>
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-success mt-3">Liberar</button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-success mb-3"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#remisionOTModal{{$orden->id}}">
+                                        Remision
+                                    </button>
+                                    <div class="modal fade" id="remisionOTModal{{$orden->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$orden->id}}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="asignarTecnicoLabel{{$orden->id}}">
-                                                        Liberar - OT-{{$orden->budget->id}}_{{$orden->id}}
+                                                        SALIDA REMISION: OT-{{$orden->budget->id}}_{{$orden->id}}
                                                     </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <p><strong>Descripción:</strong> {{$orden->descripcion}}</p>
-                                                    <form action="{{ route('shipping.ot.liberacion', $orden->id) }}" method="POST">
+                                                    <form action="{{ route('shipping.ot.salida_factura', $orden->id) }}" method="POST">
                                                         @csrf
                                                         <button type="submit" class="btn btn-success mt-3">Liberar</button>
                                                     </form>

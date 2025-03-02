@@ -72,14 +72,14 @@ class BudgetController extends Controller
     public function store(Request $request)
     {
 
-        // try {
-        $this->createBudget($request);
+        try {
+            $this->createBudget($request);
 
-        return redirect()->route('budgets.index')->with('success', 'Cotizacion creada con éxito.');
-        // } catch (\Throwable $th) {
-        //     Log::error('Error al crear el cotizacion: ' . $th->getMessage());
-        //     return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear la cotizacion.');
-        // }
+            return redirect()->route('budgets.index')->with('success', 'Cotizacion creada con éxito.');
+        } catch (\Throwable $th) {
+            Log::error('Error al crear el cotizacion: ' . $th->getMessage());
+            return redirect()->route('budgets.index')->with('error', 'Hubo un problema al crear la cotizacion.');
+        }
     }
 
 

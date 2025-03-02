@@ -65,6 +65,45 @@
                                 <td>{{$orden->cantidad}}</td>
                                 <td>{{$orden->estado}}</td>
                                 <td>
+                                    <!-- Botón para abrir el modal -->
+                                    <button type="button"
+                                        class="btn btn-success mb-3"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#historialModal"
+                                        onclick="cargarHistorial({{ $orden->id }})">
+                                        Historial
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="historialModal" tabindex="-1" aria-labelledby="historialModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="historialModalLabel">Historial de Entregas</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Salida</th>
+                                                                <th>Cantidad</th>
+                                                                <th>Tipo</th>
+                                                                <th>Fecha</th>
+                                                                <th>Entrega</th>
+                                                                <th>Recibe</th>
+
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="historialBody">
+                                                            <!-- Los datos se cargarán aquí con AJAX -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <button
                                         type="button"
                                         class="btn btn-success mb-3"
@@ -98,6 +137,16 @@
                                                         </div>
 
                                                         <div class="mb-3">
+                                                            <label for="persona_entrega" class="form-label"><strong>Entrega:</strong></label>
+                                                            <input type="text" class="form-control" name="persona_entrega" id="persona_entrega" required>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="persona_recibe" class="form-label"><strong>Recibe:</strong></label>
+                                                            <input type="text" class="form-control" name="persona_recibe" id="persona_recibe" required>
+                                                        </div>
+
+                                                        <div class="mb-3">
                                                             <label for="numero_documento" class="form-label"><strong>Número de Factura:</strong></label>
                                                             <input type="text" class="form-control" name="numero_documento" id="numero_documento" required>
                                                         </div>
@@ -127,14 +176,48 @@
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="asignarTecnicoLabel{{$orden->id}}">
-                                                        SALIDA REMISION: OT-{{$orden->budget->id}}_{{$orden->id}}
+                                                        <p><strong>SAL - {{$next_id}}</strong></p>
                                                     </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <p><strong>Descripción:</strong> {{$orden->descripcion}}</p>
-                                                    <form action="{{ route('shipping.ot.salida_factura', $orden->id) }}" method="POST">
+                                                    <form action="{{ route('shipping.ot.salida_remision', $orden->id) }}" method="POST">
                                                         @csrf
+                                                        <div class="mb-3">
+                                                            <label for="cantidad" class="form-label"><strong>Cantidad Enviada:</strong></label>
+                                                            <input type="number" class="form-control" name="cantidad" id="cantidad" required min="1">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label for="tipo_documento" class="form-label"><strong>Tipo de salida:</strong></label>
+                                                            <input type="text" class="form-control" name="tipo_documento" id="tipo_documento" value="REMISION" readonly>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="razon_social" class="form-label"><strong>Razon Social:</strong></label>
+                                                            <select class="form-control" name="razon_social" id="razon_social" required>
+                                                                <option value="MAQUINADOS BADILSA S.A DE C.V">MAQUINADOS BADILSA S.A DE C.V</option>
+                                                                <option value="RICARDO JAVIER BADILLO AMAYA">RICARDO JAVIER BADILLO AMAYA</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="persona_entrega" class="form-label"><strong>Entrega:</strong></label>
+                                                            <input type="text" class="form-control" name="persona_entrega" id="persona_entrega" required>
+                                                        </div>
+
+                                                        <div class="mb-3">
+                                                            <label for="persona_recibe" class="form-label"><strong>Recibe:</strong></label>
+                                                            <input type="text" class="form-control" name="persona_recibe" id="persona_recibe" required>
+                                                        </div>
+
+
+
+                                                        <div class="mb-3 form-check">
+                                                            <input type="checkbox" class="form-check-input" id="ultima_entrega" name="ultima_entrega" value="1">
+                                                            <label class="form-check-label" for="ultima_entrega">Última entrega</label>
+                                                        </div>
+
                                                         <button type="submit" class="btn btn-success mt-3">Liberar</button>
                                                     </form>
                                                 </div>
@@ -152,6 +235,35 @@
     </div>
     </div>
 
+
+    <script>
+        function cargarHistorial(id) {
+            fetch(`/historial/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    let tbody = document.getElementById("historialBody");
+                    tbody.innerHTML = "";
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = "<tr><td colspan='4' class='text-center'>No hay entregas registradas</td></tr>";
+                    } else {
+                        data.forEach(entrega => {
+                            let row = `<tr>
+                        <td>SAL - ${entrega.id}</td>
+                        <td>${entrega.cantidad}</td>
+                        <td>${entrega.tipo_documento}</td>
+                        <td>${entrega.created_at}</td>
+                        <td>${entrega.persona_entrega}</td>
+                        <td>${entrega.persona_recibe}</td>
+
+                    </tr>`;
+                            tbody.innerHTML += row;
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 
 
 

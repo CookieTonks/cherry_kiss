@@ -26,4 +26,9 @@ class Item extends Model
     {
         return $this->belongsTo(User::class, 'tecnico', 'id'); // 'tecnico' es la columna que guarda el ID del técnico
     }
+
+    public function entregas()
+    {
+        return $this->hasMany(Entrega::class, 'item_id'); // Ajusta 'item_id' según el campo en tu tabla de entregas
+    }
 }

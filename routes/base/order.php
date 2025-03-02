@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 
 Route::group(['middleware' => ['auth']], function () {
-    // Route::middleware(['can:ver_ordenes'])->group(function () {
+    Route::middleware(['can:ordenes_dashboard'])->group(function () {
     Route::get('/materiales/home', [OrderController::class, 'index'])->name('orders.home');
     Route::get('/budgets/{budgetId}/orders', [OrderController::class, 'showBudgetOrders'])->name('budgets.show.orders');
     Route::get('/budgets/{budgetId}/order/{ItemId}/pdf', [OrderController::class, 'makeOrder'])->name('budgets.pdf.order');
@@ -24,5 +24,5 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::delete('/budgets/destroy/{materialId}/materials', [MaterialController::class, 'destroy'])->name('budgets.destroy.materials');
     // Route::put('/budgets/edit/{materialId}/materials', [MaterialController::class, 'update'])->name('budgets.edit.materials');
 
-    // });
+    });
 });

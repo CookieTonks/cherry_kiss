@@ -69,8 +69,13 @@
                     <img src="logo.png" width="200px">
                 </td>
                 <td style="width: 50%; text-align: right; font-size: small;">
+                    @if($entrega->razon_social === 'RICARDO JAVIER BADILLO AMAYA')
+                    <strong>RICARDO JAVIER BADILLO AMAYA</strong> <br>
+                    <strong style="color: #4682B4;">R.F.C. BAAR561015TU5</strong> <br>
+                    @else
                     <strong>MAQUINADOS BADILSA S.A. DE C.V.</strong> <br>
                     <strong style="color: #4682B4;">R.F.C. MBA140904LY0</strong> <br>
+                    @endif
                     CARRETERA AGUA FRÍA KM 1.5 <br>
                     COL. CERRITOS DE AGUA FRÍA, APODACA, N.L. <br>
                     C.P. 66200
@@ -116,18 +121,35 @@
         <table class="table table-sm" style="text-align:center;font-size:xx-small;" width="100%">
             <thead style="background-color: #4682B4; color:white;">
                 <tr>
-                    <th>DESCRIPCION</th>
                     <th>COTIZACION</th>
+                    <th>DESCRIPCION</th>
                     <th>CANTIDAD</th>
                     <th>P/U</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>{{$entrega->item->descripcion}}</td>
                     <td>COT-{{$entrega->item->budget->id}}</td>
+                    <td>{{$entrega->item->descripcion}}</td>
                     <td>{{$entrega->cantidad}}</td>
                     <td>{{$entrega->item->precio_unitario}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <table class="table table-sm" style="text-align:center;font-size:xx-small;" width="100%">
+            <thead style="background-color: #4682B4; color:white;">
+                <tr>
+
+                    <th>ENTREGA</th>
+                    <th>RECIBE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{$entrega->persona_entrega}}</td>
+                    <td>{{$entrega->persona_recibe}}</td>
                 </tr>
             </tbody>
         </table>

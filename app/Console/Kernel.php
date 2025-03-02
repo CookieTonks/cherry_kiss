@@ -12,8 +12,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new \App\Jobs\UpdateBudgetStatus)->dailyAt('07:30');
+        $schedule->command('budgets:update-status')->dailyAt('07:30');
+        $schedule->command('budgets:send-email')->dailyAt('08:00'); // Ajusta la hora según necesites
+
     }
+
 
     /**
      * Register the commands for the application.

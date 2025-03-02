@@ -8,7 +8,7 @@ use App\Http\Controllers\ProductionController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth']], function () {
-    // Route::middleware(['can:ver_usuarios'])->group(function () {
+    Route::middleware(['can:production_dashboard'])->group(function () {
     Route::get('/production/home', [ProductionController::class, 'Home'])->name('production.home');
     Route::post('/production/tecnico/{otId}/ot', [ProductionController::class, 'tecnicoOt'])->name('production.tecnico.ot');
     Route::post('/production/liberacion/{otId}/ot', [ProductionController::class, 'liberacionOt'])->name('production.liberacion.ot');
@@ -19,5 +19,5 @@ Route::group(['middleware' => ['auth']], function () {
     // Route::get('/compras/oc/{ocId}/pdf', [ProductionController::class, 'ocPdf'])->name('compras.oc.pdf');
 
 
-    // });
+    });
 });

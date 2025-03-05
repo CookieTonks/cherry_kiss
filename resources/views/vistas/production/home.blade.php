@@ -15,7 +15,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="" class="text-decoration-none text-dark fw-bold fs-5">
-                                OT pendientes:
+                                OT pendientes: {{$totales['sin_asignar']}}
                             </a>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="" class="text-decoration-none text-dark fw-bold fs-5">
-                                OT PROCESO:
+                                OT Proceso: {{$totales['en_proceso']}}
                             </a>
                         </div>
                     </div>

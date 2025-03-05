@@ -220,9 +220,12 @@
                             <label class="form-label">Nombre</label>
                             <input type="text" id="nombre" name="nombre" class="form-control" required>
                         </div>
+
+                       
+                        
                         <div class="mb-3">
-                            <label class="form-label">Razon social</label>
-                            <input type="text" id="razon_social" name="razon_social" class="form-control" required>
+                            <label class="form-label">RFC</label>
+                            <input type="text" id="rfc" name="rfc" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
@@ -251,6 +254,12 @@
                             <label class="form-label">Nombre</label>
                             <input type="text" name="nombre" class="form-control" required>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">RFC</label>
+                            <input type="text" id="rfc" name="rfc" class="form-control" required>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label">Teléfono</label>
                             <input type="text" name="telefono" class="form-control" required>
@@ -263,6 +272,8 @@
                             <label class="form-label">Direccion</label>
                             <input type="text" name="direccion" class="form-control" required>
                         </div>
+
+
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </form>
                 </div>

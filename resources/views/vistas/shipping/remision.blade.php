@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>SALIDA - FACTURA</title>
+    <title>SALIDA - REMISION</title>
     <link rel="stylesheet" href="build/assets/app-C38joj50.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" crossorigin="anonymous">
     <style type="text/css">
@@ -64,7 +64,7 @@
 <body>
     <div class="content">
         <table style="width: 100%; border-collapse: collapse;">
-            <tr>
+            <tr>   
                 <td style="width: 50%;">
                     <img src="logo.png" width="200px">
                 </td>
@@ -111,7 +111,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>SAL-{{$entrega->id}}_F-{{$entrega->numero_documento}}</td>
+                    <td>SAL-{{$entrega->id}}</td>
                     <td>{{$entrega->tipo_documento}}</td>
                 </tr>
             </tbody>
@@ -152,6 +152,7 @@
                 </tr>
             </tbody>
         </table>
+
     </div>
 </body>
 

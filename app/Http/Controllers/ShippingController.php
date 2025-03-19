@@ -57,7 +57,6 @@ class ShippingController extends Controller
     {
 
         try {
-
             $entrega = new Entrega();
             $entrega->item_id = $id;
             $entrega->cantidad = $request->cantidad;
@@ -80,7 +79,7 @@ class ShippingController extends Controller
             // Descargar el PDF
             return $pdf->stream("SAL-{$entrega->id}_F-{$request->numero_documento}.pdf");
         } catch (\Throwable $th) {
-            return redirect()->route('shipping.home')->with('error', 'Hubo un problema al registrar la salida.'. $th);
+            return redirect()->route('shipping.home')->with('error', 'Hubo un problema al registrar la salida.' . $th);
         }
     }
 

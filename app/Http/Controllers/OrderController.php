@@ -149,11 +149,13 @@ class OrderController extends Controller
     {
         try {
             $item = Item::findOrFail($ItemId);
+            $item->estado = 'P.PRODUCCION';
             $item->materials()->where('estatus', 'registrado')->update(['estatus' => 'pendiente']);
             $item->budget->proceso()->update(['ordenes' => 1]);
+            $item->save();
             return back()->with('success', '¡Materiales solicitados con exito!');
         } catch (\Throwable $th) {
-            return back()->with('error', '¡Materiales no fueron solicitados, intenta de nuevo!');
+            return back()->with('error', '¡Materiales no fueron solicitados, intenta de nuevo!' . $th);
         }
     }
 }

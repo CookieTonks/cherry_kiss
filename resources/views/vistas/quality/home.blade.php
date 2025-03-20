@@ -88,8 +88,12 @@
                                         </div>
                                     </div>
 
-                                    <a href="" class="btn btn-danger mb-3">Rechazar</a>
-
+                                    <a href="URL_AQUI"
+                                        class="btn btn-danger mb-3"
+                                        onclick="return confirm('¿Estás seguro de que deseas rechazar esta OT?')">
+                                        Rechazar
+                                    </a>
+                                    
                                 </td>
                             </tr>
                             @endforeach

@@ -87,6 +87,9 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <a href="" class="btn btn-danger mb-3">Rechazar</a>
+
                                 </td>
                             </tr>
                             @endforeach

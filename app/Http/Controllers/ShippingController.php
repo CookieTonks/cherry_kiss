@@ -18,16 +18,29 @@ class ShippingController extends Controller
 
         return view('vistas.shipping.home', compact('ordenes', 'contador', 'next_id'));
     }
-
     public function salida_factura(Request $request, $id)
     {
-
-
         try {
+            $item = Item::find($id);
 
+            if (!$item) {
+                return redirect()->route('shipping.home')->with('error', 'La OT no existe.');
+            }
+
+            // Sumar todas las entregas existentes
+            $sumaEntregas = $item->entregas->sum('cantidad');
+            $nuevaCantidad = $request->cantidad;
+            $totalEntregas = $sumaEntregas + $nuevaCantidad;
+
+            // Verificar si es la última entrega
+            if ($request->ultima_entrega == "1" && $totalEntregas != $item->cantidad) {
+                return redirect()->route('shipping.home')->with('error', 'La cantidad total de piezas no coincide. No se registró la entrega.');
+            }
+
+            // Registrar la entrega
             $entrega = new Entrega();
             $entrega->item_id = $id;
-            $entrega->cantidad = $request->cantidad;
+            $entrega->cantidad = $nuevaCantidad;
             $entrega->tipo_documento = $request->tipo_documento;
             $entrega->numero_documento = $request->numero_documento;
             $entrega->persona_entrega = $request->persona_entrega;
@@ -35,53 +48,68 @@ class ShippingController extends Controller
             $entrega->razon_social = $request->razon_social;
             $entrega->save();
 
-
-            if ($request->ultima_entrega == "1") {
-                Item::where('id', $id)->update(['estado' => 'E.ENTREGADO']);
+            // Si es la última entrega y la cantidad coincide, marcar como "E.ENTREGADO"
+            if ($request->ultima_entrega == "1" && $totalEntregas == $item->cantidad) {
+                $item->update(['estado' => 'E.ENTREGADO']);
             }
 
-
+            // Generar el PDF para cualquier entrega (última o no)
             $html = view('vistas.shipping.factura', compact('entrega'))->render();
-
             $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
 
-            // Descargar el PDF
             return $pdf->stream("SAL-{$entrega->id}_F-{$request->numero_documento}.pdf");
         } catch (\Throwable $th) {
-            return redirect()->route('shipping.home')->with('error', 'Hubo un problema al registrar la salida.');
+            return redirect()->route('shipping.home')->with('error', 'Hubo un problema al registrar la entrega. ' . $th->getMessage());
         }
     }
 
 
+
     public function salida_remision(Request $request, $id)
     {
-
         try {
+            $item = Item::find($id);
+
+            if (!$item) {
+                return redirect()->route('shipping.home')->with('error', 'La OT no existe.');
+            }
+
+            // Sumar todas las entregas existentes
+            $sumaEntregas = $item->entregas->sum('cantidad');
+            $nuevaCantidad = $request->cantidad;
+            $totalEntregas = $sumaEntregas + $nuevaCantidad;
+
+            // Si es la última entrega, validar que la cantidad total coincida antes de guardar
+            if ($request->ultima_entrega == "1" && $totalEntregas != $item->cantidad) {
+                return redirect()->route('shipping.home')->with('error', 'La cantidad total de piezas no coincide. No se registró la entrega.');
+            }
+
+            // Registrar la entrega
             $entrega = new Entrega();
             $entrega->item_id = $id;
-            $entrega->cantidad = $request->cantidad;
+            $entrega->cantidad = $nuevaCantidad;
             $entrega->tipo_documento = $request->tipo_documento;
             $entrega->persona_entrega = $request->persona_entrega;
             $entrega->persona_recibe = $request->persona_recibe;
             $entrega->razon_social = $request->razon_social;
             $entrega->save();
 
-
-            if ($request->ultima_entrega == "1") {
-                Item::where('id', $id)->update(['estado' => 'E.ENTREGADO']);
+            // Si es la última entrega y la cantidad coincide, marcar como entregado
+            if ($request->ultima_entrega == "1" && $totalEntregas == $item->cantidad) {
+                $item->update(['estado' => 'E.ENTREGADO']);
             }
 
-
+            // Generar el PDF para cualquier entrega (última o no)
             $html = view('vistas.shipping.remision', compact('entrega'))->render();
-
             $pdf = \PDF::loadHTML($html)->setPaper('a4', 'portrait');
 
-            // Descargar el PDF
-            return $pdf->stream("SAL-{$entrega->id}_F-{$request->numero_documento}.pdf");
+            return $pdf->stream("SAL-{$entrega->id}_R-{$request->numero_documento}.pdf");
         } catch (\Throwable $th) {
-            return redirect()->route('shipping.home')->with('error', 'Hubo un problema al registrar la salida.' . $th);
+            return redirect()->route('shipping.home')->with('error', 'Hubo un problema al registrar la entrega. ' . $th->getMessage());
         }
     }
+
+
 
 
     public function showHistorial($id)

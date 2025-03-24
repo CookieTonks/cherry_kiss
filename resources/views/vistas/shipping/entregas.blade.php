@@ -40,13 +40,14 @@
                         data-toolbar="#toolbar">
                         <thead class="thead-dark">
                             <tr>
-                                <th data-field="salida" data-sortable="true"># SALIDA</th>
+                                <th data-field="numero_salida" data-sortable="true"># SALIDA</th>
                                 <th data-field="cantidad" data-sortable="true">Cantidad</th>
                                 <th data-field="ot" data-sortable="true">OT</th>
-                                <th data-field="salida" data-sortable="true">Tipo Salida</th>
+                                <th data-field="tipo_salida" data-sortable="true">Tipo Salida</th>
                                 <th data-field="entrega" data-sortable="true">Entrega</th>
                                 <th data-field="recibe" data-sortable="true">Recibe</th>
                                 <th data-field="razon_social" data-sortable="true">Razon Social</th>
+                                <th data-field="archivo_firmado" data-sortable="true">Firma</th>
                                 <th data-field="documento_firmado" data-sortable="true">Documento Firmado</th>
                             </tr>
                         </thead>
@@ -60,7 +61,20 @@
                                 <td>{{$entrega->tipo_documento}}</td>
                                 <td>{{$entrega->persona_entrega}}</td>
                                 <td>{{$entrega->persona_recibe}}</td>
-                                <td>{{$entrega->razon_social}}</td>
+                                <td>{{ $entrega->razon_social }}</td>
+                                <td>
+                                    @if($entrega->carga_firma)
+                                    <span style="color: green; font-weight: bold;">✅</span>
+                                    @if($entrega->pdf_path)
+                                    <a href="{{ Storage::url($entrega->pdf_path) }}" target="_blank" style="margin-left: 10px; color: blue; text-decoration: underline;">
+                                        Ver archivo
+                                    </a>
+                                    @endif
+                                    @else
+                                    <span style="color: red; font-weight: bold;">❌</span>
+                                    @endif
+                                </td>
+
                                 <td>
                                     <!-- Botón para abrir el modal -->
                                     <button

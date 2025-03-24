@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Mail\OrdenListaFacturar;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Storage;
 
 
 class ShippingController extends Controller
@@ -131,5 +131,31 @@ class ShippingController extends Controller
         return view('vistas.shipping.entregas', compact('entregas'));
     }
 
-    public function cargaSalida() {}
+    public function cargaSalida(Request $request, $id)
+    {
+
+        try {
+            $entrega = Entrega::find($id);
+
+            $archivo = $request->file('pdf');
+
+            $rutaCarpeta = "public/entregas/{$id}";
+            Storage::makeDirectory($rutaCarpeta);
+
+            $nombreArchivo = uniqid('firma_') . '.' . $archivo->getClientOriginalExtension();
+            $archivo->storeAs($rutaCarpeta, $nombreArchivo);
+
+            $entrega->carga_firma = 1;
+            $entrega->pdf_path = "entregas/{$id}/{$nombreArchivo}";
+
+
+            $entrega->save();
+
+            return redirect()->route('shipping.entregas')
+                ->with('success', 'Se ha registrado la carga de la firma y el PDF.');
+        } catch (\Throwable $th) {
+            return redirect()->route('shipping.entregas')
+                ->with('error', 'Hubo un problema al registrar la carga de la firma y el PDF. ' . $th->getMessage());
+        }
+    }
 }

@@ -4,15 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\Budget;
+
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
     public function home()
     {
 
-        $ordenes = Item::where('estado', 'F.PENDIENTE')->get();
+        $ordenes = Budget::whereHas('items', function ($query) {
+            $query->where('estado', 'E.ENTREGADO');
+        })
+        ->select('budgets.*')
+        ->distinct()
+        ->get();
+    
 
-        $contador = Item::where('estado', 'F.PENDIENTE')->count();
+
+        $contador = Item::where('estado', 'E.ENTREGADO')->count();
 
         return view('vistas.invoice.home', compact('ordenes', 'contador'));
     }
@@ -26,7 +36,7 @@ class InvoiceController extends Controller
             $orden->save();
             return redirect()->route('invoice.home')->with('success', 'OT liberada con éxito.');
         } catch (\Throwable $th) {
-            return redirect()->route('invoice.home')->with('error', 'Hubo un problema al liberar OT, por favor intenta de nuevo.' .$th);
+            return redirect()->route('invoice.home')->with('error', 'Hubo un problema al liberar OT, por favor intenta de nuevo.' . $th);
         }
     }
 }

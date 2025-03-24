@@ -23,7 +23,7 @@ class ExpiringBudgetsMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Cotizaciones proxima entrega')
+        return $this->subject('Orden de compras próximas a vencer')
             ->markdown('emails.expiring_budgets');
     }
 }

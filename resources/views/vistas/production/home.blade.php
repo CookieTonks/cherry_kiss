@@ -61,6 +61,7 @@
                                 <th data-field="cantidad" data-sortable="true">Cantidad</th>
                                 <th data-field="estado" data-sortable="true">Estado</th>
                                 <th data-field="tecnico" data-sortable="true">Tecnico</th>
+                                <th data-field="material" data-sortable="true">Material</th>
                                 <th data-field="acciones" data-sortable="true">Acciones</th>
                             </tr>
                         </thead>
@@ -72,6 +73,12 @@
                                 <td>{{$orden->cantidad}}</td>
                                 <td>{{$orden->estado}}</td>
                                 <td> {{ $orden->tecnicos ? $orden->tecnicos->name : 'Sin asignar' }} </td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
+                                        onclick="loadItems({{ $orden->id }})">
+                                        Ver Material
+                                    </button>
+                                </td>
                                 <td>
                                     <button
                                         type="button"
@@ -139,6 +146,60 @@
         </div>
     </div>
     </div>
+
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="itemsModalLabel">Material solicitado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Unidad</th>
+                                <th>Medida</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function loadItems(ItemId) {
+            // Realiza una solicitud AJAX para obtener los items del presupuesto
+            fetch(`/budgets/order/${ItemId}/materials`)
+                .then(response => response.json())
+                .then(items => {
+                    const tbody = document.getElementById('itemsTableBody');
+                    tbody.innerHTML = ''; // Limpiar datos anteriores
+                    items.forEach(item => {
+                        const row = `
+                    <tr>
+                        <td>${item.descripcion}</td>
+                        <td>${item.cantidad}</td>
+                        <td>${item.unidad}</td>
+                        <td>${item.medida}</td>
+                        <td>${item.estatus}</td>
+
+                    </tr>
+                `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error al cargar los items:', error));
+        }
+    </script>
 
 
 

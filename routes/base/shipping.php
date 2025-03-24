@@ -13,5 +13,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/shipping/ot/{id}/salida_factura', [ShippingController::class, 'salida_factura'])->name('shipping.ot.salida_factura');
         Route::post('/shipping/ot/{id}/salida_remision', [ShippingController::class, 'salida_remision'])->name('shipping.ot.salida_remision');
         Route::get('/historial/{id}', [ShippingController::class, 'showHistorial']);
+        Route::get('/shipping/entregas', [ShippingController::class, 'Entregas'])->name('shipping.entregas');
+        Route::post('/shipping/entregas/{id}', [ShippingController::class, 'cargaSalida'])->name('shipping.cargaSalida');
+
+
     });
 });

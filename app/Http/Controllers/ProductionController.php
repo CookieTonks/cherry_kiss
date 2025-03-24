@@ -10,7 +10,7 @@ class ProductionController extends Controller
 {
     public function Home()
     {
-        $ordenes = Item::where('estado', '=', 'P.PRODUCCION')->orwhere('estado', '=', 'P.ASIGNADA')->get();
+        $ordenes = Item::where('estado', '=', 'P.PRODUCCION')->orwhere('estado', '=', 'P.ASIGNADA')->orwhere('estado', '=', 'P.RECHAZADA')->get();
 
         $totales = [
             'sin_asignar' => Item::where('estado', 'P.PRODUCCION')->count(), //Cuando se cierre en facturacion

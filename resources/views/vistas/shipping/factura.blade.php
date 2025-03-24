@@ -107,12 +107,14 @@
                 <tr>
                     <th>CODIGO</th>
                     <th>TIPO ENTREGA</th>
+                    <th>#FACTURA</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>SAL-{{$entrega->id}}_F-{{$entrega->numero_documento}}</td>
+                    <td>SAL-{{$entrega->id}}</td>
                     <td>{{$entrega->tipo_documento}}</td>
+                    <td>{{$entrega->numero_documento}}</td>
                 </tr>
             </tbody>
         </table>

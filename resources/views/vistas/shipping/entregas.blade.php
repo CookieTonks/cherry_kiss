@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Calidad / Ordenes de trabajo
+            Embarques / Carga de Archivos Enviados
         </h2>
 
     </x-slot>
@@ -14,8 +14,8 @@
                 <div class="col-12 col-sm-6">
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
-                            <a href="{{ route('budgets.index', ['estado' => 'ABIERTA']) }}" class="text-decoration-none text-dark fw-bold fs-5">
-                                Ordenes pendientes: {{$contador}}
+                            <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                Ordenes pendientes:
                             </a>
                         </div>
                     </div>
@@ -40,60 +40,62 @@
                         data-toolbar="#toolbar">
                         <thead class="thead-dark">
                             <tr>
-                                <th data-field="ot" data-sortable="true">OT</th>
-                                <th data-field="orderNumber" data-sortable="true">Empresa</th>
-                                <th data-field="supplier" data-sortable="true">Usuario</th>
-                                <th data-field="sales" data-sortable="true">Vendedor</th>
-                                <th data-field="oc" data-sortable="true">OC</th>
-                                <th data-field="descripcion" data-sortable="true">Descripcion</th>
+                                <th data-field="salida" data-sortable="true"># SALIDA</th>
                                 <th data-field="cantidad" data-sortable="true">Cantidad</th>
-                                <th data-field="status" data-sortable="true">Estado</th>
-                                <th data-field="acciones" data-sortable="true">Acciones</th>
+                                <th data-field="ot" data-sortable="true">OT</th>
+                                <th data-field="salida" data-sortable="true">Tipo Salida</th>
+                                <th data-field="entrega" data-sortable="true">Entrega</th>
+                                <th data-field="recibe" data-sortable="true">Recibe</th>
+                                <th data-field="razon_social" data-sortable="true">Razon Social</th>
+                                <th data-field="documento_firmado" data-sortable="true">Documento Firmado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($ordenes as $orden)
+
+                            @foreach($entregas as $entrega)
                             <tr>
-                                <td>OT-{{$orden->budget->id}}_{{$orden->id}}</td>
-                                <td>{{$orden->budget->client->name}}</td>
-                                <td>{{$orden->budget->clientUser->name}}</td>
-                                <td>{{$orden->budget->user->name}}</td>
-                                <td>{{$orden->budget->oc_number}}</td>
-                                <td>{{$orden->descripcion}}</td>
-                                <td>{{$orden->cantidad}}</td>
-                                <td>{{$orden->estado}}</td>
+                                <td>SAL-{{$entrega->id}}_F-{{$entrega->numero_documento}}</td>
+                                <td>{{$entrega->cantidad}}</td>
+                                <td>{{$entrega->item->budget->id}}_{{$entrega->item->id}}</td>
+                                <td>{{$entrega->tipo_documento}}</td>
+                                <td>{{$entrega->persona_entrega}}</td>
+                                <td>{{$entrega->persona_recibe}}</td>
+                                <td>{{$entrega->razon_social}}</td>
                                 <td>
+                                    <!-- Botón para abrir el modal -->
                                     <button
                                         type="button"
                                         class="btn btn-success mb-3"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#liberarOTModal{{$orden->id}}">
-                                        Liberar
+                                        data-bs-target="#liberarOTModal{{$entrega->id}}">
+                                        Carga de Documento
                                     </button>
-                                    <div class="modal fade" id="liberarOTModal{{$orden->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$orden->id}}" aria-hidden="true">
+
+                                    <div class="modal fade" id="liberarOTModal{{$entrega->id}}" tabindex="-1" aria-labelledby="asignarTecnicoLabel{{$entrega->id}}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="asignarTecnicoLabel{{$orden->id}}">Liberar - OT-{{$orden->budget->id}}_{{$orden->id}}</h5>
+                                                    <h5 class="modal-title" id="asignarTecnicoLabel{{$entrega->id}}">
+                                                    </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('quality.ot.liberacion', $orden->id) }}" method="POST">
+                                                    <form action="{{ route('shipping.cargaSalida', $entrega->id) }}" method="POST" enctype="multipart/form-data">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-success mt-3">Liberar</button>
+
+                                                        <div class="mb-3">
+                                                            <label for="pdf{{$entrega->id}}" class="form-label">Subir Entrega Firmada (PDF)</label>
+                                                            <input type="file" class="form-control" id="pdf{{$entrega->id}}" name="pdf" accept=".pdf" required>
+                                                        </div>
+
+                                                        <button type="submit" class="btn btn-success mt-3">Subir Documento</button>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <a href="{{ route('quality.ot.rechazo', $orden->id) }}"
-                                        class="btn btn-danger mb-3"
-                                        onclick="return confirm('¿Estás seguro de que deseas rechazar esta OT?')">
-                                        Rechazar
-                                    </a>
-
                                 </td>
+
                             </tr>
                             @endforeach
                         </tbody>
@@ -103,6 +105,11 @@
         </div>
     </div>
     </div>
+
+
+
+
+
 
     <!-- Modales -->
 

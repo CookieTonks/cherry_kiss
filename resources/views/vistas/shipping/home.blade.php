@@ -28,6 +28,9 @@
             <div class="row">
                 <div class="table-responsive">
                     <div id="toolbar">
+                        <a href="{{ route('shipping.entregas') }}" class="btn btn-primary">
+                            Entregas Archivos
+                        </a>
 
                     </div>
                     <table id="orders-table"
@@ -81,6 +84,7 @@
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="historialModalLabel">Historial de Entregas</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
                                                 </div>
                                                 <div class="modal-body">
                                                     <table class="table table-striped">

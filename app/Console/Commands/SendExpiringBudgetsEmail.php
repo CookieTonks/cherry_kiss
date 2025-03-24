@@ -45,12 +45,10 @@ class SendExpiringBudgetsEmail extends Command
             return;
         }
 
-        // 1️⃣ Enviar un solo correo al administrador con TODOS los presupuestos próximos a vencer
         $adminEmail = 'miriamdominguez.e@gmail.com';
         Mail::to($adminEmail)->send(new ExpiringBudgetsMail($budgets));
         $this->info("Correo enviado al admin: $adminEmail");
 
-        // 2️⃣ Agrupar presupuestos por usuario y enviarles solo los suyos
         $budgetsByUser = $budgets->groupBy('user.email');
 
         foreach ($budgetsByUser as $email => $userBudgets) {
@@ -61,7 +59,6 @@ class SendExpiringBudgetsEmail extends Command
                 $this->info("Presupuesto sin usuario asignado.");
             }
         }
-
         $this->info('Correos de cotizacion próximos a vencer enviados con éxito.');
     }
 }

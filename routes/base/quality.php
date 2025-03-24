@@ -11,5 +11,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::middleware(['can:calidad_dashboard'])->group(function () {
         Route::get('/quality/home', [QualityController::class, 'Home'])->name('quality.home');
         Route::post('/quality/ot/{id}/liberacion', [QualityController::class, 'liberacion'])->name('quality.ot.liberacion');
+        Route::get('/quality/ot/{id}/rechazo', [QualityController::class, 'rechazo'])->name('quality.ot.rechazo');
+
     });
 });

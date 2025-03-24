@@ -32,4 +32,17 @@ class QualityController extends Controller
             return redirect()->route('quality.home')->with('error', 'Hubo un problema al liberar la OT.');
         }
     }
+
+    public function rechazo($id)
+    {
+        try {
+            $orden = Item::findOrFail($id);
+            $orden->estado = 'P.RECHAZADA';
+            $orden->tecnico = null;
+            $orden->save();
+            return redirect()->route('quality.home')->with('success', 'OT rechazada con éxito.');
+        } catch (\Throwable $th) {
+            return redirect()->route('quality.home')->with('error', 'Hubo un problema al rechazar la OT.');
+        }
+    }
 }

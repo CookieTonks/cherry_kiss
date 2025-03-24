@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Entrega;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Mail\OrdenListaFacturar;
+use Illuminate\Support\Facades\Mail;
+
 
 
 class ShippingController extends Controller
@@ -51,7 +54,9 @@ class ShippingController extends Controller
             // Si es la última entrega y la cantidad coincide, marcar como "E.ENTREGADO"
             if ($request->ultima_entrega == "1" && $totalEntregas == $item->cantidad) {
                 $item->update(['estado' => 'E.ENTREGADO']);
+                Mail::to('miriamdominguez.e@gmail.com')->send(new OrdenListaFacturar($item));
             }
+
 
             // Generar el PDF para cualquier entrega (última o no)
             $html = view('vistas.shipping.factura', compact('entrega'))->render();
@@ -97,6 +102,7 @@ class ShippingController extends Controller
             // Si es la última entrega y la cantidad coincide, marcar como entregado
             if ($request->ultima_entrega == "1" && $totalEntregas == $item->cantidad) {
                 $item->update(['estado' => 'E.ENTREGADO']);
+                Mail::to('miriamdominguez.e@gmail.com')->send(new OrdenListaFacturar($item));
             }
 
             // Generar el PDF para cualquier entrega (última o no)
@@ -118,4 +124,12 @@ class ShippingController extends Controller
         $orden = Item::with('entregas')->find($id);
         return response()->json($orden->entregas);
     }
+
+    public function Entregas()
+    {
+        $entregas = Entrega::all();
+        return view('vistas.shipping.entregas', compact('entregas'));
+    }
+
+    public function cargaSalida() {}
 }

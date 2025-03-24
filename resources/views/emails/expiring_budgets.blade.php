@@ -1,13 +1,13 @@
 <x-mail::message>
-# Cotizaciones proximas a entregar
+# Orden de compras proximas a vencer
 
-Las siguientes cotizaciones tienen fecha de entrega los proximos **7 dias**:
+Las siguientes Ordenes de Compras tienen fecha de entrega los proximos **7 dias**:
 
 <x-mail::table>
-| COT  | Cliente | Usuario | Vendedor | Fecha de Creación |
+| OC  | Cliente | Usuario | Vendedor | Fecha de Creación |
 |-----|---------|---------| ---------|-------------------|
 @foreach ($budgets as $budget)
-| COT- {{ $budget->id }} | {{ $budget->client?->name }} | {{ $budget->user?->name }} | {{ $budget->clientUser?->name }} |{{ $budget->created_at->format('d/m/Y') }} |
+| {{ $budget->oc_number }} | {{ $budget->client?->name }} | {{ $budget->user?->name }} | {{ $budget->clientUser?->name }} |{{ $budget->created_at->format('d/m/Y') }} |
 @endforeach
 </x-mail::table>
 

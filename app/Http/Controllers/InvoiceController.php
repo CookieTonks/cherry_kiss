@@ -16,10 +16,10 @@ class InvoiceController extends Controller
         $ordenes = Budget::whereHas('items', function ($query) {
             $query->where('estado', 'E.ENTREGADO');
         })
-        ->select('budgets.*')
-        ->distinct()
-        ->get();
-    
+            ->select('budgets.*')
+            ->distinct()
+            ->get();
+
 
 
         $contador = Item::where('estado', 'E.ENTREGADO')->count();
@@ -39,4 +39,10 @@ class InvoiceController extends Controller
             return redirect()->route('invoice.home')->with('error', 'Hubo un problema al liberar OT, por favor intenta de nuevo.' . $th);
         }
     }
+
+
+    public function oc_number(){
+        $test = "Hola";
+    }
+   
 }

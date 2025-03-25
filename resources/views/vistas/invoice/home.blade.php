@@ -43,21 +43,32 @@
                                 <th data-field="orderNumber" data-sortable="true">Empresa</th>
                                 <th data-field="supplier" data-sortable="true">Usuario</th>
                                 <th data-field="sales" data-sortable="true">Vendedor</th>
+                                <th data-field="partidas" data-sortable="true">Partidas</th>
                                 <th data-field="acciones" data-sortable="true">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach($ordenes as $orden)
                             <tr>
                                 <td>{{$orden->oc_number}}</td>
                                 <td>{{$orden->client->name}}</td>
                                 <td>{{$orden->user->name}}</td>
                                 <td>{{$orden->clientUser->name}}</td>
-                                <td></td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#itemsModal"
+                                        onclick="loadItems({{ $orden->id }})">
+                                        Ver Partidas
+                                    </button>
+                                </td>
+                                <td>
+                                <a href="{{ route('oc.factura', ['oc_numer' => $orden->id]) }}" class="btn btn-success btn-sm">
+                                        Opciones
+                                    </a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>
@@ -66,9 +77,66 @@
     </div>
 
 
+    <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="itemsModalLabel">Detalles de la cotizacion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Cotizacion</th>
+                                <th>Partida</th>
+                                <th>Descripción</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                                <th>Estatus</th>
+                                <th>PDF</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
+    <script>
+        function loadItems(budgetId) {
 
+            fetch(`/budgets/${budgetId}/items`)
+                .then(response => response.json())
+                .then(items => {
+                    const tbody = document.getElementById('itemsTableBody');
+                    tbody.innerHTML = ''; // Limpiar datos anteriores
+                    items.forEach(item => {
+                        const row = `
+                    <tr>
+                        <td>COT - ${budgetId}</td>
+                        <td>${item.partida}</td>
+                        <td>${item.descripcion}</td>
+                        <td>${item.cantidad}</td>
+                        <td>${item.precio_unitario}</td>
+                        <td>${item.subtotal}</td>
+                        <td>${item.estado}</td>
+                        <td>
+                            <a href="/storage/${item.imagen}" target="_blank">Ver PDF</a>
+                        </td>
+                    </tr>
+                `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error al cargar los items:', error));
+        }
+    </script>
     <!-- Modales -->
 
 </x-app-layout>

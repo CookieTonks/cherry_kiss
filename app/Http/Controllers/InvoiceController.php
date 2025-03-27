@@ -43,6 +43,9 @@ class InvoiceController extends Controller
 
     public function oc_number(){
         $test = "Hola";
+
+        dd($test);
     }
+
    
 }

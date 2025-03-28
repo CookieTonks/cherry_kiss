@@ -29,23 +29,16 @@ class InvoiceController extends Controller
 
     public function liberacion($otId, Request $request)
     {
-        try {
-            $orden = Item::findOrFail($otId);
-            $orden->estado = 'F.LIBERADA';
-            $orden->invoice_number = $request->factura;
-            $orden->save();
-            return redirect()->route('invoice.home')->with('success', 'OT liberada con éxito.');
-        } catch (\Throwable $th) {
-            return redirect()->route('invoice.home')->with('error', 'Hubo un problema al liberar OT, por favor intenta de nuevo.' . $th);
-        }
+
+        dd($otId, $request->all());
+        
     }
 
 
-    public function oc_number(){
+    public function oc_number()
+    {
         $test = "Hola";
 
         dd($test);
     }
-
-   
 }

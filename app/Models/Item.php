@@ -31,4 +31,9 @@ class Item extends Model
     {
         return $this->hasMany(Entrega::class, 'item_id'); // Ajusta 'item_id' según el campo en tu tabla de entregas
     }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_number', 'id'); // Relación con la tabla de facturas
+    }
 }

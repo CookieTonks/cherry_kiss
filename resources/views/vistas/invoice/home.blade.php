@@ -55,6 +55,7 @@
                                         <th data-field="sales" data-sortable="true">Vendedor</th>
                                         <th data-field="cantidad" data-sortable="true">Descripcion</th>
                                         <th data-field="descripcion" data-sortable="true">Cantidad</th>
+                                        <th data-field="factura" data-sortable="true">Factura</th>
                                         <th data-field="status" data-sortable="true">Estado</th>
                                         <th data-field="acciones" data-sortable="true">Acciones</th>
                                     </tr>
@@ -68,9 +69,54 @@
                                         <td>{{$partida->budget->user->name}}</td>
                                         <td>{{$partida->descripcion}}</td>
                                         <td>{{$partida->cantidad}}</td>
+                                        <td>{{$partida->invoice->codigo}}</td>
                                         <td>{{$partida->estado}}</td>
-                                        <td>hello baby firl</td>
+                                        <td>
+                                            <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#partidaOc-{{ $partida->id }}"
+                                                data-material-id="{{ $partida->id }}">
+                                                FACTURA
+                                            </button>
+                                        </td>
+                                        <div class="modal fade" id="partidaOc-{{ $partida->id }}" tabindex="-1" aria-labelledby="materialOcLabel-{{ $partida->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="partidaOcLabel-{{ $partida->id }}">Asignar OC</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="{{ route('factura.partida.oc', ['id' => $partida->id]) }}" method="POST" enctype="multipart/form-data">
+                                                            @csrf
+                                                            @method('POST')
+
+                                                            <!-- Campo oculto para el ID del material -->
+                                                            <input type="hidden" name="partida_id" value="{{ $partida->id }}">
+
+                                                            <!-- Selector de OC -->
+                                                            <div class="mb-3">
+                                                                <label for="oc_id-{{ $partida->id }}" class="form-label">OC</label>
+                                                                <select class="form-control" id="oc_id-{{ $partida->id }}" name="factura_id" required>
+                                                                    @foreach ($facturas as $factura)
+                                                                    <option value="{{ $factura->id }}">{{ $factura->codigo }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Regresar</button>
+                                                                <button type="submit" class="btn btn-success">Guardar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </tr>
+
                                     @endforeach
 
                                 </tbody>
@@ -98,19 +144,24 @@
                                         <strong>Cliente:</strong> {{ $factura->client->name }}<br>
                                         <strong>Estado:</strong> {{ $factura->estatus }}
                                         <br>
-                                        <!-- Ver aqui a donde cuantas estan por factura -->
-                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ocMaterials"
-                                            onclick="loadMaterials({{ $factura->id }})">
-                                            Ver Material
+                                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ocPartidas"
+                                            onclick="loadPartidas({{ $factura->id }})">
+                                            Ver Partidas
                                         </button>
-                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ocMaterials"
-                                            onclick="loadMaterials({{ $factura->id }})">
-                                            Estatus Factura
+                                        <button class="btn btn-warning btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#changeStatusModal"
+                                            data-factura-id="{{ $factura->id }}"
+                                            data-estatus="{{ $factura->estatus }}"
+                                            onclick="openStatusModal(this)">
+                                            Cambiar Estatus
                                         </button>
+
 
 
                                     </li>
                                     @endforeach
+
 
 
                                 </ul>
@@ -122,6 +173,40 @@
             </div>
 
         </div>
+
+
+        <div class="modal fade" id="changeStatusModal" tabindex="-1" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changeStatusModalLabel">Cambiar Estatus de la Factura</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulario para enviar el estatus -->
+                        <form id="statusForm" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" id="facturaId" name="facturaId">
+
+                            <div class="mb-3">
+                                <label for="newStatus" class="form-label">Nuevo Estatus</label>
+                                <select class="form-select" id="newStatus" name="estatus" required>
+                                    <option value="pendiente">Pendiente</option>
+                                    <option value="Cliente">Enviada al cliente</option>
+                                    <option value="Portal">En portal</option>
+                                    <option value="Pagada">Pagada</option>
+                                    <option value="Cancelada">Cancelada</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-success">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
 
         <div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="modifyItemModalLabel" aria-hidden="true">
@@ -173,27 +258,27 @@
         </div>
 
 
-        <div class="modal fade" id="ocMaterials" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal fade" id="ocPartidas" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="itemsModalLabel">Detalles de la OC</h5>
+                        <h5 class="modal-title" id="itemsModalLabel">Detalles de la Factura</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>OT</th>
+                                    <th>oc</th>
                                     <th>Empresa</th>
                                     <th>Vendedor</th>
                                     <th>Descripcion</th>
                                     <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Estatus</th>
+                                    <th>Factura</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
-                            <tbody id="materialTableBody">
+                            <tbody id="partidaTableBody">
                                 <!-- Se llenará dinámicamente -->
                             </tbody>
                         </table>
@@ -204,52 +289,62 @@
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                var materialOcModal = document.getElementById('materialOc');
-                materialOcModal.addEventListener('show.bs.modal', function(event) {
+                var partidaOcModal = document.getElementById('partidaOc');
+                partidaOcModal.addEventListener('show.bs.modal', function(event) {
                     var button = event.relatedTarget; // Botón que activó el modal
-                    var materialId = button.getAttribute('data-material-id'); // Obtén el ID del material desde el atributo data-material-id
-                    var materialIdInput = materialOcModal.querySelector('#materialIdInput'); // Campo oculto en el formulario
-                    materialIdInput.value = materialId; // Asigna el valor al input oculto
+                    var partidaId = button.getAttribute('data-partida-id'); // Obtén el ID del material desde el atributo data-material-id
+                    var partidaIdInput = partidaOcModal.querySelector('#partidaIdInput'); // Campo oculto en el formulario
+                    partidaIdInput.value = partidaId; // Asigna el valor al input oculto
                 });
             });
         </script>
 
         <script>
-            function loadMaterials(ocId) {
-                fetch(`/compras/oc/${ocId}/materials`)
+            function loadPartidas(facturaId) {
+                fetch(`/factura/invoice_number/${facturaId}/partidas`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Error en la respuesta del servidor');
                         }
                         return response.json();
                     })
-                    .then(materials => {
-                        const tbody = document.getElementById('materialTableBody');
+                    .then(partidas => { // Usar 'partidas' aquí
+                        const tbody = document.getElementById('partidaTableBody');
                         tbody.innerHTML = ''; // Limpiar datos anteriores
 
-                        materials.forEach(material => {
+                        partidas.forEach(partida => {
                             const row = `
-                        <tr>
-                            <td>OT-${material.item?.budget?.id}_${material.item_id}</td>
-                            <td>${material.item?.budget?.client?.name || 'N/A'}</td>
-                            <td>${material.item?.budget?.user?.name || 'N/A'}</td>
-                            <td>${material.descripcion || 'N/A'}</td>
-                            <td>${material.cantidad || 'N/A'}</td>
-                            <td>${material.oc?.codigo || 'NO OC'}</td>
-                            <td>${material.estatus || 'N/A'}</td>
-                        </tr>
-                    `;
+                                <tr>
+                                    <td>${partida.budget?.oc_number || '-'}</td>  <!-- Esto sí está bien -->
+                                    <td>${partida.budget?.client?.name || 'N/A'}</td>  <!-- Corregir aquí -->
+                                    <td>${partida.budget?.user?.name || 'N/A'}</td>  <!-- Corregir aquí -->
+                                    <td>${partida.descripcion || '-'}</td>
+                                    <td>${partida.cantidad || '-'}</td>
+                                    <td>${partida.invoice?.codigo || '-'}</td>
+                                    <td>${partida.estado || '-'}</td>
+                                </tr>`;
                             tbody.innerHTML += row;
                         });
+
                     })
-                    .catch(error => console.error('Error al cargar los materiales:', error));
+                    .catch(error => console.error('Error al cargar las partidas:', error));
             }
         </script>
 
+        <script>
+            function openStatusModal(button) {
+                const facturaId = button.getAttribute('data-factura-id');
+                const currentStatus = button.getAttribute('data-estatus');
 
+                // Asignar ID y estatus actual al formulario
+                document.getElementById('facturaId').value = facturaId;
+                document.getElementById('newStatus').value = currentStatus;
 
-
-
+                // Modificar dinámicamente la ruta del formulario
+                const form = document.getElementById('statusForm');
+                form.action = `/invoice/${facturaId}/estatus`;
+            }
+        </script>
 
     </x-slot>
 </x-app-layout>

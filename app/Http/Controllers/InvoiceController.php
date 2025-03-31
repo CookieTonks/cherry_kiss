@@ -56,4 +56,43 @@ class InvoiceController extends Controller
             return back()->with('error', '¡Hubo un problema al dar de alta la factura, por favor intenta de nuevo!' . $th);
         }
     }
+
+    public function partida_factura(Request $request)
+    {
+
+        try {
+            $partida = Item::find($request->partida_id);
+            $partida->invoice_number = $request->factura_id;
+            $partida->save();
+            return back()->with('success', 'Partida actualizada con éxito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Hubo un problema al actualizar la partida, por favor intenta de nuevo!' . $th);
+        }
+    }
+
+    public function invoice_partidas($id)
+    {
+
+        $partidas = Item::with(['budget', 'budget.client', 'budget.user', 'invoice'])
+            ->where('invoice_number', $id)
+            ->get();
+
+
+
+        return response()->json($partidas); // Devuelve la respuesta en formato JSON.
+
+
+    }
+
+    public function invoice_estatus($id, Request $request)
+    {
+        try {
+            $invoice = Invoice::find($id);
+            $invoice->estatus = $request->estatus;
+            $invoice->save();
+            return back()->with('success', 'Estatus actualizado con éxito!');
+        } catch (\Throwable $th) {
+            return back()->with('error', '¡Hubo un problema al actualizar el estatus, por favor intenta de nuevo!' . $th);
+        }
+    }
 }

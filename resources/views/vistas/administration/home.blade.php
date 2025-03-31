@@ -15,8 +15,8 @@
                     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTecnico">Agregar Empleado</button>
                 </div>
             </div>
+            
             <div class="row">
-
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <div class="py-12">
+            <div class="row">
                 <div class="row d-flex flex-wrap">
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card shadow rounded h-100">
@@ -152,16 +152,16 @@
                     </div>
                 </div>
             </div>
-            <!-- Gráficas -->
         </div>
 
+        
 
 
         <div class="py-2">
             <div class="row">
                 <div class="table-responsive">
                     <div id="toolbar">
-                      
+
                     </div>
                     <table id="orders-table"
                         class="table table-striped table-bordered"
@@ -171,7 +171,7 @@
                         data-show-columns="true"
                         data-show-refresh="true"
                         data-page-list="[5, 10, 20, All]"
-                        data-export-types="['excel']"  
+                        data-export-types="['excel']"
                         data-toolbar="#toolbar">
                         <thead class="thead-dark">
                             <tr>
@@ -221,8 +221,8 @@
                             <input type="text" id="nombre" name="nombre" class="form-control" required>
                         </div>
 
-                       
-                        
+
+
                         <div class="mb-3">
                             <label class="form-label">RFC</label>
                             <input type="text" id="rfc" name="rfc" class="form-control" required>
@@ -248,13 +248,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                <form method="POST" action="{{route('administracion.cliente')}}">
-                @csrf
-                <div class="mb-3">
+                    <form method="POST" action="{{route('administracion.cliente')}}">
+                        @csrf
+                        <div class="mb-3">
                             <label class="form-label">Nombre</label>
                             <input type="text" name="nombre" class="form-control" required>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label class="form-label">RFC</label>
                             <input type="text" id="rfc" name="rfc" class="form-control" required>
@@ -328,16 +328,16 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST" action="{{route('administracion.clienteUsuario')}}">
-                    @csrf
-                    <div class="mb-3">
-                        <label class="form-label">Cliente</label>
-                        <select class="form-control" name="cliente_id" required>
-                            <option value="">Seleccione un cliente</option>
-                            @foreach ($clientes as $cliente)
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label">Cliente</label>
+                            <select class="form-control" name="cliente_id" required>
+                                <option value="">Seleccione un cliente</option>
+                                @foreach ($clientes as $cliente)
                                 <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <div class="mb-3">
                             <label class="form-label">Nombre</label>
@@ -361,143 +361,169 @@
     </div>
 
 
- 
-                <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    // Datos desde Laravel a JavaScript
-                    var vendedores = [];
-                    var cotizacionesVendedores = [];
 
-                    @foreach($budgetsBySeller as $budget)
-                        vendedores.push("{{ $budget->vendedor }}");
-                        cotizacionesVendedores.push({{ $budget->total }});
-                    @endforeach
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Datos desde Laravel a JavaScript
+            var vendedores = [];
+            var cotizacionesVendedores = [];
 
-                    // Gráfico de Cotizaciones por Vendedor
-                    new Chart(document.getElementById('vendedoresBudget'), {
-                        type: 'bar',
-                        data: {
-                            labels: vendedores,
-                            datasets: [{
-                                label: 'Cotizaciones Aprobadas',
-                                data: cotizacionesVendedores,
-                                backgroundColor: '#4e73df',
-                                borderColor: '#4e73df',
-                                borderWidth: 1
-                            }]
+            @foreach($budgetsBySeller as $budget)
+            vendedores.push("{{ $budget->vendedor }}");
+            cotizacionesVendedores.push({
+                {
+                    $budget - > total
+                }
+            });
+            @endforeach
+
+            // Gráfico de Cotizaciones por Vendedor
+            new Chart(document.getElementById('vendedoresBudget'), {
+                type: 'bar',
+                data: {
+                    labels: vendedores,
+                    datasets: [{
+                        label: 'Cotizaciones Aprobadas',
+                        data: cotizacionesVendedores,
+                        backgroundColor: '#4e73df',
+                        borderColor: '#4e73df',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
                         },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { position: 'top' },
-                                tooltip: { enabled: true }
-                            }
+                        tooltip: {
+                            enabled: true
                         }
-                    });
-                });
-            </script>
+                    }
+                }
+            });
+        });
+    </script>
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    var clientes = [];
-                    var cotizacionesClientes = [];
-                    var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40'];
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var clientes = [];
+            var cotizacionesClientes = [];
+            var colores = ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#ff9f40'];
 
-                    @foreach($budgetsByClient as $budget)
-                        clientes.push("{{ $budget->cliente }}");
-                        cotizacionesClientes.push({{ $budget->total }});
-                    @endforeach
+            @foreach($budgetsByClient as $budget)
+            clientes.push("{{ $budget->cliente }}");
+            cotizacionesClientes.push({
+                {
+                    $budget - > total
+                }
+            });
+            @endforeach
 
-                    new Chart(document.getElementById('clientBudget'), {
-                        type: 'pie',
-                        data: {
-                            labels: clientes,
-                            datasets: [{
-                                label: 'Ventas por Cliente',
-                                data: cotizacionesClientes,
-                                backgroundColor: colores.slice(0, clientes.length),
-                                borderColor: colores.slice(0, clientes.length),
-                                borderWidth: 1
-                            }]
+            new Chart(document.getElementById('clientBudget'), {
+                type: 'pie',
+                data: {
+                    labels: clientes,
+                    datasets: [{
+                        label: 'Ventas por Cliente',
+                        data: cotizacionesClientes,
+                        backgroundColor: colores.slice(0, clientes.length),
+                        borderColor: colores.slice(0, clientes.length),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
                         },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: { position: 'top' },
-                                tooltip: { enabled: true }
-                            }
+                        tooltip: {
+                            enabled: true
                         }
-                    });
-                });
-            </script>
+                    }
+                }
+            });
+        });
+    </script>
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    var meses = [];
-                    var cotizacionesMeses = [];
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var meses = [];
+            var cotizacionesMeses = [];
 
-                    @foreach($budgetsByMonth as $budget)
-                        meses.push("{{ $budget->month }}/{{ $budget->year }}");
-                        cotizacionesMeses.push({{ $budget->total }});
-                    @endforeach
+            @foreach($budgetsByMonth as $budget)
+            meses.push("{{ $budget->month }}/{{ $budget->year }}");
+            cotizacionesMeses.push({
+                {
+                    $budget - > total
+                }
+            });
+            @endforeach
 
-                    new Chart(document.getElementById("budgetsByMonth"), {
-                        type: "line",
-                        data: {
-                            labels: meses,
-                            datasets: [{
-                                label: "Cotizaciones por Mes",
-                                data: cotizacionesMeses,
-                                borderColor: "#45B880",
-                                backgroundColor: "rgba(69, 184, 128, 0.2)",
-                                borderWidth: 2,
-                                fill: true
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: true }
-                            }
+            new Chart(document.getElementById("budgetsByMonth"), {
+                type: "line",
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: "Cotizaciones por Mes",
+                        data: cotizacionesMeses,
+                        borderColor: "#45B880",
+                        backgroundColor: "rgba(69, 184, 128, 0.2)",
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
                         }
-                    });
-                });
-            </script>
+                    }
+                }
+            });
+        });
+    </script>
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    const meses = @json($budgetStatus->pluck('month'));
-                    const facturasEnviadas = @json($budgetStatus->pluck('aprobadas_en_proceso'));
-                    const facturasPendientes = @json($budgetStatus->pluck('rechazadas'));
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const meses = @json($budgetStatus - > pluck('month'));
+            const facturasEnviadas = @json($budgetStatus - > pluck('aprobadas_en_proceso'));
+            const facturasPendientes = @json($budgetStatus - > pluck('rechazadas'));
 
-                    new Chart(document.getElementById("facturasEstadoChart"), {
-                        type: "bar",
-                        data: {
-                            labels: meses,
-                            datasets: [{
-                                label: "Facturas Enviadas",
-                                data: facturasEnviadas,
-                                backgroundColor: "rgba(54, 162, 235, 0.7)"
-                            }, {
-                                label: "Facturas Pendientes",
-                                data: facturasPendientes,
-                                backgroundColor: "rgba(255, 99, 132, 0.7)"
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { display: true }
-                            },
-                            scales: {
-                                y: { beginAtZero: true }
-                            }
+            new Chart(document.getElementById("facturasEstadoChart"), {
+                type: "bar",
+                data: {
+                    labels: meses,
+                    datasets: [{
+                        label: "Facturas Enviadas",
+                        data: facturasEnviadas,
+                        backgroundColor: "rgba(54, 162, 235, 0.7)"
+                    }, {
+                        label: "Facturas Pendientes",
+                        data: facturasPendientes,
+                        backgroundColor: "rgba(255, 99, 132, 0.7)"
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true
                         }
-                    });
-                });
-            </script>
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 
 
 

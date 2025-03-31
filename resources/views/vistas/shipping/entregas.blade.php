@@ -55,7 +55,7 @@
 
                             @foreach($entregas as $entrega)
                             <tr>
-                                <td>SAL-{{$entrega->id}}_F-{{$entrega->numero_documento}}</td>
+                                <td>SAL-{{$entrega->id}}</td>
                                 <td>{{$entrega->cantidad}}</td>
                                 <td>{{$entrega->item->budget->id}}_{{$entrega->item->id}}</td>
                                 <td>{{$entrega->tipo_documento}}</td>

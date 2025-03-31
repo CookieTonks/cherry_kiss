@@ -10,4 +10,10 @@ class Invoice extends Model
     use HasFactory;
 
     protected $fillable = ['codigo', 'empresa', 'cliente', 'estatus'];
+
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'cliente');
+    }
 }

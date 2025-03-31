@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            Compras / Home
+            Facturacion / Home
         </h2>
         <div class="container">
             <div class="py-5">
@@ -12,7 +12,7 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material sin asignar: {{$totales['sin_asignar']}}
+                                    Partidas de OC sin factura:
                                 </a>
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="" class="text-decoration-none text-dark fw-bold fs-5">
-                                    Material en proceso: {{$totales['en_proceso']}}
+                                    Partidas de OC en proceso:
                                 </a>
                             </div>
                         </div>
@@ -50,10 +50,9 @@
                                 data-toolbar="#toolbar">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th data-field="ot" data-sortable="true">OT</th>
+                                        <th data-field="ot" data-sortable="true">OC</th>
                                         <th data-field="orderNumber" data-sortable="true">Empresa</th>
                                         <th data-field="sales" data-sortable="true">Vendedor</th>
-                                        <th data-field="oc" data-sortable="true">OC</th>
                                         <th data-field="cantidad" data-sortable="true">Descripcion</th>
                                         <th data-field="descripcion" data-sortable="true">Cantidad</th>
                                         <th data-field="status" data-sortable="true">Estado</th>
@@ -61,69 +60,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($materiales as $material)
+
+                                    @foreach($partidas as $partida)
                                     <tr>
-                                        <td>OT-{{$material->item->budget->id}}_{{$material->item->id}}</td>
-                                        <td>{{$material->item->budget->clientUser->name}}</td>
-                                        <td>{{$material->item->budget->user->name}}</td>
-                                        <td>{{$material->oc->codigo ?? 'NO OC'}}</td>
-                                        <td>{{$material->descripcion}}</td>
-                                        <td>{{$material->cantidad}}</td>
-                                        <td>{{$material->estatus}}</td>
-                                        <td>
-                                            <button
-                                                type="button"
-                                                class="btn btn-success"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#materialOc-{{ $material->id }}"
-                                                data-material-id="{{ $material->id }}">
-                                                OC
-                                            </button>
-                                        </td>
+                                        <td>{{$partida->budget->oc_number}}</td>
+                                        <td>{{$partida->budget->client->name}}</td>
+                                        <td>{{$partida->budget->user->name}}</td>
+                                        <td>{{$partida->descripcion}}</td>
+                                        <td>{{$partida->cantidad}}</td>
+                                        <td>{{$partida->estado}}</td>
+                                        <td>hello baby firl</td>
                                     </tr>
-
-                                    <!-- Modal ÚNICO para cada material -->
-                                    <div class="modal fade" id="materialOc-{{ $material->id }}" tabindex="-1" aria-labelledby="materialOcLabel-{{ $material->id }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="materialOcLabel-{{ $material->id }}">Asignar OC</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form action="{{ route('compras.material.oc', ['materialId' => $material->id]) }}" method="POST" enctype="multipart/form-data">
-                                                        @csrf
-                                                        @method('POST')
-
-                                                        <!-- Campo oculto para el ID del material -->
-                                                        <input type="hidden" name="materialId" value="{{ $material->id }}">
-
-                                                        <!-- Selector de OC -->
-                                                        <div class="mb-3">
-                                                            <label for="oc_id-{{ $material->id }}" class="form-label">OC</label>
-                                                            <select class="form-control" id="oc_id-{{ $material->id }}" name="oc_id" required>
-                                                                @foreach ($ocs as $oc)
-                                                                <option value="{{ $oc->id }}">{{ $oc->codigo }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-
-                                                        <!-- Precio Unitario -->
-                                                        <div class="mb-3">
-                                                            <label for="precio_unitario-{{ $material->id }}" class="form-label">P/U</label>
-                                                            <input type="number" step="0.01" class="form-control" id="precio_unitario-{{ $material->id }}" name="precio_unitario" placeholder="Precio Unitario" required>
-                                                        </div>
-
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Regresar</button>
-                                                            <button type="submit" class="btn btn-success">Guardar</button>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     @endforeach
+
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -133,31 +83,36 @@
                         <div class="card">
                             <!-- Encabezado de la tarjeta -->
                             <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                                <span>Órdenes de Compra (OC)</span>
+                                <span>FACTURAS</span>
                                 <!-- Botón alineado dentro del header -->
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#itemsModal" class="btn btn-primary mb-3"> + OC</button>
-
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#itemsModal" class="btn btn-primary mb-3"> + </button>
                             </div>
 
                             <!-- Cuerpo de la tarjeta -->
                             <div class="card-body">
                                 <ul class="list-group">
-                                    @foreach($ocs as $oc)
+
+                                    @foreach($facturas as $factura)
                                     <li class="list-group-item">
-                                        <strong>Código:</strong> {{ $oc->codigo }}<br>
-                                        <strong>Proveedor:</strong> {{ $oc->supplier->nombre }}<br>
-                                        <strong>Estado:</strong> {{ $oc->estatus }}
+                                        <strong>Factura:</strong> {{ $factura->codigo }}<br>
+                                        <strong>Cliente:</strong> {{ $factura->client->name }}<br>
+                                        <strong>Estado:</strong> {{ $factura->estatus }}
                                         <br>
+                                        <!-- Ver aqui a donde cuantas estan por factura -->
                                         <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#ocMaterials"
-                                            onclick="loadMaterials({{ $oc->id }})">
+                                            onclick="loadMaterials({{ $factura->id }})">
                                             Ver Material
                                         </button>
-                                        <a href="{{ route('compras.oc.pdf', ['ocId' => $oc->id]) }}" class="btn btn-success btn-sm">
-                                            OC PDF
-                                        </a>
+                                        <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#ocMaterials"
+                                            onclick="loadMaterials({{ $factura->id }})">
+                                            Estatus Factura
+                                        </button>
+
 
                                     </li>
                                     @endforeach
+
+
                                 </ul>
                             </div>
                         </div>
@@ -173,30 +128,38 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modifyItemModalLabel">Nueva OC</h5>
+                        <h5 class="modal-title" id="modifyItemModalLabel">Nueva Factura</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('compras.oc.store')}}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('invoice.alta')}}" method="POST" enctype="multipart/form-data">
                             @csrf
+
+                            <div class="mb-3">
+                                <label for="codigo" class="form-label">Codigo</label>
+                                <input type="text" class="form-control" id="codigo" name="codigo" placeholder="Codigo">
+                            </div>
                             <!-- Datos de la OC -->
                             <div class="mb-3">
-                                <label for="client" class="form-label">Proveedor</label>
-                                <select class="form-control" id="supplier_id" name="supplier_id" required>
-                                    @foreach ($proveedores as $proveedor)
-                                    <option value="{{ $proveedor->id }}" required>{{ $proveedor->nombre }}</option>
+                                <label for="client" class="form-label">Cliente</label>
+
+                                <select class="form-control" id="client_id" name="client_id" required>
+                                    @foreach ($clientes as $cliente)
+                                    <option value="{{ $cliente->id }}" required>{{ $cliente->name }}</option>
                                     @endforeach
+                                </select>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="razon_social" class="form-label"><strong>Razon Social:</strong></label>
+                                <select class="form-control" name="razon_social" id="razon_social" required>
+                                    <option value="MAQUINADOS BADILSA S.A DE C.V">MAQUINADOS BADILSA S.A DE C.V</option>
+                                    <option value="RICARDO JAVIER BADILLO AMAYA">RICARDO JAVIER BADILLO AMAYA</option>
                                 </select>
                             </div>
 
-                            <!-- Datos de la OC -->
-                            <div class="mb-3">
-                                <label for="moneda" class="form-label">Moneda</label>
-                                <select class="form-control" id="moneda" name="moneda" required>
-                                    <option value="MXN">MXN</option>
-                                    <option value="USD">USD</option>
-                                </select>
-                            </div>
+
 
                             <div class="modal-footer">
                                 <a href="" class="btn btn-secondary mb-3" style="margin-right: 15px;">Regresar</a>

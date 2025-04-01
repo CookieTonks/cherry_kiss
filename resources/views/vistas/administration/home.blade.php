@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <div class="py-5"> 
+        <div class="py-5">
             <div class="row d-flex flex-wrap"> <!-- Eliminé row innecesaria -->
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100">
@@ -112,8 +112,8 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Facturas Monto</h5>
-                            <h2 id="ventasMes">${{ number_format($budgetMonto, 2) }}</h2>
+                            <h5 class="fw-bold">Facturas <br> Monto</h5>
+                            <h2 id="ventasMes">${{ number_format($invoiceSubtotal, 2) }}</h2>
                             <a href="{{ route('export.general.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
                             <h5 class="fw-bold">Facturas Entregadas</h5>
-                            <h2 id="cotizacionesAbiertas">{{$budgetOpen}}</h2>
+                            <h2 id="cotizacionesAbiertas">{{$invoiceClient}}</h2>
                             <a href="{{ route('export.open.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
                     </div>
@@ -132,8 +132,8 @@
                 <div class="col-12 col-sm-6 col-md-3">
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
-                            <h5 class="fw-bold">Facturas Portal</h5>
-                            <h2 id="productosCerrados">{{$budgetClosed}}</h2>
+                            <h5 class="fw-bold">Facturas <br> Portal</h5>
+                            <h2 id="productosCerrados">{{$invoicePortal}}</h2>
                             <a href="{{ route('export.closed.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                     <div class="card shadow rounded h-100 text-center p-3">
                         <div class="card-body">
                             <h5 class="fw-bold">Facturas pagadas</h5>
-                            <h2 id="productosRechazados">{{$budgetRejected}}</h2>
+                            <h2 id="productosRechazados">{{$invoicePaid}}</h2>
                             <a href="{{ route('export.rejected.budgets') }}" class="btn btn-success mt-3">Exportar a Excel</a>
                         </div>
                     </div>

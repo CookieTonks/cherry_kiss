@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Client;
 use App\Models\ClientUser;
+use App\Models\Invoice;
 use Spatie\Permission\Models\Role;
 
 
@@ -111,6 +112,31 @@ class AdministrationController extends Controller
             ->count();
 
 
+
+        $invoicePaid = Invoice::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estatus', '=', 'Pagada')
+            ->count();
+
+        $invoiceSubtotal = Invoice::whereYear('invoices.created_at', Carbon::now()->year)
+            ->whereMonth('invoices.created_at', Carbon::now()->month)
+            ->where('invoices.estatus', 'Pagada')
+            ->join('items', 'items.invoice_number', '=', 'invoices.id')
+            ->sum('items.subtotal');
+
+
+
+        $invoicePortal = Invoice::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estatus', '=', 'PORTAL')
+            ->count();
+
+        $invoiceClient = Invoice::whereYear('created_at', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->where('estatus', '=', 'CLIENTE')
+            ->count();
+
+
         $ordenes = Item::with('budget')->get();
 
         $roles = Role::all();
@@ -135,7 +161,11 @@ class AdministrationController extends Controller
                 'itemClosed',
                 'ordenes',
                 'roles',
-                'clientes'
+                'clientes',
+                'invoiceClient',
+                'invoicePaid',
+                'invoicePortal',
+                'invoiceSubtotal',
             )
         );
     }
@@ -191,7 +221,7 @@ class AdministrationController extends Controller
                 ->with('success', '¡Usuario dado de alta con exito!');
         } catch (\Exception $e) {
             return redirect()->route('administration.home')
-                ->with('error', 'Ocurrió un error al dar de alta el usuario. Intenta nuevamente.'. $e);
+                ->with('error', 'Ocurrió un error al dar de alta el usuario. Intenta nuevamente.' . $e);
         }
     }
 

@@ -115,7 +115,7 @@
                                 </td>
                                 <td>{{$budget->created_at}}</td>
                                 <td>
-                                    <a href="{{ route('oc_number.show', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
+                                    <a href="{{ route('budgets.show', ['budgetId' => $budget->id]) }}" class="btn btn-success btn-sm">
                                         Opciones
                                     </a>
                                 </td>

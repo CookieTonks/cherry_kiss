@@ -8,7 +8,7 @@
 
                 <div class="row justify-content-center">
                     <!-- Módulo 1 -->
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-4">
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="" class="text-decoration-none text-dark fw-bold fs-5">
@@ -18,11 +18,21 @@
                         </div>
                     </div>
 
-                    <div class="col-12 col-sm-6">
+                    <div class="col-12 col-sm-4">
                         <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                             <div class="card-body text-center">
                                 <a href="" class="text-decoration-none text-dark fw-bold fs-5">
                                     Material en proceso: {{$totales['en_proceso']}}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-sm-4">
+                        <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
+                            <div class="card-body text-center">
+                                <a href="" class="text-decoration-none text-dark fw-bold fs-5">
+                                    Buscador Material
                                 </a>
                             </div>
                         </div>
@@ -62,7 +72,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach($materiales as $material)
-                                    <tr>
+                                    <tr @if($material->estatus == 'PENDIENTE') class="table-danger" @endif>
                                         <td>OT-{{$material->item->budget->id}}_{{$material->item->id}}</td>
                                         <td>{{$material->item->budget->clientUser->name}}</td>
                                         <td>{{$material->item->budget->user->name}}</td>
@@ -81,6 +91,7 @@
                                             </button>
                                         </td>
                                     </tr>
+
 
                                     <!-- Modal ÚNICO para cada material -->
                                     <div class="modal fade" id="materialOc-{{ $material->id }}" tabindex="-1" aria-labelledby="materialOcLabel-{{ $material->id }}" aria-hidden="true">

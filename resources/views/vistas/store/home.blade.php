@@ -15,7 +15,7 @@
                     <div class="card shadow rounded h-100 d-flex align-items-center justify-content-center">
                         <div class="card-body text-center">
                             <a href="" class="text-decoration-none text-dark fw-bold fs-5">
-                                Material pendiente:
+                                Material pendiente: {{$materiales_count}}
                             </a>
                         </div>
                     </div>

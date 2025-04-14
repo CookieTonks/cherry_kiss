@@ -67,7 +67,7 @@
                         </thead>
                         <tbody>
                             @foreach($ordenes as $orden)
-                            <tr>
+                            <tr @if($orden->estado == 'P.PRODUCCION') class="table-danger" @endif>
                                 <td>OT-{{$orden->budget->id}}_{{$orden->id}}</td>
                                 <td>{{$orden->descripcion}}</td>
                                 <td>{{$orden->cantidad}}</td>

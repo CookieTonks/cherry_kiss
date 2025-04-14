@@ -14,7 +14,9 @@ class AlmacenController extends Controller
     {
         $materiales = Material::where('estatus', '=', 'EN PROCESO')->get();
 
-        return view('vistas.store.home', compact('materiales'));
+        $materiales_count = Material::where('estatus', '=', 'EN PROCESO')->count();
+
+        return view('vistas.store.home', compact('materiales', 'materiales_count'));
     }
 
     public function check($materialId)

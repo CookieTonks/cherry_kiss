@@ -69,7 +69,7 @@
                                         <td>{{$partida->budget->user->name}}</td>
                                         <td>{{$partida->descripcion}}</td>
                                         <td>{{$partida->cantidad}}</td>
-                                        <td>{{$partida->invoice->codigo}}</td>
+                                        <td>{{$partida->invoice->codigo ?? "SIN ASIGNAR"}}</td>
                                         <td>{{$partida->estado}}</td>
                                         <td>
                                             <button
